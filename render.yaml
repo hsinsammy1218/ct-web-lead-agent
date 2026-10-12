@@ -1,0 +1,56 @@
+services:
+  - type: worker
+    name: ct-lead-worker
+    runtime: node
+    plan: standard
+    buildCommand: npm ci && npx playwright install --with-deps chromium
+    startCommand: npm run worker
+    envVars:
+      - key: DATA_DRIVER
+        value: supabase
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: OPERATOR_EMAILS
+        sync: false
+      - key: PAGESPEED_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+      - key: PLAYWRIGHT_ENABLED
+        value: "true"
+      - key: MONTHLY_API_CAP_USD
+        value: "50"
+      - key: DAILY_API_CAP_USD
+        value: "5"
+      - key: AI_QUALITY_THRESHOLD
+        value: "70"
+      - key: REAUDIT_DAYS
+        value: "90"
+      - key: SCREENSHOT_DIR
+        value: /var/data/screenshots
+    disk:
+      name: ct-lead-screenshots
+      mountPath: /var/data
+      sizeGB: 1
+
+  - type: cron
+    name: ct-lead-maintenance
+    runtime: node
+    schedule: "15 6 * * *"
+    buildCommand: npm ci
+    startCommand: npm run start -w @ct/worker -- --maintenance
+    envVars:
+      - key: DATA_DRIVER
+        value: supabase
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: REAUDIT_DAYS
+        value: "90"
