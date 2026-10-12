@@ -1,0 +1,70 @@
+# Intake labels. Operators can edit this file and re-seed without changing application code.
+industries:
+  - slug: general-contractors
+    display_name: General contractors
+    enabled: true
+    sort_order: 10
+  - slug: roofing
+    display_name: Roofing companies
+    enabled: true
+    sort_order: 20
+  - slug: plumbing
+    display_name: Plumbing companies
+    enabled: true
+    sort_order: 30
+  - slug: electricians
+    display_name: Electricians
+    enabled: true
+    sort_order: 40
+  - slug: hvac
+    display_name: HVAC companies
+    enabled: true
+    sort_order: 50
+  - slug: landscaping
+    display_name: Landscaping companies
+    enabled: true
+    sort_order: 60
+  - slug: cleaning
+    display_name: Cleaning services
+    enabled: true
+    sort_order: 70
+  - slug: auto-repair
+    display_name: Auto repair shops
+    enabled: true
+    sort_order: 80
+  - slug: barbershops
+    display_name: Barbershops
+    enabled: true
+    sort_order: 90
+  - slug: hair-salons
+    display_name: Hair salons
+    enabled: true
+    sort_order: 100
+  - slug: restaurants
+    display_name: Restaurants
+    enabled: true
+    sort_order: 110
+  - slug: small-retail
+    display_name: Small retail businesses
+    enabled: true
+    sort_order: 120
+  - slug: painting
+    display_name: Painting contractors
+    enabled: true
+    sort_order: 130
+  - slug: flooring
+    display_name: Flooring companies
+    enabled: true
+    sort_order: 140
+  - slug: remodeling
+    display_name: Remodeling companies
+    enabled: true
+    sort_order: 150
+  - slug: pressure-washing
+    display_name: Pressure washing companies
+    enabled: true
+    sort_order: 160
+  - slug: professional-services
+    display_name: Local professional services
+    enabled: true
+    sort_order: 170

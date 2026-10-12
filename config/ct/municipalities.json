@@ -1,0 +1,1244 @@
+{
+  "source": "CT Data Collaborative town-to-planning-region crosswalk (MIT), Census 2022 county-subdivision FIPS",
+  "regions": [
+    {
+      "id": "capitol",
+      "name": "Capitol",
+      "cog_name": "Capitol Planning Region",
+      "fips": "9110"
+    },
+    {
+      "id": "naugatuck-valley",
+      "name": "Naugatuck Valley",
+      "cog_name": "Naugatuck Valley Planning Region",
+      "fips": "9140"
+    },
+    {
+      "id": "northeastern-connecticut",
+      "name": "Northeastern Connecticut",
+      "cog_name": "Northeastern Connecticut Planning Region",
+      "fips": "9150"
+    },
+    {
+      "id": "northwest-hills",
+      "name": "Northwest Hills",
+      "cog_name": "Northwest Hills Planning Region",
+      "fips": "9160"
+    },
+    {
+      "id": "south-central",
+      "name": "South Central",
+      "cog_name": "South Central Connecticut Planning Region",
+      "fips": "9170"
+    },
+    {
+      "id": "western-connecticut",
+      "name": "Western Connecticut",
+      "cog_name": "Western Connecticut Planning Region",
+      "fips": "9190"
+    },
+    {
+      "id": "southeastern-connecticut",
+      "name": "Southeastern Connecticut",
+      "cog_name": "Southeastern Connecticut Planning Region",
+      "fips": "9180"
+    },
+    {
+      "id": "greater-bridgeport",
+      "name": "Greater Bridgeport",
+      "cog_name": "Greater Bridgeport Planning Region",
+      "fips": "9120"
+    },
+    {
+      "id": "lower-connecticut-river-valley",
+      "name": "Lower Connecticut River Valley",
+      "cog_name": "Lower Connecticut River Valley Planning Region",
+      "fips": "9130"
+    }
+  ],
+  "municipalities": [
+    {
+      "opm_code": "911001080",
+      "name": "Andover",
+      "name_normalized": "andover",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914001220",
+      "name": "Ansonia",
+      "name_normalized": "ansonia",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915001430",
+      "name": "Ashford",
+      "name_normalized": "ashford",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911002060",
+      "name": "Avon",
+      "name_normalized": "avon",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916002760",
+      "name": "Barkhamsted",
+      "name_normalized": "barkhamsted",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914003250",
+      "name": "Beacon Falls",
+      "name_normalized": "beacon falls",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911004300",
+      "name": "Berlin",
+      "name_normalized": "berlin",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917004580",
+      "name": "Bethany",
+      "name_normalized": "bethany",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919004720",
+      "name": "Bethel",
+      "name_normalized": "bethel",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914004930",
+      "name": "Bethlehem",
+      "name_normalized": "bethlehem",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911005910",
+      "name": "Bloomfield",
+      "name_normalized": "bloomfield",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911006260",
+      "name": "Bolton",
+      "name_normalized": "bolton",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918006820",
+      "name": "Bozrah",
+      "name_normalized": "bozrah",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917007310",
+      "name": "Branford",
+      "name_normalized": "branford",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "912008070",
+      "name": "Bridgeport",
+      "name_normalized": "bridgeport",
+      "planning_region_id": "greater-bridgeport",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919008210",
+      "name": "Bridgewater",
+      "name_normalized": "bridgewater",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914008490",
+      "name": "Bristol",
+      "name_normalized": "bristol",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919008980",
+      "name": "Brookfield",
+      "name_normalized": "brookfield",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915009190",
+      "name": "Brooklyn",
+      "name_normalized": "brooklyn",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916010100",
+      "name": "Burlington",
+      "name_normalized": "burlington",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916010940",
+      "name": "Canaan",
+      "name_normalized": "canaan",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915012130",
+      "name": "Canterbury",
+      "name_normalized": "canterbury",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911012270",
+      "name": "Canton",
+      "name_normalized": "canton",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915013810",
+      "name": "Chaplin",
+      "name_normalized": "chaplin",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914014160",
+      "name": "Cheshire",
+      "name_normalized": "cheshire",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913014300",
+      "name": "Chester",
+      "name_normalized": "chester",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913015350",
+      "name": "Clinton",
+      "name_normalized": "clinton",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918015910",
+      "name": "Colchester",
+      "name_normalized": "colchester",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916016050",
+      "name": "Colebrook",
+      "name_normalized": "colebrook",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911016400",
+      "name": "Columbia",
+      "name_normalized": "columbia",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916017240",
+      "name": "Cornwall",
+      "name_normalized": "cornwall",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911017800",
+      "name": "Coventry",
+      "name_normalized": "coventry",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913018080",
+      "name": "Cromwell",
+      "name_normalized": "cromwell",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919018500",
+      "name": "Danbury",
+      "name_normalized": "danbury",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919018850",
+      "name": "Darien",
+      "name_normalized": "darien",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913019130",
+      "name": "Deep River",
+      "name_normalized": "deep river",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914019550",
+      "name": "Derby",
+      "name_normalized": "derby",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913020810",
+      "name": "Durham",
+      "name_normalized": "durham",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911022070",
+      "name": "East Granby",
+      "name_normalized": "east granby",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913022280",
+      "name": "East Haddam",
+      "name_normalized": "east haddam",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913022490",
+      "name": "East Hampton",
+      "name_normalized": "east hampton",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911022630",
+      "name": "East Hartford",
+      "name_normalized": "east hartford",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917022910",
+      "name": "East Haven",
+      "name_normalized": "east haven",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918023400",
+      "name": "East Lyme",
+      "name_normalized": "east lyme",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911024800",
+      "name": "East Windsor",
+      "name_normalized": "east windsor",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915021860",
+      "name": "Eastford",
+      "name_normalized": "eastford",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "912023890",
+      "name": "Easton",
+      "name_normalized": "easton",
+      "planning_region_id": "greater-bridgeport",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911025360",
+      "name": "Ellington",
+      "name_normalized": "ellington",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911025990",
+      "name": "Enfield",
+      "name_normalized": "enfield",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913026270",
+      "name": "Essex",
+      "name_normalized": "essex",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "912026620",
+      "name": "Fairfield",
+      "name_normalized": "fairfield",
+      "planning_region_id": "greater-bridgeport",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911027600",
+      "name": "Farmington",
+      "name_normalized": "farmington",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918029910",
+      "name": "Franklin",
+      "name_normalized": "franklin",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911031240",
+      "name": "Glastonbury",
+      "name_normalized": "glastonbury",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916032290",
+      "name": "Goshen",
+      "name_normalized": "goshen",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911032640",
+      "name": "Granby",
+      "name_normalized": "granby",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919033620",
+      "name": "Greenwich",
+      "name_normalized": "greenwich",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918033900",
+      "name": "Griswold",
+      "name_normalized": "griswold",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918034250",
+      "name": "Groton",
+      "name_normalized": "groton",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917034950",
+      "name": "Guilford",
+      "name_normalized": "guilford",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913035230",
+      "name": "Haddam",
+      "name_normalized": "haddam",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917035650",
+      "name": "Hamden",
+      "name_normalized": "hamden",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915036000",
+      "name": "Hampton",
+      "name_normalized": "hampton",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911037070",
+      "name": "Hartford",
+      "name_normalized": "hartford",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916037140",
+      "name": "Hartland",
+      "name_normalized": "hartland",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916037280",
+      "name": "Harwinton",
+      "name_normalized": "harwinton",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911037910",
+      "name": "Hebron",
+      "name_normalized": "hebron",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916040290",
+      "name": "Kent",
+      "name_normalized": "kent",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915040500",
+      "name": "Killingly",
+      "name_normalized": "killingly",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913040710",
+      "name": "Killingworth",
+      "name_normalized": "killingworth",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918042390",
+      "name": "Lebanon",
+      "name_normalized": "lebanon",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918042600",
+      "name": "Ledyard",
+      "name_normalized": "ledyard",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918043230",
+      "name": "Lisbon",
+      "name_normalized": "lisbon",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916043370",
+      "name": "Litchfield",
+      "name_normalized": "litchfield",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913044210",
+      "name": "Lyme",
+      "name_normalized": "lyme",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917044560",
+      "name": "Madison",
+      "name_normalized": "madison",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911044700",
+      "name": "Manchester",
+      "name_normalized": "manchester",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911044910",
+      "name": "Mansfield",
+      "name_normalized": "mansfield",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911045820",
+      "name": "Marlborough",
+      "name_normalized": "marlborough",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917046520",
+      "name": "Meriden",
+      "name_normalized": "meriden",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914046940",
+      "name": "Middlebury",
+      "name_normalized": "middlebury",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913047080",
+      "name": "Middlefield",
+      "name_normalized": "middlefield",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913047360",
+      "name": "Middletown",
+      "name_normalized": "middletown",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917047535",
+      "name": "Milford",
+      "name_normalized": "milford",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "912048620",
+      "name": "Monroe",
+      "name_normalized": "monroe",
+      "planning_region_id": "greater-bridgeport",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918048900",
+      "name": "Montville",
+      "name_normalized": "montville",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916049460",
+      "name": "Morris",
+      "name_normalized": "morris",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914049950",
+      "name": "Naugatuck",
+      "name_normalized": "naugatuck",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911050440",
+      "name": "New Britain",
+      "name_normalized": "new britain",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919050580",
+      "name": "New Canaan",
+      "name_normalized": "new canaan",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919050860",
+      "name": "New Fairfield",
+      "name_normalized": "new fairfield",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916051350",
+      "name": "New Hartford",
+      "name_normalized": "new hartford",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917052070",
+      "name": "New Haven",
+      "name_normalized": "new haven",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918052350",
+      "name": "New London",
+      "name_normalized": "new london",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919052630",
+      "name": "New Milford",
+      "name_normalized": "new milford",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911052140",
+      "name": "Newington",
+      "name_normalized": "newington",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919052980",
+      "name": "Newtown",
+      "name_normalized": "newtown",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916053470",
+      "name": "Norfolk",
+      "name_normalized": "norfolk",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917053890",
+      "name": "North Branford",
+      "name_normalized": "north branford",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916054030",
+      "name": "North Canaan",
+      "name_normalized": "north canaan",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917054870",
+      "name": "North Haven",
+      "name_normalized": "north haven",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918055500",
+      "name": "North Stonington",
+      "name_normalized": "north stonington",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919056060",
+      "name": "Norwalk",
+      "name_normalized": "norwalk",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918056270",
+      "name": "Norwich",
+      "name_normalized": "norwich",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913057040",
+      "name": "Old Lyme",
+      "name_normalized": "old lyme",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913057320",
+      "name": "Old Saybrook",
+      "name_normalized": "old saybrook",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917057600",
+      "name": "Orange",
+      "name_normalized": "orange",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914058300",
+      "name": "Oxford",
+      "name_normalized": "oxford",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915059980",
+      "name": "Plainfield",
+      "name_normalized": "plainfield",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911060120",
+      "name": "Plainville",
+      "name_normalized": "plainville",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914060750",
+      "name": "Plymouth",
+      "name_normalized": "plymouth",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915061030",
+      "name": "Pomfret",
+      "name_normalized": "pomfret",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913061800",
+      "name": "Portland",
+      "name_normalized": "portland",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918062150",
+      "name": "Preston",
+      "name_normalized": "preston",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914062290",
+      "name": "Prospect",
+      "name_normalized": "prospect",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915062710",
+      "name": "Putnam",
+      "name_normalized": "putnam",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919063480",
+      "name": "Redding",
+      "name_normalized": "redding",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919063970",
+      "name": "Ridgefield",
+      "name_normalized": "ridgefield",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911065370",
+      "name": "Rocky Hill",
+      "name_normalized": "rocky hill",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916065930",
+      "name": "Roxbury",
+      "name_normalized": "roxbury",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918066210",
+      "name": "Salem",
+      "name_normalized": "salem",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916066420",
+      "name": "Salisbury",
+      "name_normalized": "salisbury",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915067400",
+      "name": "Scotland",
+      "name_normalized": "scotland",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914067610",
+      "name": "Seymour",
+      "name_normalized": "seymour",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916067960",
+      "name": "Sharon",
+      "name_normalized": "sharon",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914068170",
+      "name": "Shelton",
+      "name_normalized": "shelton",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919068310",
+      "name": "Sherman",
+      "name_normalized": "sherman",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911068940",
+      "name": "Simsbury",
+      "name_normalized": "simsbury",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911069220",
+      "name": "Somers",
+      "name_normalized": "somers",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911071390",
+      "name": "South Windsor",
+      "name_normalized": "south windsor",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914069640",
+      "name": "Southbury",
+      "name_normalized": "southbury",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911070550",
+      "name": "Southington",
+      "name_normalized": "southington",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918071670",
+      "name": "Sprague",
+      "name_normalized": "sprague",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911072090",
+      "name": "Stafford",
+      "name_normalized": "stafford",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919073070",
+      "name": "Stamford",
+      "name_normalized": "stamford",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915073420",
+      "name": "Sterling",
+      "name_normalized": "sterling",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918073770",
+      "name": "Stonington",
+      "name_normalized": "stonington",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "912074190",
+      "name": "Stratford",
+      "name_normalized": "stratford",
+      "planning_region_id": "greater-bridgeport",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911074540",
+      "name": "Suffield",
+      "name_normalized": "suffield",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914075730",
+      "name": "Thomaston",
+      "name_normalized": "thomaston",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915075870",
+      "name": "Thompson",
+      "name_normalized": "thompson",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911076290",
+      "name": "Tolland",
+      "name_normalized": "tolland",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916076570",
+      "name": "Torrington",
+      "name_normalized": "torrington",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "912077200",
+      "name": "Trumbull",
+      "name_normalized": "trumbull",
+      "planning_region_id": "greater-bridgeport",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915077830",
+      "name": "Union",
+      "name_normalized": "union",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911078250",
+      "name": "Vernon",
+      "name_normalized": "vernon",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915078600",
+      "name": "Voluntown",
+      "name_normalized": "voluntown",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917078740",
+      "name": "Wallingford",
+      "name_normalized": "wallingford",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916079510",
+      "name": "Warren",
+      "name_normalized": "warren",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916079720",
+      "name": "Washington",
+      "name_normalized": "washington",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914080070",
+      "name": "Waterbury",
+      "name_normalized": "waterbury",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918080280",
+      "name": "Waterford",
+      "name_normalized": "waterford",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914080490",
+      "name": "Watertown",
+      "name_normalized": "watertown",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911082590",
+      "name": "West Hartford",
+      "name_normalized": "west hartford",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917082870",
+      "name": "West Haven",
+      "name_normalized": "west haven",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "913081680",
+      "name": "Westbrook",
+      "name_normalized": "westbrook",
+      "planning_region_id": "lower-connecticut-river-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919083430",
+      "name": "Weston",
+      "name_normalized": "weston",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919083500",
+      "name": "Westport",
+      "name_normalized": "westport",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911084900",
+      "name": "Wethersfield",
+      "name_normalized": "wethersfield",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911085950",
+      "name": "Willington",
+      "name_normalized": "willington",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "919086370",
+      "name": "Wilton",
+      "name_normalized": "wilton",
+      "planning_region_id": "western-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "916086440",
+      "name": "Winchester",
+      "name_normalized": "winchester",
+      "planning_region_id": "northwest-hills",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "918086790",
+      "name": "Windham",
+      "name_normalized": "windham",
+      "planning_region_id": "southeastern-connecticut",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911087000",
+      "name": "Windsor",
+      "name_normalized": "windsor",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "911087070",
+      "name": "Windsor Locks",
+      "name_normalized": "windsor locks",
+      "planning_region_id": "capitol",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914087560",
+      "name": "Wolcott",
+      "name_normalized": "wolcott",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "917087700",
+      "name": "Woodbridge",
+      "name_normalized": "woodbridge",
+      "planning_region_id": "south-central",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "914087910",
+      "name": "Woodbury",
+      "name_normalized": "woodbury",
+      "planning_region_id": "naugatuck-valley",
+      "legacy_county": null
+    },
+    {
+      "opm_code": "915088190",
+      "name": "Woodstock",
+      "name_normalized": "woodstock",
+      "planning_region_id": "northeastern-connecticut",
+      "legacy_county": null
+    }
+  ]
+}
