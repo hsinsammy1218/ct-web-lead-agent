@@ -50,7 +50,11 @@ interface IndustryPack {
   about: string;
   heroImage: string;
   heroAlt: string;
-  gallery: Array<{ src: string; alt: string }>;
+  gallery: [
+    { src: string; alt: string },
+    { src: string; alt: string },
+    { src: string; alt: string },
+  ];
   cta: string;
   formTitle: string;
   formBlurb: string;
