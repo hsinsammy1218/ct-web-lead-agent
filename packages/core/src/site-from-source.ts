@@ -86,19 +86,65 @@ const IMG = {
 
 /** Social profiles linked from the live inyourcornerfitness.com site. */
 const SOCIAL = [
-  { label: "Instagram", handle: "@inyourcornerboxing", href: "https://www.instagram.com/inyourcornerboxing/" },
-  { label: "Instagram", handle: "@box_like_a_mutha", href: "https://www.instagram.com/box_like_a_mutha/" },
-  { label: "Facebook", handle: "IYC community", href: "https://www.facebook.com/groups/511510502872483" },
-  { label: "YouTube", handle: "In Your Corner Boxing", href: "https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" },
-] as const;
+  {
+    network: "instagram" as const,
+    label: "Instagram",
+    handle: "@inyourcornerboxing",
+    href: "https://www.instagram.com/inyourcornerboxing/",
+  },
+  {
+    network: "instagram" as const,
+    label: "Instagram",
+    handle: "@box_like_a_mutha",
+    href: "https://www.instagram.com/box_like_a_mutha/",
+  },
+  {
+    network: "facebook" as const,
+    label: "Facebook",
+    handle: "IYC community",
+    href: "https://www.facebook.com/groups/511510502872483",
+  },
+  {
+    network: "youtube" as const,
+    label: "YouTube",
+    handle: "In Your Corner Boxing",
+    href: "https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA",
+  },
+];
+
+function socialIconSvg(network: "instagram" | "facebook" | "youtube"): string {
+  if (network === "instagram") {
+    return `<svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18"><path fill="currentColor" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm11 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7.5A4.5 4.5 0 1 1 12 16.5 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5z"/></svg>`;
+  }
+  if (network === "facebook") {
+    return `<svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18"><path fill="currentColor" d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v7h3v-7h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg>`;
+  }
+  return `<svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18"><path fill="currentColor" d="M23 7.5a3.5 3.5 0 0 0-2.5-2.5C18.6 4.5 12 4.5 12 4.5s-6.6 0-8.5.5A3.5 3.5 0 0 0 1 7.5 36.4 36.4 0 0 0 .5 12a36.4 36.4 0 0 0 .5 4.5 3.5 3.5 0 0 0 2.5 2.5c1.9.5 8.5.5 8.5.5s6.6 0 8.5-.5a3.5 3.5 0 0 0 2.5-2.5A36.4 36.4 0 0 0 23.5 12a36.4 36.4 0 0 0-.5-4.5zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>`;
+}
 
 function socialLinksHtml(): string {
   return `<nav class="socials" aria-label="Social media">
       ${SOCIAL.map(
         (item) =>
-          `<a href="${item.href}" target="_blank" rel="noreferrer"><span>${escape(item.label)}</span><strong>${escape(item.handle)}</strong></a>`,
+          `<a href="${item.href}" target="_blank" rel="noreferrer">${socialIconSvg(item.network)}<span class="social-copy"><span>${escape(item.label)}</span><strong>${escape(item.handle)}</strong></span></a>`,
       ).join("\n      ")}
     </nav>`;
+}
+
+function socialInlineHtml(): string {
+  const unique = [
+    { network: "instagram" as const, label: "Instagram", href: "https://www.instagram.com/inyourcornerboxing/" },
+    { network: "facebook" as const, label: "Facebook", href: "https://www.facebook.com/groups/511510502872483" },
+    { network: "youtube" as const, label: "YouTube", href: "https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" },
+  ];
+  return `<p class="social-inline">
+          ${unique
+            .map(
+              (item) =>
+                `<a href="${item.href}" target="_blank" rel="noreferrer">${socialIconSvg(item.network)}<span>${escape(item.label)}</span></a>`,
+            )
+            .join("\n          ")}
+        </p>`;
 }
 
 function shell(active: string, title: string, description: string, body: string): string {
@@ -262,11 +308,7 @@ function pageHome(): string {
         <img class="cta-logo" src="${IMG.logo}" alt="In Your Corner Boxing logo" width="96" height="96">
         <h2>Ready to step into the corner?</h2>
         <p>1 Wolcott Rd, Wolcott CT 06716 · <a href="mailto:inyourcornerboxing@yahoo.com">inyourcornerboxing@yahoo.com</a></p>
-        <p class="social-inline">
-          <a href="https://www.instagram.com/inyourcornerboxing/" target="_blank" rel="noreferrer">Instagram</a>
-          <a href="https://www.facebook.com/groups/511510502872483" target="_blank" rel="noreferrer">Facebook</a>
-          <a href="https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" target="_blank" rel="noreferrer">YouTube</a>
-        </p>
+        ${socialInlineHtml()}
         <a class="btn btn-primary" href="book.html">Book with GloFox</a>
       </div>
     </section>
@@ -562,9 +604,16 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
   background: #000; object-fit: cover; display: block;
 }
 .cta-band h2 { margin-bottom: 0.65rem; }
-.social-inline { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 0.85rem 0 1.25rem; }
-.social-inline a { color: var(--muted); text-decoration: none; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; }
-.social-inline a:hover { color: var(--red); }
+.social-icon { display: block; flex-shrink: 0; width: 1.1rem; height: 1.1rem; }
+.social-inline { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.85rem; margin: 0.85rem 0 1.25rem; }
+.social-inline a {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  color: var(--muted); text-decoration: none; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem;
+  padding: 0.45rem 0.75rem; border: 1px solid var(--line); background: rgba(0,0,0,0.35);
+}
+.social-inline a:hover { color: var(--text); border-color: var(--red); }
+.social-inline a:hover .social-icon { color: var(--red); }
 .page { padding-bottom: 3rem; }
 .page-hero { padding: 1.75rem 0 1.1rem; }
 .page-hero .lede { max-width: 36rem; margin-bottom: 0; }
@@ -593,12 +642,14 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
 .footer-grid { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: 1.5fr 1fr 1fr; }
 .socials { display: grid; gap: 0.5rem; margin-top: 1rem; }
 .socials a {
-  display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.5rem; align-items: baseline;
+  display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.65rem; align-items: center;
   text-decoration: none; color: var(--muted); font-size: 0.88rem;
-  padding: 0.45rem 0.65rem; border: 1px solid var(--line); background: var(--panel);
+  padding: 0.55rem 0.7rem; border: 1px solid var(--line); background: var(--panel);
 }
-.socials a span { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; }
-.socials a strong { color: var(--text); font-weight: 600; font-size: 0.86rem; }
+.socials a .social-icon { color: var(--red); width: 1.15rem; height: 1.15rem; }
+.socials .social-copy { display: grid; gap: 0.1rem; min-width: 0; }
+.socials .social-copy span { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.68rem; }
+.socials .social-copy strong { color: var(--text); font-weight: 600; font-size: 0.86rem; }
 .socials a:hover { border-color: var(--red); }
 .fine { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; color: var(--muted); font-size: 0.85rem; }
 .cta-inline { padding: 2rem 0; }
