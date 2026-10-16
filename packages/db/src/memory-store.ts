@@ -376,7 +376,7 @@ export class MemoryStore {
       },
       score: null,
       ai: null,
-      draft: null,
+      draft: null as LeadRecord["draft"],
       notes: input.note ? [{ id: randomUUID(), body: input.note, createdAt: now, createdBy: submittedBy }] : [],
       statusHistory: [{ status: "new", createdAt: now, createdBy: submittedBy }],
       createdAt: now,

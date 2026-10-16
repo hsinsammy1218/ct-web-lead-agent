@@ -185,7 +185,7 @@ export function buildDraftSite(input: DraftSiteInput): DraftSiteResult {
           </div>
         </div>
         <div class="photo" role="img" aria-label="${escapeHtml(input.businessName)} serving ${escapeHtml(input.municipality)} Connecticut">
-          Local ${escapeHtml(input.industry)}
+          ${escapeHtml(input.industry)}
         </div>
       </section>
 

@@ -119,6 +119,13 @@ export async function regenerateDraft(formData: FormData): Promise<void> {
     fixesApplied: [],
     recommendedService: lead.score?.recommendedService ?? null,
     error: null,
+    repoUrl: null,
+    deploymentUrl: null,
+    githubRepo: null,
+    vercelProjectId: null,
+    publishStatus: "queued",
+    testsPassed: null,
+    testChecks: [],
   });
   await store.enqueueJob("site.generate", `draft:${id}:${Date.now()}`, { leadId: id });
   redirect(`/leads/${id}?queued=1`);

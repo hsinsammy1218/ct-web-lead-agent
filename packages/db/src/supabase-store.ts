@@ -288,6 +288,13 @@ export class SupabaseStore {
       fixes_applied: draft.fixesApplied,
       recommended_service: draft.recommendedService,
       error: draft.error,
+      repo_url: draft.repoUrl,
+      deployment_url: draft.deploymentUrl,
+      github_repo: draft.githubRepo,
+      vercel_project_id: draft.vercelProjectId,
+      publish_status: draft.publishStatus,
+      tests_passed: draft.testsPassed,
+      test_checks: draft.testChecks,
       updated_at: new Date().toISOString(),
     });
     if (error) throw error;
@@ -426,7 +433,7 @@ const LEAD_SELECT = `
   lead_status_history(status, created_at, created_by),
   lead_scores(quality, need, qualification, contact, confidence, opportunity, band, recommended_service, explanation),
   ai_assessments(output),
-  site_drafts(status, path, preview_path, generated_at, summary, fixes_applied, recommended_service, error)
+  site_drafts(status, path, preview_path, generated_at, summary, fixes_applied, recommended_service, error, repo_url, deployment_url, github_repo, vercel_project_id, publish_status, tests_passed, test_checks)
 `;
 
 function mapLead(row: Row): LeadRecord {
@@ -507,6 +514,15 @@ function mapLead(row: Row): LeadRecord {
           fixesApplied: Array.isArray(draft.fixes_applied) ? (draft.fixes_applied as string[]) : [],
           recommendedService: (draft.recommended_service as string | null) ?? null,
           error: (draft.error as string | null) ?? null,
+          repoUrl: (draft.repo_url as string | null) ?? null,
+          deploymentUrl: (draft.deployment_url as string | null) ?? null,
+          githubRepo: (draft.github_repo as string | null) ?? null,
+          vercelProjectId: (draft.vercel_project_id as string | null) ?? null,
+          publishStatus: (draft.publish_status as SiteDraft["publishStatus"]) ?? null,
+          testsPassed: (draft.tests_passed as boolean | null) ?? null,
+          testChecks: Array.isArray(draft.test_checks)
+            ? (draft.test_checks as SiteDraft["testChecks"])
+            : [],
         }
       : null,
     notes: ((row.lead_notes as Row[]) ?? []).map((note) => ({

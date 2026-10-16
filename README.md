@@ -23,7 +23,14 @@ In another terminal:
 npm run worker:once
 ```
 
-That drains the queue, including the score job and the automatic draft-site job. After scoring, the worker writes a fixed homepage under `data/drafts/<lead-id>/` and the lead page links to `/drafts/<lead-id>`. Leave `PLAYWRIGHT_ENABLED=false` unless Chromium is installed. PageSpeed and OpenAI run only when their keys are set.
+That drains the queue, including score, draft generation, and publish jobs. After scoring, the worker:
+
+1. Writes a fixed homepage under `data/drafts/<lead-id>/`
+2. Creates a private GitHub repo for that site (when `GITHUB_TOKEN` and `SITE_GITHUB_OWNER` are set)
+3. Deploys it to Vercel (when `VERCEL_TOKEN` is set)
+4. Runs production checks on the HTML and live URL
+
+The lead page links to the local draft, GitHub repo, and live Vercel URL. Leave `PLAYWRIGHT_ENABLED=false` unless Chromium is installed. PageSpeed and OpenAI run only when their keys are set.
 
 ## Production
 

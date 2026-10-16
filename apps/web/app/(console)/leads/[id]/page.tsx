@@ -23,7 +23,12 @@ export default async function LeadDetailPage({
   const measured = lead.audit?.findings.filter((finding) => finding.source === "measured") ?? [];
   const inferred = lead.audit?.findings.filter((finding) => finding.source === "inferred") ?? [];
   const blocked = lead.audit?.status === "blocked" || lead.website.status === "BLOCKED";
-  const pending = lead.audit?.status === "queued" || !lead.score || lead.draft?.status === "queued";
+  const pending =
+    lead.audit?.status === "queued" ||
+    !lead.score ||
+    lead.draft?.status === "queued" ||
+    lead.draft?.status === "publishing" ||
+    lead.draft?.publishStatus === "queued";
   return (
     <section className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -125,13 +130,42 @@ export default async function LeadDetailPage({
       </article>
       <article className="rounded-lg border border-line bg-white p-4">
         <h2 className="font-serif text-xl">Generated draft site</h2>
-        {lead.draft?.status === "ready" && lead.draft.previewPath ? (
+        {lead.draft?.status === "ready" || lead.draft?.status === "publishing" || lead.draft?.deploymentUrl ? (
           <div className="mt-3 space-y-3 text-sm">
             <p>{lead.draft.summary}</p>
             <p>
               Recommended service: {serviceLabel(lead.draft.recommendedService ?? undefined)} · Generated{" "}
               {lead.draft.generatedAt?.slice(0, 16).replace("T", " ")}
             </p>
+            {lead.draft.publishStatus ? <p>Publish status: {lead.draft.publishStatus}</p> : null}
+            {lead.draft.repoUrl ? (
+              <p>
+                GitHub:{" "}
+                <a className="text-pine" href={lead.draft.repoUrl} target="_blank" rel="noreferrer">
+                  {lead.draft.githubRepo ?? lead.draft.repoUrl}
+                </a>
+              </p>
+            ) : null}
+            {lead.draft.deploymentUrl ? (
+              <p>
+                Vercel:{" "}
+                <a className="text-pine" href={lead.draft.deploymentUrl} target="_blank" rel="noreferrer">
+                  {lead.draft.deploymentUrl}
+                </a>
+              </p>
+            ) : null}
+            {lead.draft.testsPassed != null ? (
+              <p>Production checks: {lead.draft.testsPassed ? "passed" : "failed"}</p>
+            ) : null}
+            {lead.draft.testChecks?.length ? (
+              <ul className="list-disc pl-5">
+                {lead.draft.testChecks.map((check) => (
+                  <li key={check.name}>
+                    {check.ok ? "✓" : "✗"} {check.name} — {check.detail}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             {lead.draft.fixesApplied.length ? (
               <ul className="list-disc pl-5">
                 {lead.draft.fixesApplied.map((fix) => (
@@ -139,16 +173,26 @@ export default async function LeadDetailPage({
                 ))}
               </ul>
             ) : null}
-            <a href={lead.draft.previewPath} target="_blank" rel="noreferrer" className="inline-block rounded-md bg-pine px-3 py-2 text-white">
-              Open draft website
-            </a>
+            <div className="flex flex-wrap gap-2">
+              {lead.draft.previewPath ? (
+                <a href={lead.draft.previewPath} target="_blank" rel="noreferrer" className="inline-block rounded-md bg-pine px-3 py-2 text-white">
+                  Open local draft
+                </a>
+              ) : null}
+              {lead.draft.deploymentUrl ? (
+                <a href={lead.draft.deploymentUrl} target="_blank" rel="noreferrer" className="inline-block rounded-md border border-line bg-white px-3 py-2">
+                  Open live site
+                </a>
+              ) : null}
+            </div>
+            {lead.draft.error ? <p className="text-amber-800">{lead.draft.error}</p> : null}
           </div>
         ) : lead.draft?.status === "queued" ? (
           <p className="mt-3 text-sm text-ink/70">Draft website is queued. Run the worker, then refresh.</p>
         ) : lead.draft?.status === "failed" ? (
           <p className="mt-3 text-sm text-red-700">{lead.draft.error ?? "Draft generation failed."}</p>
         ) : (
-          <p className="mt-3 text-sm text-ink/60">A draft site is created automatically after scoring.</p>
+          <p className="mt-3 text-sm text-ink/60">After scoring, the worker creates a draft, GitHub repo, Vercel deploy, and production checks.</p>
         )}
       </article>
       <div className="flex flex-wrap gap-3">
