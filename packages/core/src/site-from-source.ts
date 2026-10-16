@@ -338,13 +338,11 @@ function pageFightBack(): string {
     "Stand Up Fight Back IYC is a non-contact boxing program for people fighting movement disorders, including Parkinson’s, at In Your Corner Boxing in Wolcott, CT.",
     `
   <main class="page">
-    <section class="page-hero wrap">
-      <p class="eyebrow">Special program</p>
-      <h1>Fight Back IYC</h1>
-      <p class="lede">Stand Up. Fight Back. Non-contact boxing for movement disorders.</p>
-    </section>
-    <section class="wrap split">
+    <section class="wrap split program">
       <div>
+        <p class="eyebrow">Special program</p>
+        <h1>Fight Back IYC</h1>
+        <p class="lede">Stand Up. Fight Back. Non-contact boxing for movement disorders.</p>
         <p>Stand Up Fight Back IYC is a boxing program designed for those fighting back against any movement disorder.</p>
         <p>This is a non-contact class where we work all the skills and drills of a boxer. The benefits of boxing are endless — for those with movement disorders, the major benefits include decreasing progression of the disease and increasing quality of life.</p>
         <p>In Your Corner Boxing is a boxing gym, and when you walk through the door you are a boxer. You will be taught the basics of boxing to prepare you to <strong>FIGHT BACK</strong>.</p>
@@ -512,14 +510,21 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .pillars h2 { color: var(--red); margin-bottom: 0.45rem; }
 .pillars p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 .band { background: var(--bg-2); padding: 2.5rem 0; border-block: 1px solid var(--line); }
-.split { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: center; }
-.split > div:first-child { display: flex; flex-direction: column; justify-content: center; max-width: 36rem; }
+.split { display: grid; gap: 1.75rem; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: start; }
+.split > div:first-child { display: flex; flex-direction: column; gap: 0.75rem; max-width: 36rem; }
+.split > div:first-child > p { margin: 0; }
+.split > div:first-child > .lede { color: var(--muted); }
+.split > div:first-child > .btn { align-self: flex-start; margin-top: 0.35rem; }
 .stack-photos { display: grid; gap: 0.75rem; grid-template-columns: 1fr 1fr; align-self: stretch; }
 .stack-photos img {
   width: 100%; aspect-ratio: 3 / 4; height: 100%; max-height: 420px;
   object-fit: cover; object-position: center 18%; border-radius: 0.35rem;
 }
-.split > img { width: 100%; object-fit: cover; border-radius: 0.35rem; }
+.split > img {
+  width: 100%; aspect-ratio: 4 / 5; max-height: 520px;
+  object-fit: cover; object-position: center; border-radius: 0.35rem;
+}
+.program { padding: 1.75rem 0 2.5rem; }
 .schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 .schedule div { background: var(--panel); border: 1px solid var(--line); padding: 1rem; display: grid; gap: 0.35rem; }
 .schedule strong { color: var(--red); font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; }
