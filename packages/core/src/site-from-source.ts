@@ -84,6 +84,23 @@ const IMG = {
     "https://static.wixstatic.com/media/368ba1_f7b40c30da604043825fc71e6c826ac6~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/cynthia.jpg",
 };
 
+/** Social profiles linked from the live inyourcornerfitness.com site. */
+const SOCIAL = [
+  { label: "Instagram", handle: "@inyourcornerboxing", href: "https://www.instagram.com/inyourcornerboxing/" },
+  { label: "Instagram", handle: "@box_like_a_mutha", href: "https://www.instagram.com/box_like_a_mutha/" },
+  { label: "Facebook", handle: "IYC community", href: "https://www.facebook.com/groups/511510502872483" },
+  { label: "YouTube", handle: "In Your Corner Boxing", href: "https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" },
+] as const;
+
+function socialLinksHtml(): string {
+  return `<nav class="socials" aria-label="Social media">
+      ${SOCIAL.map(
+        (item) =>
+          `<a href="${item.href}" target="_blank" rel="noreferrer"><span>${escape(item.label)}</span><strong>${escape(item.handle)}</strong></a>`,
+      ).join("\n      ")}
+    </nav>`;
+}
+
 function shell(active: string, title: string, description: string, body: string): string {
   return `<!doctype html>
 <html lang="en">
@@ -146,6 +163,7 @@ function shell(active: string, title: string, description: string, body: string)
         <img src="${IMG.logo}" alt="" width="72" height="72">
         <h2>In Your Corner Boxing</h2>
         <p>Boxing · Fitness · Nutrition in Wolcott, CT. A gym family where every member is truly in your corner.</p>
+        ${socialLinksHtml()}
       </div>
       <div>
         <h3>Visit</h3>
@@ -157,6 +175,8 @@ function shell(active: string, title: string, description: string, body: string)
         <p><a href="book.html">Class schedule &amp; pricing</a></p>
         <p><a href="coaches.html">Meet the coaches</a></p>
         <p><a href="https://www.inyourcornerfitness.com/iyc-gear" target="_blank" rel="noreferrer">IYC Gear</a></p>
+        <p><a href="https://www.facebook.com/groups/511510502872483" target="_blank" rel="noreferrer">Facebook community</a></p>
+        <p><a href="https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" target="_blank" rel="noreferrer">YouTube channel</a></p>
       </div>
     </div>
     <p class="fine">© ${new Date().getFullYear()} In Your Corner Boxing · Wolcott, Connecticut</p>
@@ -241,6 +261,11 @@ function pageHome(): string {
       <div class="wrap">
         <h2>Ready to step into the corner?</h2>
         <p>1 Wolcott Rd, Wolcott CT 06716 · <a href="mailto:inyourcornerboxing@yahoo.com">inyourcornerboxing@yahoo.com</a></p>
+        <p class="social-inline">
+          <a href="https://www.instagram.com/inyourcornerboxing/" target="_blank" rel="noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/groups/511510502872483" target="_blank" rel="noreferrer">Facebook</a>
+          <a href="https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" target="_blank" rel="noreferrer">YouTube</a>
+        </p>
         <a class="btn btn-primary" href="book.html">Book with GloFox</a>
       </div>
     </section>
@@ -531,6 +556,9 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .schedule span { color: var(--muted); font-size: 0.9rem; }
 .note { color: var(--muted); }
 .cta-band { padding: 3.5rem 0; background: linear-gradient(135deg, #1a0000, #0d0d0d 45%, #140000); border-top: 1px solid var(--line); text-align: center; }
+.social-inline { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 0.85rem 0 1.25rem; }
+.social-inline a { color: var(--muted); text-decoration: none; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; }
+.social-inline a:hover { color: var(--red); }
 .page { padding-bottom: 3rem; }
 .page-hero { padding: 1.75rem 0 1.1rem; }
 .page-hero .lede { max-width: 36rem; margin-bottom: 0; }
@@ -556,7 +584,16 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
 .price-grid ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
 .price-grid li { margin: 0.4rem 0; }
 .site-footer { border-top: 1px solid var(--line); padding: 2.5rem 0 2rem; background: #050505; }
-.footer-grid { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: 1.4fr 1fr 1fr; }
+.footer-grid { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: 1.5fr 1fr 1fr; }
+.socials { display: grid; gap: 0.5rem; margin-top: 1rem; }
+.socials a {
+  display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.5rem; align-items: baseline;
+  text-decoration: none; color: var(--muted); font-size: 0.88rem;
+  padding: 0.45rem 0.65rem; border: 1px solid var(--line); background: var(--panel);
+}
+.socials a span { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; }
+.socials a strong { color: var(--text); font-weight: 600; font-size: 0.86rem; }
+.socials a:hover { border-color: var(--red); }
 .fine { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; color: var(--muted); font-size: 0.85rem; }
 .cta-inline { padding: 2rem 0; }
 .section-head { margin-bottom: 1.2rem; }
