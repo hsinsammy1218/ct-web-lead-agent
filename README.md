@@ -23,7 +23,7 @@ In another terminal:
 npm run worker:once
 ```
 
-That drains the queue, including the score job that an audit enqueues. Leave `PLAYWRIGHT_ENABLED=false` unless Chromium is installed. PageSpeed and OpenAI run only when their keys are set.
+That drains the queue, including the score job and the automatic draft-site job. After scoring, the worker writes a fixed homepage under `data/drafts/<lead-id>/` and the lead page links to `/drafts/<lead-id>`. Leave `PLAYWRIGHT_ENABLED=false` unless Chromium is installed. PageSpeed and OpenAI run only when their keys are set.
 
 ## Production
 

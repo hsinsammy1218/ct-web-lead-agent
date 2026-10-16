@@ -34,6 +34,17 @@ export interface LeadNote {
   createdBy: string;
 }
 
+export interface SiteDraft {
+  status: "queued" | "ready" | "failed";
+  path: string | null;
+  previewPath: string | null;
+  generatedAt: string | null;
+  summary: string | null;
+  fixesApplied: string[];
+  recommendedService: string | null;
+  error: string | null;
+}
+
 export interface LeadRecord {
   id: string;
   displayName: string;
@@ -49,6 +60,7 @@ export interface LeadRecord {
   audit: LeadAudit | null;
   score: LeadScore | null;
   ai: Assessment | null;
+  draft: SiteDraft | null;
   notes: LeadNote[];
   statusHistory: Array<{ status: LeadStatus; createdAt: string; createdBy: string }>;
   createdAt: string;

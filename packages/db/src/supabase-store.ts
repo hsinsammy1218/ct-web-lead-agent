@@ -16,7 +16,7 @@ import {
   type NormalizedSubmission,
   type ReferenceData,
 } from "@ct/core";
-import type { DashboardStats, LeadFilters, LeadRecord, SubmitResult, WorkRecord } from "./types.js";
+import type { DashboardStats, LeadFilters, LeadRecord, SiteDraft, SubmitResult, WorkRecord } from "./types.js";
 
 type Row = Record<string, unknown>;
 
@@ -277,6 +277,22 @@ export class SupabaseStore {
     );
   }
 
+  async saveSiteDraft(leadId: string, draft: SiteDraft): Promise<void> {
+    const { error } = await this.client.from("site_drafts").upsert({
+      business_id: leadId,
+      status: draft.status,
+      path: draft.path,
+      preview_path: draft.previewPath,
+      generated_at: draft.generatedAt,
+      summary: draft.summary,
+      fixes_applied: draft.fixesApplied,
+      recommended_service: draft.recommendedService,
+      error: draft.error,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) throw error;
+  }
+
   async updateWebsite(leadId: string, patch: Partial<LeadRecord["website"]>): Promise<void> {
     const update: Row = {};
     if (patch.finalUrl !== undefined) update.final_url = patch.finalUrl;
@@ -409,7 +425,8 @@ const LEAD_SELECT = `
   lead_notes(id, body, created_at, created_by),
   lead_status_history(status, created_at, created_by),
   lead_scores(quality, need, qualification, contact, confidence, opportunity, band, recommended_service, explanation),
-  ai_assessments(output)
+  ai_assessments(output),
+  site_drafts(status, path, preview_path, generated_at, summary, fixes_applied, recommended_service, error)
 `;
 
 function mapLead(row: Row): LeadRecord {
@@ -421,6 +438,7 @@ function mapLead(row: Row): LeadRecord {
   const latest = audits.slice().sort((a, b) => String(b.audited_at ?? "").localeCompare(String(a.audited_at ?? "")))[0];
   const score = first(row.lead_scores) as Row | null;
   const ai = first(row.ai_assessments) as Row | null;
+  const draft = first(row.site_drafts) as Row | null;
   return {
     id: String(row.id),
     displayName: String(row.display_name),
@@ -479,6 +497,18 @@ function mapLead(row: Row): LeadRecord {
         }
       : null,
     ai: (ai?.output as Assessment | undefined) ?? null,
+    draft: draft
+      ? {
+          status: draft.status as SiteDraft["status"],
+          path: (draft.path as string | null) ?? null,
+          previewPath: (draft.preview_path as string | null) ?? null,
+          generatedAt: (draft.generated_at as string | null) ?? null,
+          summary: (draft.summary as string | null) ?? null,
+          fixesApplied: Array.isArray(draft.fixes_applied) ? (draft.fixes_applied as string[]) : [],
+          recommendedService: (draft.recommended_service as string | null) ?? null,
+          error: (draft.error as string | null) ?? null,
+        }
+      : null,
     notes: ((row.lead_notes as Row[]) ?? []).map((note) => ({
       id: String(note.id),
       body: String(note.body),

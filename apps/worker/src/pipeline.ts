@@ -1,11 +1,12 @@
-import { createHash } from "node:crypto";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import {
   ASSESSMENT_SYSTEM_PROMPT,
   buildAssessmentPrompt,
+  buildDraftSite,
   classifyHost,
   evaluateWebsite,
   scoreLead,
@@ -14,7 +15,7 @@ import {
   websiteQuality,
   type PsiMetrics,
 } from "@ct/core";
-import { screenshotDirectory, type MemoryStore, type SupabaseStore, type WorkRecord } from "@ct/db";
+import { draftSiteDirectory, screenshotDirectory, type MemoryStore, type SupabaseStore, type WorkRecord } from "@ct/db";
 import { fetchPublicSite } from "./fetch-site.js";
 
 type Store = MemoryStore | SupabaseStore;
@@ -24,6 +25,7 @@ export async function processItem(store: Store, item: WorkRecord): Promise<void>
   if (item.jobType === "website.audit") await runAudit(store, item);
   else if (item.jobType === "ai.assess") await runAi(store, item);
   else if (item.jobType === "lead.score") await runScore(store, item);
+  else if (item.jobType === "site.generate") await runSiteGenerate(store, item);
   else if (item.jobType === "retention.cleanup") {
     await store.retentionCleanup(Number(process.env.SCREENSHOT_RETENTION_DAYS ?? 90), screenshotDir());
   } else if (item.jobType === "reaudit.enqueue") {
@@ -146,6 +148,65 @@ async function runScore(store: Store, item: WorkRecord): Promise<void> {
   });
   if (lead.ai) score.recommendedService = lead.ai.recommended_service;
   await store.saveScore(lead.id, score);
+  await store.saveSiteDraft(lead.id, {
+    status: "queued",
+    path: null,
+    previewPath: null,
+    generatedAt: null,
+    summary: "Draft website queued from the audit.",
+    fixesApplied: [],
+    recommendedService: score.recommendedService,
+    error: null,
+  });
+  await store.enqueueJob("site.generate", `draft:${lead.id}:${lead.audit?.id ?? "score"}`, { leadId: lead.id });
+}
+
+async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
+  const lead = await store.getLead(String(item.payload.leadId ?? ""));
+  if (!lead) throw new Error("Lead not found");
+  try {
+    const draft = buildDraftSite({
+      leadId: lead.id,
+      businessName: lead.displayName,
+      municipality: lead.municipalityName,
+      planningRegion: lead.planningRegionName,
+      industry: lead.industryName,
+      phone: lead.phone,
+      currentUrl: lead.website.finalUrl ?? lead.website.originalUrl,
+      hostClass: lead.website.status,
+      findings: lead.audit?.findings ?? [],
+      score: lead.score,
+      ai: lead.ai,
+    });
+    const dir = path.join(draftSiteDirectory(), lead.id);
+    mkdirSync(dir, { recursive: true });
+    const htmlPath = path.join(dir, "index.html");
+    const briefPath = path.join(dir, "brief.json");
+    writeFileSync(htmlPath, draft.html, "utf8");
+    writeFileSync(briefPath, `${JSON.stringify(draft.brief, null, 2)}\n`, "utf8");
+    await store.saveSiteDraft(lead.id, {
+      status: "ready",
+      path: htmlPath,
+      previewPath: `/drafts/${lead.id}`,
+      generatedAt: draft.brief.generatedAt,
+      summary: draft.brief.summary,
+      fixesApplied: draft.brief.fixesApplied,
+      recommendedService: draft.brief.recommendedService,
+      error: null,
+    });
+  } catch (error) {
+    await store.saveSiteDraft(lead.id, {
+      status: "failed",
+      path: null,
+      previewPath: null,
+      generatedAt: null,
+      summary: null,
+      fixesApplied: [],
+      recommendedService: lead.score?.recommendedService ?? null,
+      error: error instanceof Error ? error.message : "Draft generation failed",
+    });
+    throw error;
+  }
 }
 
 async function loadPsi(store: Store, pageUrl: string): Promise<PsiMetrics | null> {
