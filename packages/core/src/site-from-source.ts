@@ -519,7 +519,7 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
   width: 100%; aspect-ratio: 3 / 4; height: 100%; max-height: 420px;
   object-fit: cover; object-position: center 18%; border-radius: 0.35rem;
 }
-.split > img, .coach img { width: 100%; object-fit: cover; border-radius: 0.35rem; }
+.split > img { width: 100%; object-fit: cover; border-radius: 0.35rem; }
 .schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 .schedule div { background: var(--panel); border: 1px solid var(--line); padding: 1rem; display: grid; gap: 0.35rem; }
 .schedule strong { color: var(--red); font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; }
@@ -527,10 +527,21 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .note { color: var(--muted); }
 .cta-band { padding: 3.5rem 0; background: linear-gradient(135deg, #1a0000, #0d0d0d 45%, #140000); border-top: 1px solid var(--line); text-align: center; }
 .page { padding-bottom: 3rem; }
-.page-hero { padding: 3rem 0 1.5rem; }
-.coach-grid { display: grid; gap: 2rem; }
-.coach { display: grid; gap: 1.25rem; grid-template-columns: 280px 1fr; background: var(--panel); border: 1px solid var(--line); padding: 1rem; }
-.coach .role { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.8rem; }
+.page-hero { padding: 1.75rem 0 1.1rem; }
+.page-hero .lede { max-width: 36rem; margin-bottom: 0; }
+.coach-grid { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+.coach {
+  display: grid; gap: 1rem; grid-template-columns: 148px minmax(0, 1fr);
+  align-items: start; background: var(--panel); border: 1px solid var(--line); padding: 0.9rem;
+}
+.coach img {
+  width: 100%; aspect-ratio: 3 / 4; max-height: 210px; height: 100%;
+  object-fit: cover; object-position: center top; border-radius: 0.35rem;
+}
+.coach > div { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.coach h2 { font-size: clamp(1.55rem, 2.4vw, 2.05rem); margin: 0; line-height: 1; }
+.coach .role { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; margin: 0; }
+.coach p:not(.role) { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.45; }
 .quote-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 blockquote { margin: 0; background: var(--panel); border-left: 4px solid var(--red); padding: 1.25rem; }
 blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
@@ -548,7 +559,10 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
   .hero { min-height: 48svh; max-height: none; }
   .hero-copy { padding: 1.75rem 0 1.4rem; }
   .pillars { grid-template-columns: 1fr; padding: 1.5rem 0; }
+  .coach-grid { grid-template-columns: 1fr; }
   .split, .coach, .footer-grid { grid-template-columns: 1fr; }
+  .coach { grid-template-columns: 120px minmax(0, 1fr); }
+  .coach img { max-height: 180px; }
   .split > div:first-child { max-width: none; }
   .stack-photos { grid-template-columns: 1fr 1fr; }
   .stack-photos img { max-height: 280px; aspect-ratio: 4 / 5; }
