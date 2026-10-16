@@ -49,11 +49,13 @@ describe("site draft generation", () => {
     expect(result.html).toContain("<h1>In your corner fitness</h1>");
     expect(result.html).toContain('id="contact"');
     expect(result.html).toContain("LocalBusiness");
-    expect(result.html).toContain('aria-label="In your corner fitness serving Wolcott Connecticut"');
+    expect(result.html).toContain("images.unsplash.com");
+    expect(result.html).toContain("Personal training");
+    expect(result.html).not.toContain("Draft site generated");
     expect(result.brief.recommendedService).toBe("local_seo");
     expect(result.brief.fixesApplied.length).toBeGreaterThan(3);
     expect(fixesFromFindings([{ category: "ux", code: "no_contact_form", severity: "moderate", evidence: {}, source: "measured" }], "SOCIAL_ONLY")).toContain(
-      "Replaced the social/directory presence with a company homepage draft.",
+      "Replaced the social/directory presence with an official company homepage.",
     );
   });
 });

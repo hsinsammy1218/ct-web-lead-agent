@@ -129,7 +129,7 @@ export default async function LeadDetailPage({
         {lead.audit?.summary ? <p className="mt-3 text-sm">{lead.audit.summary}</p> : null}
       </article>
       <article className="rounded-lg border border-line bg-white p-4">
-        <h2 className="font-serif text-xl">Generated draft site</h2>
+        <h2 className="font-serif text-xl">Generated website</h2>
         {lead.draft?.status === "ready" || lead.draft?.status === "publishing" || lead.draft?.deploymentUrl ? (
           <div className="mt-3 space-y-3 text-sm">
             <p>{lead.draft.summary}</p>
@@ -176,7 +176,7 @@ export default async function LeadDetailPage({
             <div className="flex flex-wrap gap-2">
               {lead.draft.previewPath ? (
                 <a href={lead.draft.previewPath} target="_blank" rel="noreferrer" className="inline-block rounded-md bg-pine px-3 py-2 text-white">
-                  Open local draft
+                  Open local preview
                 </a>
               ) : null}
               {lead.draft.deploymentUrl ? (
@@ -190,9 +190,9 @@ export default async function LeadDetailPage({
         ) : lead.draft?.status === "queued" ? (
           <p className="mt-3 text-sm text-ink/70">Draft website is queued. Run the worker, then refresh.</p>
         ) : lead.draft?.status === "failed" ? (
-          <p className="mt-3 text-sm text-red-700">{lead.draft.error ?? "Draft generation failed."}</p>
+          <p className="mt-3 text-sm text-red-700">{lead.draft.error ?? "Website generation failed."}</p>
         ) : (
-          <p className="mt-3 text-sm text-ink/60">After scoring, the worker creates a draft, GitHub repo, Vercel deploy, and production checks.</p>
+          <p className="mt-3 text-sm text-ink/60">After scoring, the worker builds the final site, creates a GitHub repo, deploys to Vercel, and runs production checks.</p>
         )}
       </article>
       <div className="flex flex-wrap gap-3">
@@ -208,7 +208,7 @@ export default async function LeadDetailPage({
         </form>
         <form action={regenerateDraft}>
           <input type="hidden" name="lead_id" value={lead.id} />
-          <SubmitButton label="Regenerate draft" pendingLabel="Queuing…" />
+          <SubmitButton label="Regenerate website" pendingLabel="Queuing…" />
         </form>
         <form action={setLeadStatus} className="flex items-center gap-2">
           <input type="hidden" name="lead_id" value={lead.id} />
