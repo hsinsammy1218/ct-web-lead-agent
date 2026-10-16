@@ -197,7 +197,6 @@ async function deployToVercel(input: {
       target: "production",
       projectSettings: {
         framework: null,
-        ssoProtection: null,
       },
       files: input.files.map((file) => ({
         file: file.path,
