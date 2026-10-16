@@ -505,9 +505,14 @@ h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
 .pillars article { background: var(--panel); border: 1px solid var(--line); padding: 1.4rem; }
 .pillars h2 { color: var(--red); }
 .band { background: var(--bg-2); padding: 3.5rem 0; border-block: 1px solid var(--line); }
-.split { display: grid; gap: 1.5rem; grid-template-columns: 1.05fr 0.95fr; align-items: center; }
-.stack-photos { display: grid; gap: 0.85rem; }
-.stack-photos img, .split > img, .coach img { width: 100%; object-fit: cover; border-radius: 0.35rem; }
+.split { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: center; }
+.split > div:first-child { display: flex; flex-direction: column; justify-content: center; max-width: 36rem; }
+.stack-photos { display: grid; gap: 0.75rem; grid-template-columns: 1fr 1fr; align-self: stretch; }
+.stack-photos img {
+  width: 100%; aspect-ratio: 3 / 4; height: 100%; max-height: 420px;
+  object-fit: cover; object-position: center 18%; border-radius: 0.35rem;
+}
+.split > img, .coach img { width: 100%; object-fit: cover; border-radius: 0.35rem; }
 .schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 .schedule div { background: var(--panel); border: 1px solid var(--line); padding: 1rem; display: grid; gap: 0.35rem; }
 .schedule strong { color: var(--red); font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; }
@@ -534,6 +539,9 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
 .section-head { margin-bottom: 1.2rem; }
 @media (max-width: 900px) {
   .pillars, .split, .coach, .footer-grid { grid-template-columns: 1fr; }
+  .split > div:first-child { max-width: none; }
+  .stack-photos { grid-template-columns: 1fr 1fr; }
+  .stack-photos img { max-height: 280px; aspect-ratio: 4 / 5; }
   .nav-toggle { display: inline-flex; }
   .site-header nav {
     display: none; position: absolute; inset: 100% 0 auto 0; background: #0b0b0b;
