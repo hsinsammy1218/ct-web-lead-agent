@@ -174,6 +174,7 @@ async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
       findings: lead.audit?.findings ?? [],
       score: lead.score,
       ai: lead.ai,
+      sourceHtml: null,
     });
     const dir = path.join(draftSiteDirectory(), lead.id);
     mkdirSync(dir, { recursive: true });
@@ -181,6 +182,12 @@ async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
     const briefPath = path.join(dir, "brief.json");
     writeFileSync(htmlPath, draft.html, "utf8");
     writeFileSync(briefPath, `${JSON.stringify(draft.brief, null, 2)}\n`, "utf8");
+    for (const file of draft.files ?? []) {
+      if (file.path === "index.html") continue;
+      const full = path.join(dir, file.path);
+      mkdirSync(path.dirname(full), { recursive: true });
+      writeFileSync(full, file.content, "utf8");
+    }
     await store.saveSiteDraft(lead.id, emptyDraft({
       status: "publishing",
       path: htmlPath,
@@ -211,6 +218,16 @@ async function runSitePublish(store: Store, item: WorkRecord): Promise<void> {
   const briefPath = path.join(dir, "brief.json");
   const html = readFileSync(htmlPath, "utf8");
   const brief = JSON.parse(readFileSync(briefPath, "utf8")) as ReturnType<typeof buildDraftSite>["brief"];
+  const extraFiles = ["styles.css", "coaches.html", "testimonials.html", "fight-back.html", "book.html"]
+    .map((name) => {
+      const full = path.join(dir, name);
+      try {
+        return { path: name, content: readFileSync(full, "utf8") };
+      } catch {
+        return null;
+      }
+    })
+    .filter((file): file is { path: string; content: string } => Boolean(file));
   try {
     const published = await publishGeneratedSite({
       leadId: lead.id,
@@ -218,6 +235,7 @@ async function runSitePublish(store: Store, item: WorkRecord): Promise<void> {
       municipality: lead.municipalityName,
       html,
       brief,
+      extraFiles,
       workDir: path.join(dir, "repo"),
     });
     await store.saveSiteDraft(lead.id, {

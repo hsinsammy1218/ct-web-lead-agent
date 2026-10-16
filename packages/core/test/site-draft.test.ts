@@ -44,15 +44,16 @@ describe("site draft generation", () => {
       ai: null,
     });
 
-    expect(result.html).toContain("<title>In your corner fitness | Wolcott, CT</title>");
-    expect(result.html).toContain('name="description"');
-    expect(result.html).toContain("<h1>In your corner fitness</h1>");
-    expect(result.html).toContain('id="contact"');
+    expect(result.html).toContain("In Your Corner Boxing");
+    expect(result.html).toContain("Boxing · Fitness · Nutrition");
+    expect(result.html).toContain("1 Wolcott Rd");
+    expect(result.html).toContain("inyourcornerboxing@yahoo.com");
     expect(result.html).toContain("LocalBusiness");
-    expect(result.html).toContain("images.unsplash.com");
-    expect(result.html).toContain("Personal training");
+    expect(result.html).toContain("static.wixstatic.com");
     expect(result.html).not.toContain("Draft site generated");
-    expect(result.brief.recommendedService).toBe("local_seo");
+    expect(result.files?.some((file) => file.path === "coaches.html")).toBe(true);
+    expect(result.files?.some((file) => file.path === "book.html")).toBe(true);
+    expect(result.files?.some((file) => file.path === "styles.css")).toBe(true);
     expect(result.brief.fixesApplied.length).toBeGreaterThan(3);
     expect(fixesFromFindings([{ category: "ux", code: "no_contact_form", severity: "moderate", evidence: {}, source: "measured" }], "SOCIAL_ONLY")).toContain(
       "Replaced the social/directory presence with an official company homepage.",

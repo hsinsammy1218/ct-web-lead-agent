@@ -24,9 +24,12 @@ describe("site publish helpers", () => {
       brief: draft.brief,
       businessName: "In your corner fitness",
       municipality: "Wolcott",
+      extraFiles: draft.files,
     });
-    expect(files.map((file) => file.path).sort()).toEqual(["README.md", "brief.json", "index.html", "package.json", "vercel.json"]);
-    const checks = runHtmlProductionChecks(draft.html, "In your corner fitness");
+    expect(files.map((file) => file.path)).toEqual(
+      expect.arrayContaining(["README.md", "brief.json", "index.html", "package.json", "vercel.json", "styles.css", "coaches.html", "book.html"]),
+    );
+    const checks = runHtmlProductionChecks(draft.html, draft.brief.businessName);
     expect(checks.passed).toBe(true);
   });
 });

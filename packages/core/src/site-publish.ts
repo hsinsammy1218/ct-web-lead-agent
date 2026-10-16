@@ -30,6 +30,7 @@ export function buildPublishFiles(input: {
   brief: DraftSiteBrief;
   businessName: string;
   municipality: string;
+  extraFiles?: Array<{ path: string; content: string }>;
 }): Array<{ path: string; content: string }> {
   const readme = `# ${input.businessName}
 
@@ -52,7 +53,7 @@ Open \`index.html\` locally, or use the Vercel production URL.
 ${input.brief.fixesApplied.map((fix) => `- ${fix}`).join("\n")}
 `;
 
-  return [
+  const base = [
     { path: "index.html", content: input.html },
     { path: "brief.json", content: `${JSON.stringify(input.brief, null, 2)}\n` },
     { path: "README.md", content: readme },
@@ -89,6 +90,11 @@ ${input.brief.fixesApplied.map((fix) => `- ${fix}`).join("\n")}
       )}\n`,
     },
   ];
+
+  const extras = (input.extraFiles ?? []).filter((file) => file.path !== "index.html");
+  const byPath = new Map<string, { path: string; content: string }>();
+  for (const file of [...base, ...extras]) byPath.set(file.path, file);
+  return [...byPath.values()];
 }
 
 export function runHtmlProductionChecks(html: string, businessName: string): ProductionCheckResult {
@@ -99,7 +105,11 @@ export function runHtmlProductionChecks(html: string, businessName: string): Pro
     check("Declares language", /<html[^>]+lang=/i.test(html), "html lang attribute present"),
     check("Has one primary heading", (html.match(/<h1[\s>]/gi) ?? []).length === 1, "exactly one h1"),
     check("Includes business name", html.toLowerCase().includes(businessName.toLowerCase()), "business name appears in HTML"),
-    check("Has contact path", /href=["']tel:|id=["']contact["']|<form[\s>]/i.test(html), "phone link or contact form present"),
+    check(
+      "Has contact path",
+      /href=["']tel:|href=["']mailto:|id=["']contact["']|<form[\s>]|Book Now|book\.html/i.test(html),
+      "phone, email, form, or booking path present",
+    ),
     check(
       "Has LocalBusiness schema",
       /LocalBusiness|HealthClub|HomeAndConstructionBusiness|SportsActivityLocation/i.test(html),

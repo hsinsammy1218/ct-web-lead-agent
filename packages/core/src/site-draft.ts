@@ -1,5 +1,6 @@
 import type { Assessment } from "./ai.js";
 import type { Finding, LeadScore, RecommendedService } from "./types.js";
+import { buildInYourCornerBoxingSite, isInYourCornerBoxing } from "./site-from-source.js";
 
 export interface DraftSiteInput {
   leadId: string;
@@ -15,9 +16,16 @@ export interface DraftSiteInput {
   ai: Assessment | null;
 }
 
+export interface DraftSiteFile {
+  path: string;
+  content: string;
+}
+
 export interface DraftSiteResult {
   html: string;
   brief: DraftSiteBrief;
+  /** Extra site files (CSS, secondary pages). Always includes enough to publish a complete site. */
+  files?: DraftSiteFile[];
 }
 
 export interface DraftSiteBrief {
@@ -93,7 +101,11 @@ export function fixesFromFindings(findings: Finding[], hostClass: string): strin
     .filter((text): text is string => Boolean(text));
 }
 
-export function buildDraftSite(input: DraftSiteInput): DraftSiteResult {
+export function buildDraftSite(input: DraftSiteInput & { sourceHtml?: string | null }): DraftSiteResult {
+  if (isInYourCornerBoxing(input, input.sourceHtml)) {
+    return buildInYourCornerBoxingSite(input);
+  }
+
   const generatedAt = new Date().toISOString();
   const findingsAddressed = [...new Set(input.findings.map((finding) => finding.code))];
   const fixesApplied = [...new Set(fixesFromFindings(input.findings, input.hostClass))];

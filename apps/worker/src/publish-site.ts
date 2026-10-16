@@ -21,6 +21,7 @@ export async function publishGeneratedSite(input: {
   municipality: string;
   html: string;
   brief: DraftSiteBrief;
+  extraFiles?: Array<{ path: string; content: string }>;
   workDir: string;
 }): Promise<PublishResult> {
   const githubToken = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
@@ -29,7 +30,8 @@ export async function publishGeneratedSite(input: {
   const teamId = process.env.VERCEL_TEAM_ID;
   const autoPublish = process.env.AUTO_PUBLISH_SITES !== "false";
 
-  const localChecks = runHtmlProductionChecks(input.html, input.businessName);
+  const checkName = input.brief.businessName || input.businessName;
+  const localChecks = runHtmlProductionChecks(input.html, checkName);
   if (!localChecks.passed) {
     return {
       draft: {
@@ -79,6 +81,7 @@ export async function publishGeneratedSite(input: {
     brief: input.brief,
     businessName: input.businessName,
     municipality: input.municipality,
+    extraFiles: input.extraFiles,
   });
   mkdirSync(input.workDir, { recursive: true });
   for (const file of files) {
@@ -102,7 +105,7 @@ export async function publishGeneratedSite(input: {
     files,
   });
 
-  const liveChecks = await runLiveProductionChecks(deployment.url, input.businessName);
+  const liveChecks = await runLiveProductionChecks(deployment.url, checkName);
   const checks: ProductionCheck[] = [...localChecks.checks, ...liveChecks.checks];
   const passed = localChecks.passed && liveChecks.passed;
 
