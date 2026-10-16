@@ -259,6 +259,7 @@ function pageHome(): string {
 
     <section class="cta-band">
       <div class="wrap">
+        <img class="cta-logo" src="${IMG.logo}" alt="In Your Corner Boxing logo" width="96" height="96">
         <h2>Ready to step into the corner?</h2>
         <p>1 Wolcott Rd, Wolcott CT 06716 · <a href="mailto:inyourcornerboxing@yahoo.com">inyourcornerboxing@yahoo.com</a></p>
         <p class="social-inline">
@@ -555,7 +556,12 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .schedule strong { color: var(--red); font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; }
 .schedule span { color: var(--muted); font-size: 0.9rem; }
 .note { color: var(--muted); }
-.cta-band { padding: 3.5rem 0; background: linear-gradient(135deg, #1a0000, #0d0d0d 45%, #140000); border-top: 1px solid var(--line); text-align: center; }
+.cta-band { padding: 3rem 0; background: linear-gradient(135deg, #1a0000, #0d0d0d 45%, #140000); border-top: 1px solid var(--line); text-align: center; }
+.cta-logo {
+  width: 96px; height: 96px; margin: 0 auto 1rem; border-radius: 50%;
+  background: #000; object-fit: cover; display: block;
+}
+.cta-band h2 { margin-bottom: 0.65rem; }
 .social-inline { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 0.85rem 0 1.25rem; }
 .social-inline a { color: var(--muted); text-decoration: none; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; }
 .social-inline a:hover { color: var(--red); }
