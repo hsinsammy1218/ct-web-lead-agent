@@ -74,14 +74,17 @@ const IMG = {
   gear: "https://static.wixstatic.com/media/11062b_2746e0e5dec64a059a020a7d8d6636fa~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85,enc_auto/gear.jpg",
   training:
     "https://static.wixstatic.com/media/368ba1_05e4601e2f1c43ab87fd69ab39c6ff00~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85,enc_auto/training.jpg",
-  coach1:
-    "https://static.wixstatic.com/media/368ba1_6f26cc7c9bcd40fcb683dcd0c62866b2~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/stephanie.jpg",
-  coach2:
-    "https://static.wixstatic.com/media/368ba1_4b93654e038d467197db359beeae76e1~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/mya.jpg",
-  coach3:
-    "https://static.wixstatic.com/media/368ba1_2df2787ac89441d7bc144e3c830a97db~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/tyler.jpg",
-  coach4:
-    "https://static.wixstatic.com/media/368ba1_f7b40c30da604043825fc71e6c826ac6~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/cynthia.jpg",
+  // Official coach photos from https://www.inyourcornerfitness.com/team-1
+  coachStephanie:
+    "https://static.wixstatic.com/media/368ba1_ea5c20f65a7d4b30b72fcb849ddf9994~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/coach-steph.jpg",
+  coachMya:
+    "https://static.wixstatic.com/media/368ba1_3ed77e63cce74e608dc6f59a4bfdb98c~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/coach-mya.jpg",
+  coachTyler:
+    "https://static.wixstatic.com/media/368ba1_cab10733bf5a4f8aa5aac853ee308e6f~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/coach-tyler.jpg",
+  coachCynthia:
+    "https://static.wixstatic.com/media/368ba1_6f26cc7c9bcd40fcb683dcd0c62866b2~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/coach-cynthia.jpg",
+  coachAmina:
+    "https://static.wixstatic.com/media/368ba1_f7b40c30da604043825fc71e6c826ac6~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_auto/coach-amina.jpg",
 };
 
 /** Social profiles linked from the live inyourcornerfitness.com site. */
@@ -328,7 +331,7 @@ function pageCoaches(): string {
   return shell(
     "coaches",
     "Meet the Coaches | In Your Corner Boxing",
-    "Meet Stephanie Ballesteros, Mya Soto, Tyler Marcelynas, and Cynthia Villalobos — the coaching team at In Your Corner Boxing in Wolcott, CT.",
+    "Meet Stephanie Ballesteros, Mya Soto, Tyler Marcelynas, Cynthia Villalobos, and Amina Ayrula — the coaching team at In Your Corner Boxing in Wolcott, CT.",
     `
   <main class="page">
     <section class="page-hero wrap">
@@ -338,23 +341,23 @@ function pageCoaches(): string {
     </section>
     <section class="wrap coach-grid">
       <article class="coach">
-        <img src="${IMG.coach1}" alt="Stephanie Ballesteros, owner and head coach" width="800" height="1000" loading="lazy">
+        <img src="${IMG.coachStephanie}" alt="Stephanie Ballesteros, owner and head coach" width="800" height="1000" loading="lazy">
         <div>
           <h2>Stephanie Ballesteros</h2>
           <p class="role">Owner &amp; Head Coach</p>
-          <p>Coach Stephanie is the owner and head coach of IYC, and the driving force behind the community. With 18 years as a personal trainer and 15 years as a boxing coach, she brings deep knowledge, passion, and purpose to everything she builds. She started IYC during the pandemic — first virtually, then a garage, now a thriving gym on Wolcott Rd — with a vision to create a strong, supportive community through fitness, health, and boxing.</p>
+          <p>Coach Stephanie is the owner and head coach of IYC, and the driving force behind the community. She founded the gym during COVID — first virtually, then her garage, now the thriving space on Wolcott Rd. With 18 years as a personal trainer and 15 years as a boxing coach, she leads with experience, authenticity, and care. Her vision is a gym family where people feel challenged, supported, and connected.</p>
         </div>
       </article>
       <article class="coach">
-        <img src="${IMG.coach2}" alt="Mya Soto, boxing coach" width="800" height="1000" loading="lazy">
+        <img src="${IMG.coachMya}" alt="Mya Soto, boxing coach" width="800" height="1000" loading="lazy">
         <div>
           <h2>Mya Soto</h2>
           <p class="role">Boxing Coach</p>
-          <p>Part of the IYC family since June 2022, Mya moved from athlete to assistant coach to leading boxing classes and private sessions. She specializes in high-energy mitt work and heavy bag training, and shines with youth athletes — especially Tiny Champs ages 3–5. A two-time class president, she coaches with confidence, precision, and purpose.</p>
+          <p>Part of the IYC family since June 2022, Mya moved from athlete to assistant coach to leading boxing classes and private sessions. She specializes in high-energy mitt work and heavy bag training, and shines with youth athletes — especially Tiny Champs ages 3–5. She coaches with confidence, precision, and purpose.</p>
         </div>
       </article>
       <article class="coach">
-        <img src="${IMG.coach3}" alt="Tyler Marcelynas, certified personal trainer" width="800" height="1000" loading="lazy">
+        <img src="${IMG.coachTyler}" alt="Tyler Marcelynas, certified personal trainer" width="800" height="1000" loading="lazy">
         <div>
           <h2>Tyler Marcelynas</h2>
           <p class="role">Certified Personal Trainer</p>
@@ -362,11 +365,19 @@ function pageCoaches(): string {
         </div>
       </article>
       <article class="coach">
-        <img src="${IMG.coach4}" alt="Cynthia Villalobos, personal trainer and CrossFit coach" width="800" height="1000" loading="lazy">
+        <img src="${IMG.coachCynthia}" alt="Cynthia Villalobos, personal trainer and CrossFit coach" width="800" height="1000" loading="lazy">
         <div>
           <h2>Cynthia Villalobos</h2>
           <p class="role">Certified Personal Trainer &amp; CrossFit Coach</p>
           <p>From competitive swimming in Perú to corporate wellness at ESPN, Cynthia brings 15+ years helping people move better and get stronger. A CrossFit Level 2 trainer with nearly a decade of L2 coaching, she’s been with IYC since the pandemic Zoom days — tough, technical, and ready to meet you where you are.</p>
+        </div>
+      </article>
+      <article class="coach">
+        <img src="${IMG.coachAmina}" alt="Amina Ayrula, boxing coach" width="800" height="1000" loading="lazy">
+        <div>
+          <h2>Amina Ayrula</h2>
+          <p class="role">Boxing Coach</p>
+          <p>Amina has been part of the IYC family since she was 7 — nearly half her life — and is now our youngest coach. She assists and leads Youth classes after training alongside Coach Stephanie and Coach Mya, connecting with kids while teaching technique, confidence, and a love for boxing.</p>
         </div>
       </article>
     </section>
