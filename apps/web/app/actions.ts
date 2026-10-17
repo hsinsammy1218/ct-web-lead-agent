@@ -103,3 +103,30 @@ export async function rescore(formData: FormData): Promise<void> {
   await getStore().enqueueJob("lead.score", `rescore:${id}:${Date.now()}`, { leadId: id });
   redirect(`/leads/${id}?queued=1`);
 }
+
+export async function regenerateDraft(formData: FormData): Promise<void> {
+  await operatorOrRedirect();
+  const id = String(formData.get("lead_id") ?? "");
+  const store = getStore();
+  const lead = await store.getLead(id);
+  if (!lead) redirect("/leads");
+  await store.saveSiteDraft(id, {
+    status: "queued",
+    path: null,
+    previewPath: null,
+    generatedAt: null,
+    summary: "Draft website queued again.",
+    fixesApplied: [],
+    recommendedService: lead.score?.recommendedService ?? null,
+    error: null,
+    repoUrl: null,
+    deploymentUrl: null,
+    githubRepo: null,
+    vercelProjectId: null,
+    publishStatus: "queued",
+    testsPassed: null,
+    testChecks: [],
+  });
+  await store.enqueueJob("site.generate", `draft:${id}:${Date.now()}`, { leadId: id });
+  redirect(`/leads/${id}?queued=1`);
+}

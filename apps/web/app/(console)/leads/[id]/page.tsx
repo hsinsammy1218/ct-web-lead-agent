@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LEAD_STATUSES } from "@ct/core";
-import { addNote, reaudit, rescore, setLeadStatus } from "../../../actions";
+import { addNote, reaudit, regenerateDraft, rescore, setLeadStatus } from "../../../actions";
 import { SubmitButton } from "../../../../components/submit-button";
 import { bandLabel, hostLabel, serviceLabel, statusLabel } from "../../../../lib/labels";
 import { scoreText } from "../../../../lib/filters";
@@ -23,7 +23,12 @@ export default async function LeadDetailPage({
   const measured = lead.audit?.findings.filter((finding) => finding.source === "measured") ?? [];
   const inferred = lead.audit?.findings.filter((finding) => finding.source === "inferred") ?? [];
   const blocked = lead.audit?.status === "blocked" || lead.website.status === "BLOCKED";
-  const pending = lead.audit?.status === "queued" || !lead.score;
+  const pending =
+    lead.audit?.status === "queued" ||
+    !lead.score ||
+    lead.draft?.status === "queued" ||
+    lead.draft?.status === "publishing" ||
+    lead.draft?.publishStatus === "queued";
   return (
     <section className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -123,6 +128,73 @@ export default async function LeadDetailPage({
         )}
         {lead.audit?.summary ? <p className="mt-3 text-sm">{lead.audit.summary}</p> : null}
       </article>
+      <article className="rounded-lg border border-line bg-white p-4">
+        <h2 className="font-serif text-xl">Generated website</h2>
+        {lead.draft?.status === "ready" || lead.draft?.status === "publishing" || lead.draft?.deploymentUrl ? (
+          <div className="mt-3 space-y-3 text-sm">
+            <p>{lead.draft.summary}</p>
+            <p>
+              Recommended service: {serviceLabel(lead.draft.recommendedService ?? undefined)} · Generated{" "}
+              {lead.draft.generatedAt?.slice(0, 16).replace("T", " ")}
+            </p>
+            {lead.draft.publishStatus ? <p>Publish status: {lead.draft.publishStatus}</p> : null}
+            {lead.draft.repoUrl ? (
+              <p>
+                GitHub:{" "}
+                <a className="text-pine" href={lead.draft.repoUrl} target="_blank" rel="noreferrer">
+                  {lead.draft.githubRepo ?? lead.draft.repoUrl}
+                </a>
+              </p>
+            ) : null}
+            {lead.draft.deploymentUrl ? (
+              <p>
+                Vercel:{" "}
+                <a className="text-pine" href={lead.draft.deploymentUrl} target="_blank" rel="noreferrer">
+                  {lead.draft.deploymentUrl}
+                </a>
+              </p>
+            ) : null}
+            {lead.draft.testsPassed != null ? (
+              <p>Production checks: {lead.draft.testsPassed ? "passed" : "failed"}</p>
+            ) : null}
+            {lead.draft.testChecks?.length ? (
+              <ul className="list-disc pl-5">
+                {lead.draft.testChecks.map((check) => (
+                  <li key={check.name}>
+                    {check.ok ? "✓" : "✗"} {check.name} — {check.detail}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {lead.draft.fixesApplied.length ? (
+              <ul className="list-disc pl-5">
+                {lead.draft.fixesApplied.map((fix) => (
+                  <li key={fix}>{fix}</li>
+                ))}
+              </ul>
+            ) : null}
+            <div className="flex flex-wrap gap-2">
+              {lead.draft.previewPath ? (
+                <a href={lead.draft.previewPath} target="_blank" rel="noreferrer" className="inline-block rounded-md bg-pine px-3 py-2 text-white">
+                  Open local preview
+                </a>
+              ) : null}
+              {lead.draft.deploymentUrl ? (
+                <a href={lead.draft.deploymentUrl} target="_blank" rel="noreferrer" className="inline-block rounded-md border border-line bg-white px-3 py-2">
+                  Open live site
+                </a>
+              ) : null}
+            </div>
+            {lead.draft.error ? <p className="text-amber-800">{lead.draft.error}</p> : null}
+          </div>
+        ) : lead.draft?.status === "queued" ? (
+          <p className="mt-3 text-sm text-ink/70">Draft website is queued. Run the worker, then refresh.</p>
+        ) : lead.draft?.status === "failed" ? (
+          <p className="mt-3 text-sm text-red-700">{lead.draft.error ?? "Website generation failed."}</p>
+        ) : (
+          <p className="mt-3 text-sm text-ink/60">After scoring, the worker builds the final site, creates a GitHub repo, deploys to Vercel, and runs production checks.</p>
+        )}
+      </article>
       <div className="flex flex-wrap gap-3">
         <form action={reaudit}>
           <input type="hidden" name="lead_id" value={lead.id} />
@@ -133,6 +205,10 @@ export default async function LeadDetailPage({
         <form action={rescore}>
           <input type="hidden" name="lead_id" value={lead.id} />
           <SubmitButton label="Rescore" pendingLabel="Queuing…" />
+        </form>
+        <form action={regenerateDraft}>
+          <input type="hidden" name="lead_id" value={lead.id} />
+          <SubmitButton label="Regenerate website" pendingLabel="Queuing…" />
         </form>
         <form action={setLeadStatus} className="flex items-center gap-2">
           <input type="hidden" name="lead_id" value={lead.id} />

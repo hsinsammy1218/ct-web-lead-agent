@@ -1,11 +1,12 @@
 import { createHash } from "node:crypto";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import {
   ASSESSMENT_SYSTEM_PROMPT,
   buildAssessmentPrompt,
+  buildDraftSite,
   classifyHost,
   evaluateWebsite,
   scoreLead,
@@ -14,8 +15,9 @@ import {
   websiteQuality,
   type PsiMetrics,
 } from "@ct/core";
-import { screenshotDirectory, type MemoryStore, type SupabaseStore, type WorkRecord } from "@ct/db";
+import { draftSiteDirectory, screenshotDirectory, type MemoryStore, type SiteDraft, type SupabaseStore, type WorkRecord } from "@ct/db";
 import { fetchPublicSite } from "./fetch-site.js";
+import { publishGeneratedSite } from "./publish-site.js";
 
 type Store = MemoryStore | SupabaseStore;
 const AI_COST_USD = 0.004;
@@ -24,6 +26,8 @@ export async function processItem(store: Store, item: WorkRecord): Promise<void>
   if (item.jobType === "website.audit") await runAudit(store, item);
   else if (item.jobType === "ai.assess") await runAi(store, item);
   else if (item.jobType === "lead.score") await runScore(store, item);
+  else if (item.jobType === "site.generate") await runSiteGenerate(store, item);
+  else if (item.jobType === "site.publish") await runSitePublish(store, item);
   else if (item.jobType === "retention.cleanup") {
     await store.retentionCleanup(Number(process.env.SCREENSHOT_RETENTION_DAYS ?? 90), screenshotDir());
   } else if (item.jobType === "reaudit.enqueue") {
@@ -146,6 +150,149 @@ async function runScore(store: Store, item: WorkRecord): Promise<void> {
   });
   if (lead.ai) score.recommendedService = lead.ai.recommended_service;
   await store.saveScore(lead.id, score);
+  await store.saveSiteDraft(lead.id, emptyDraft({
+    status: "queued",
+    summary: "Draft website queued from the audit.",
+    recommendedService: score.recommendedService,
+  }));
+  await store.enqueueJob("site.generate", `draft:${lead.id}:${lead.audit?.id ?? "score"}`, { leadId: lead.id });
+}
+
+async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
+  const lead = await store.getLead(String(item.payload.leadId ?? ""));
+  if (!lead) throw new Error("Lead not found");
+  try {
+    const draft = buildDraftSite({
+      leadId: lead.id,
+      businessName: lead.displayName,
+      municipality: lead.municipalityName,
+      planningRegion: lead.planningRegionName,
+      industry: lead.industryName,
+      phone: lead.phone,
+      currentUrl: lead.website.finalUrl ?? lead.website.originalUrl,
+      hostClass: lead.website.status,
+      findings: lead.audit?.findings ?? [],
+      score: lead.score,
+      ai: lead.ai,
+      sourceHtml: null,
+    });
+    const dir = path.join(draftSiteDirectory(), lead.id);
+    mkdirSync(dir, { recursive: true });
+    const htmlPath = path.join(dir, "index.html");
+    const briefPath = path.join(dir, "brief.json");
+    writeFileSync(htmlPath, draft.html, "utf8");
+    writeFileSync(briefPath, `${JSON.stringify(draft.brief, null, 2)}\n`, "utf8");
+    for (const file of draft.files ?? []) {
+      if (file.path === "index.html") continue;
+      const full = path.join(dir, file.path);
+      mkdirSync(path.dirname(full), { recursive: true });
+      writeFileSync(full, file.content, "utf8");
+    }
+    await store.saveSiteDraft(lead.id, emptyDraft({
+      status: "publishing",
+      path: htmlPath,
+      previewPath: `/drafts/${lead.id}`,
+      generatedAt: draft.brief.generatedAt,
+      summary: draft.brief.summary,
+      fixesApplied: draft.brief.fixesApplied,
+      recommendedService: draft.brief.recommendedService,
+      publishStatus: "queued",
+    }));
+    await store.enqueueJob("site.publish", `publish:${lead.id}:${draft.brief.generatedAt}`, { leadId: lead.id });
+  } catch (error) {
+    await store.saveSiteDraft(lead.id, emptyDraft({
+      status: "failed",
+      recommendedService: lead.score?.recommendedService ?? null,
+      error: error instanceof Error ? error.message : "Draft generation failed",
+      publishStatus: "failed",
+    }));
+    throw error;
+  }
+}
+
+async function runSitePublish(store: Store, item: WorkRecord): Promise<void> {
+  const lead = await store.getLead(String(item.payload.leadId ?? ""));
+  if (!lead) throw new Error("Lead not found");
+  const dir = path.join(draftSiteDirectory(), lead.id);
+  const htmlPath = path.join(dir, "index.html");
+  const briefPath = path.join(dir, "brief.json");
+  const html = readFileSync(htmlPath, "utf8");
+  const brief = JSON.parse(readFileSync(briefPath, "utf8")) as ReturnType<typeof buildDraftSite>["brief"];
+  const extraFiles = ["styles.css", "coaches.html", "testimonials.html", "fight-back.html", "book.html"]
+    .map((name) => {
+      const full = path.join(dir, name);
+      try {
+        return { path: name, content: readFileSync(full, "utf8") };
+      } catch {
+        return null;
+      }
+    })
+    .filter((file): file is { path: string; content: string } => Boolean(file));
+  try {
+    const published = await publishGeneratedSite({
+      leadId: lead.id,
+      businessName: lead.displayName,
+      municipality: lead.municipalityName,
+      html,
+      brief,
+      extraFiles,
+      workDir: path.join(dir, "repo"),
+    });
+    await store.saveSiteDraft(lead.id, {
+      status: published.draft.status ?? "ready",
+      path: htmlPath,
+      previewPath: `/drafts/${lead.id}`,
+      generatedAt: brief.generatedAt,
+      summary: published.draft.summary ?? brief.summary,
+      fixesApplied: brief.fixesApplied,
+      recommendedService: brief.recommendedService,
+      error: published.draft.error ?? null,
+      repoUrl: published.draft.repoUrl ?? null,
+      deploymentUrl: published.draft.deploymentUrl ?? null,
+      githubRepo: published.draft.githubRepo ?? null,
+      vercelProjectId: published.draft.vercelProjectId ?? null,
+      publishStatus: published.draft.publishStatus ?? "skipped",
+      testsPassed: published.draft.testsPassed ?? null,
+      testChecks: published.draft.testChecks ?? [],
+    });
+    if (published.draft.status === "failed") {
+      throw new Error(published.draft.error ?? "Publish failed production checks");
+    }
+  } catch (error) {
+    await store.saveSiteDraft(lead.id, emptyDraft({
+      status: "failed",
+      path: htmlPath,
+      previewPath: `/drafts/${lead.id}`,
+      generatedAt: brief.generatedAt,
+      summary: brief.summary,
+      fixesApplied: brief.fixesApplied,
+      recommendedService: brief.recommendedService,
+      publishStatus: "failed",
+      error: error instanceof Error ? error.message : "Publish failed",
+    }));
+    throw error;
+  }
+}
+
+function emptyDraft(patch: Partial<SiteDraft>): SiteDraft {
+  return {
+    status: "queued",
+    path: null,
+    previewPath: null,
+    generatedAt: null,
+    summary: null,
+    fixesApplied: [],
+    recommendedService: null,
+    error: null,
+    repoUrl: null,
+    deploymentUrl: null,
+    githubRepo: null,
+    vercelProjectId: null,
+    publishStatus: null,
+    testsPassed: null,
+    testChecks: [],
+    ...patch,
+  };
 }
 
 async function loadPsi(store: Store, pageUrl: string): Promise<PsiMetrics | null> {

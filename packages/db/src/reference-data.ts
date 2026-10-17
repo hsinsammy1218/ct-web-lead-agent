@@ -41,6 +41,11 @@ export function screenshotDirectory(): string {
   return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
 }
 
+export function draftSiteDirectory(): string {
+  const configured = process.env.SITE_DRAFT_DIR ?? "data/drafts";
+  return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
+}
+
 export function repoRoot(start = process.cwd()): string {
   let dir = start;
   for (let hop = 0; hop < 5; hop += 1) {
