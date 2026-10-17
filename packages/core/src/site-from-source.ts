@@ -126,7 +126,7 @@ function socialLinksHtml(): string {
   return `<nav class="socials" aria-label="Social media">
       ${SOCIAL.map(
         (item) =>
-          `<a href="${item.href}" target="_blank" rel="noreferrer">${socialIconSvg(item.network)}<span class="social-copy"><span>${escape(item.label)}</span><strong>${escape(item.handle)}</strong></span></a>`,
+          `<a href="${item.href}" target="_blank" rel="noreferrer" title="${escape(item.label)} ${escape(item.handle)}" aria-label="${escape(item.label)} ${escape(item.handle)}">${socialIconSvg(item.network)}<span>${escape(item.handle)}</span></a>`,
       ).join("\n      ")}
     </nav>`;
 }
@@ -205,24 +205,32 @@ function shell(active: string, title: string, description: string, body: string)
   ${body}
   <footer class="site-footer">
     <div class="footer-grid">
-      <div>
-        <img src="${IMG.logo}" alt="" width="72" height="72">
-        <h2>In Your Corner Boxing</h2>
-        <p>Boxing · Fitness · Nutrition in Wolcott, CT. A gym family where every member is truly in your corner.</p>
+      <div class="footer-brand">
+        <div class="footer-brand-head">
+          <img src="${IMG.logo}" alt="" width="64" height="64">
+          <div>
+            <h2>In Your Corner Boxing</h2>
+            <p class="footer-tag">Boxing · Fitness · Nutrition · Wolcott, CT</p>
+          </div>
+        </div>
+        <p>A gym family where every member is truly in your corner.</p>
         ${socialLinksHtml()}
       </div>
       <div>
         <h3>Visit</h3>
-        <p>1 Wolcott Rd<br>Wolcott, CT 06716</p>
-        <p><a href="mailto:inyourcornerboxing@yahoo.com">inyourcornerboxing@yahoo.com</a></p>
+        <ul class="footer-list">
+          <li>1 Wolcott Rd<br>Wolcott, CT 06716</li>
+          <li><a href="mailto:inyourcornerboxing@yahoo.com">inyourcornerboxing@yahoo.com</a></li>
+        </ul>
       </div>
       <div>
         <h3>Train</h3>
-        <p><a href="book.html">Class schedule &amp; pricing</a></p>
-        <p><a href="coaches.html">Meet the coaches</a></p>
-        <p><a href="https://www.inyourcornerfitness.com/iyc-gear" target="_blank" rel="noreferrer">IYC Gear</a></p>
-        <p><a href="https://www.facebook.com/groups/511510502872483" target="_blank" rel="noreferrer">Facebook community</a></p>
-        <p><a href="https://www.youtube.com/channel/UCxjIevJqDzg8kd9zSQp5SqA" target="_blank" rel="noreferrer">YouTube channel</a></p>
+        <ul class="footer-list">
+          <li><a href="book.html">Class schedule &amp; pricing</a></li>
+          <li><a href="coaches.html">Meet the coaches</a></li>
+          <li><a href="fight-back.html">Fight Back IYC</a></li>
+          <li><a href="https://www.inyourcornerfitness.com/iyc-gear" target="_blank" rel="noreferrer">IYC Gear</a></li>
+        </ul>
       </div>
     </div>
     <p class="fine">© ${new Date().getFullYear()} In Your Corner Boxing · Wolcott, Connecticut</p>
@@ -638,19 +646,28 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
 .steps h3 { color: var(--red); font-size: 2.4rem; }
 .price-grid ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
 .price-grid li { margin: 0.4rem 0; }
-.site-footer { border-top: 1px solid var(--line); padding: 2.5rem 0 2rem; background: #050505; }
-.footer-grid { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: 1.5fr 1fr 1fr; }
-.socials { display: grid; gap: 0.5rem; margin-top: 1rem; }
-.socials a {
-  display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.65rem; align-items: center;
-  text-decoration: none; color: var(--muted); font-size: 0.88rem;
-  padding: 0.55rem 0.7rem; border: 1px solid var(--line); background: var(--panel);
+.site-footer { border-top: 1px solid var(--line); padding: 2.25rem 0 1.75rem; background: #050505; }
+.footer-grid {
+  width: min(var(--max), calc(100% - 2rem)); margin: 0 auto 1.25rem;
+  display: grid; gap: 1.75rem; grid-template-columns: 1.4fr 1fr 1fr; align-items: start;
 }
-.socials a .social-icon { color: var(--red); width: 1.15rem; height: 1.15rem; }
-.socials .social-copy { display: grid; gap: 0.1rem; min-width: 0; }
-.socials .social-copy span { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.68rem; }
-.socials .social-copy strong { color: var(--text); font-weight: 600; font-size: 0.86rem; }
-.socials a:hover { border-color: var(--red); }
+.footer-brand-head { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.75rem; }
+.footer-brand-head img { width: 64px; height: 64px; border-radius: 50%; background: #000; flex-shrink: 0; }
+.footer-brand-head h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 0.95; }
+.footer-tag { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.footer-brand > p { margin: 0; color: var(--muted); max-width: 28rem; font-size: 0.95rem; }
+.footer-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; color: var(--muted); font-size: 0.95rem; }
+.footer-list a { color: var(--text); text-decoration: none; }
+.footer-list a:hover { color: var(--red); }
+.site-footer h3 { margin: 0 0 0.75rem; font-size: 1.35rem; letter-spacing: 0.06em; }
+.socials { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; }
+.socials a {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  text-decoration: none; color: var(--text); font-size: 0.78rem; font-weight: 600;
+  padding: 0.4rem 0.65rem; border: 1px solid var(--line); background: var(--panel);
+}
+.socials a .social-icon { color: var(--red); width: 1rem; height: 1rem; }
+.socials a:hover { border-color: var(--red); color: var(--red); }
 .fine { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; color: var(--muted); font-size: 0.85rem; }
 .cta-inline { padding: 2rem 0; }
 .section-head { margin-bottom: 1.2rem; }
