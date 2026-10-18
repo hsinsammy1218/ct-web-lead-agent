@@ -1,6 +1,8 @@
-# Site generation playbook
+# Fitness site generation playbook
 
-After every website audit, the worker must deliver a **production-ready multi-page professional site** for that business — not a single-page placeholder.
+This agent’s post-audit website deliverable is for **Connecticut fitness businesses**: gyms, boxing gyms, martial arts, yoga/pilates studios, CrossFit/bootcamps, and personal training.
+
+After every website audit, the worker must deliver a **production-ready multi-page fitness site** — not a single-page placeholder or a generic trades template.
 
 ## When it is an update
 
@@ -8,28 +10,28 @@ Use this path when the lead has a real operator/platform site we can read (`OPER
 
 1. Reuse the audited HTML (saved under `data/audit-html/`) or re-fetch the live URL.
 2. Extract brand signals: title, description, headings, paragraphs, images, phone, email, social links.
-3. Rebuild a complete site that keeps **their** content and photography where possible.
-4. Always publish at least: `index.html`, `services.html`, `about.html`, `contact.html`, `styles.css`.
-5. Ship SEO basics: unique titles/descriptions, one H1, LocalBusiness schema, click-to-call/contact form.
+3. Rebuild a complete fitness site that keeps **their** content and photography where possible.
+4. Always publish at least: `index.html`, `classes.html`, `about.html`, `book.html`, `styles.css`.
+5. Ship SEO basics: unique titles/descriptions, one H1, HealthClub / LocalBusiness schema, click-to-call / book form.
 6. Push to a private GitHub repo and deploy to Vercel; run production checks on HTML and the live URL.
 
-Flagship / high-touch accounts (for example In Your Corner Boxing) may use a curated source rebuild with extra domain pages (coaches, schedule, programs). That is still an “update,” just with a specialty template.
+Flagship / high-touch accounts (for example In Your Corner Boxing) may use a curated source rebuild with extra domain pages (coaches, schedule, Fight Back). That is still an “update,” just with a specialty fitness template.
 
 ## When it is a new website
 
 Use this path when the submitted URL is social-only, directory-only, blocked, unreachable, or the score recommends `new_site`.
 
-1. Build a new official multi-page site from the lead intake (name, town, industry, phone) plus industry defaults.
-2. Same page set as updates: Home, Services, About, Contact.
-3. Do not pretend the social/directory page was the company website — replace it.
+1. Build a new official multi-page fitness site from the lead intake (name, town, fitness industry, phone) plus fitness defaults (boxing / yoga / CrossFit / general gym).
+2. Same page set as updates: Home, Classes, About, Book.
+3. Do not pretend the Instagram/Facebook page was the company website — replace it with a proper gym site.
 4. Publish and verify the same way as updates.
 
 ## Quality bar (what “like IYC” means)
 
-- Feels like a real business site, not an audit report or template demo.
-- Multi-page information architecture with clear nav and CTAs.
+- Feels like a real gym site: classes, coaching, booking — not an audit report.
+- Multi-page information architecture with clear nav and CTAs (“Book a class”).
 - Real contact paths and local Connecticut context.
-- Source-faithful when content exists; invented stock copy only when there is no usable source site.
+- Source-faithful when content exists; fitness stock copy only when there is no usable source site.
 - Deployed URL linked on the lead after checks pass.
 
 ## Code map
@@ -37,7 +39,7 @@ Use this path when the submitted URL is social-only, directory-only, blocked, un
 | Piece | Role |
 | --- | --- |
 | `packages/core/src/site-draft.ts` | Entry point after scoring |
-| `packages/core/src/site-professional.ts` | Default multi-page builder (update + new) |
+| `packages/core/src/site-professional.ts` | Default fitness multi-page builder (update + new) |
 | `packages/core/src/site-extract.ts` | Pull content/media from audited HTML |
-| `packages/core/src/site-from-source.ts` | Curated specialty rebuilds |
+| `packages/core/src/site-from-source.ts` | Curated specialty fitness rebuilds (e.g. IYC) |
 | `apps/worker/src/pipeline.ts` | Saves audit HTML, generates, publishes |

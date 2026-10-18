@@ -87,9 +87,9 @@ export function fixesFromFindings(findings: Finding[], hostClass: string): strin
 }
 
 /**
- * Post-audit website deliverable.
+ * Post-audit fitness website deliverable (gyms, boxing, studios, training).
  * - Known curated businesses (e.g. IYC) get a source-faithful specialty rebuild.
- * - Everyone else gets a multi-page professional site:
+ * - Everyone else gets a multi-page fitness site (Home / Classes / About / Book):
  *   - update/redesign when an operator site can be read
  *   - new site when the lead is social/directory/blocked/unreachable
  */
