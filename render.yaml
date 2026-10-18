@@ -2,17 +2,17 @@
 # Apply: https://dashboard.render.com/blueprint/new?repo=https://github.com/hsinsammy1218/ct-web-lead-agent
 # Dashboard stays on Vercel; this worker writes audits into Supabase.
 #
-# Render MCP cannot create background workers, so audits run as a 5-minute
-# cron with --once. Swap to type: worker + `npm run worker` if you prefer
-# an always-on process (Dashboard/Blueprint only).
+# Worker uses Docker (Playwright image) because `playwright install --with-deps`
+# cannot use root/`su` on Render's native Node builder.
 services:
   - type: cron
-    name: ct-lead-worker
-    runtime: node
+    name: ct-lead-audit
+    runtime: docker
     plan: starter
     schedule: "*/5 * * * *"
-    buildCommand: npm ci && npx playwright install --with-deps chromium
-    startCommand: npm run worker:once
+    dockerfilePath: ./Dockerfile.worker
+    dockerContext: .
+    dockerCommand: npm run worker:once
     envVars:
       - key: DATA_DRIVER
         value: supabase

@@ -3,7 +3,7 @@
 | Piece | Host | URL / action |
 | --- | --- | --- |
 | Operator dashboard | **Vercel** | Project `ct-web-lead-agent` |
-| Audit worker + cron | **Render** | `ct-lead-worker` + `ct-lead-maintenance` |
+| Audit worker + cron | **Render** | `ct-lead-audit` + `ct-lead-maintenance` |
 | Tracking DB | **Supabase** | `ytbdtfzdgncdupqzniba` |
 | Generated gym sites | **Vercel** | One project per published lead |
 
