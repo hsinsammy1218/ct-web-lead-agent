@@ -303,13 +303,13 @@ function pageHome(): string {
         <h2>Class snapshot</h2>
       </div>
       <div class="schedule">
-        <div><strong>Mon</strong><span>5:00 Tiny Champs (3–6)</span><span>6:00 Circuit Training</span></div>
-        <div><strong>Tue</strong><span>6:00 Youth Boxing (6–12)</span><span>6:00 Boxing Bootcamp</span><span>7:00 Teen Boxing (12–17)</span></div>
-        <div><strong>Wed</strong><span>10:00 55+ Boxing</span><span>6:00 Boxing Heavy Bags</span></div>
-        <div><strong>Thu</strong><span>6:00 Youth Boxing</span><span>6:00 Bootcamp</span></div>
-        <div><strong>Fri</strong><span>4:30 Teen/Adult Boxing</span></div>
-        <div><strong>Sat</strong><span>9:00 Boxing: Heavy Bags</span></div>
-        <div><strong>Sun</strong><span>8:00 Bags &amp; Mitts</span><span>9:00 Bootcamp</span><span>10:00 Strength: Total Body</span></div>
+        <div><strong>Mon</strong><span>5:00 PM Tiny Champs (3–6)</span><span>6:00 PM Circuit Training</span></div>
+        <div><strong>Tue</strong><span>6:00 PM Youth Boxing (6–12)</span><span>6:00 PM Boxing Bootcamp</span><span>7:00 PM Teen Boxing (12–17)</span></div>
+        <div><strong>Wed</strong><span>10:00 AM 55+ Boxing</span><span>6:00 PM Boxing Heavy Bags</span></div>
+        <div><strong>Thu</strong><span>6:00 PM Youth Boxing</span><span>6:00 PM Bootcamp</span></div>
+        <div><strong>Fri</strong><span>4:30 PM Teen/Adult Boxing</span></div>
+        <div><strong>Sat</strong><span>9:00 AM Boxing: Heavy Bags</span></div>
+        <div><strong>Sun</strong><span>8:00 AM Bags &amp; Mitts</span><span>9:00 AM Bootcamp</span><span>10:00 AM Strength: Total Body</span></div>
       </div>
       <p class="note">Sign up in the GloFox app · Full pricing on the <a href="book.html">Book Now</a> page</p>
     </section>
@@ -612,10 +612,11 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
   object-fit: cover; object-position: center; border-radius: 0.35rem;
 }
 .program { padding: 1.75rem 0 2.5rem; }
-.schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-.schedule div { background: var(--panel); border: 1px solid var(--line); padding: 1rem; display: grid; gap: 0.35rem; }
+.schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.schedule.dense { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.schedule div { background: var(--panel); border: 1px solid var(--line); padding: 1rem 0.85rem; display: grid; gap: 0.4rem; align-content: start; }
 .schedule strong { color: var(--red); font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; }
-.schedule span { color: var(--muted); font-size: 0.9rem; }
+.schedule span { color: var(--muted); font-size: 0.86rem; line-height: 1.35; }
 .note { color: var(--muted); }
 .cta-band { padding: 3rem 0; background: linear-gradient(135deg, #1a0000, #0d0d0d 45%, #140000); border-top: 1px solid var(--line); text-align: center; }
 .cta-logo {
@@ -694,6 +695,7 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
   .hero { min-height: 48svh; max-height: none; }
   .hero-copy { padding: 1.75rem 0 1.4rem; }
   .pillars { grid-template-columns: 1fr; padding: 1.5rem 0; }
+  .schedule { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .coach-grid { max-width: none; gap: 1.15rem; }
   .split, .footer-grid { grid-template-columns: 1fr; }
   .coach { grid-template-columns: 112px minmax(0, 1fr); gap: 0.95rem; align-items: start; padding-bottom: 1.15rem; }
