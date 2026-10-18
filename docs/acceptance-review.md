@@ -11,4 +11,11 @@ The test checks the section 20 targets that can be verified without a live brows
 
 A staging pass should repeat the same checks on 15 live URLs the operator supplies, across at least five municipalities. Record the review notes in the lead, not a copy of the page HTML.
 
-After scoring, the worker also writes a draft homepage under `data/drafts/<lead-id>/` and exposes it at `/drafts/<lead-id>`. Confirm the draft includes the measured fixes (meta description, H1, click-to-call, contact form, alt text) and that social or blocked leads still get a new-site draft.
+After scoring, the worker writes a **multi-page professional site** under `data/drafts/<lead-id>/` (Home, Services, About, Contact) and exposes the homepage at `/drafts/<lead-id>`. Confirm:
+
+- Operator-site audits produce an **update** that reuses live copy/media when HTML was captured.
+- Social, directory, blocked, and unreachable leads get a **new** multi-page site (not a single placeholder page).
+- Measured fixes still appear (meta description, H1, click-to-call/contact form, alt text, LocalBusiness schema).
+- Publish jobs create/update the GitHub repo and Vercel deployment when credentials are set.
+
+See `docs/site-generation-playbook.md`.

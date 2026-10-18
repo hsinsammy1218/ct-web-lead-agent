@@ -25,10 +25,14 @@ npm run worker:once
 
 That drains the queue, including score, website generation, and publish jobs. After scoring, the worker:
 
-1. Builds a final industry-aware homepage under `data/drafts/<lead-id>/`
+1. Builds a final **multi-page professional website** under `data/drafts/<lead-id>/`
+   - **Update:** rebuild from the audited site’s content and media when a real operator site exists
+   - **New site:** replace social/directory/blocked/unreachable leads with a new official site
 2. Creates a private GitHub repo for that site (when `GITHUB_TOKEN` and `SITE_GITHUB_OWNER` are set)
 3. Deploys it to Vercel (when `VERCEL_TOKEN` is set)
 4. Runs production checks on the HTML and live URL
+
+See [docs/site-generation-playbook.md](docs/site-generation-playbook.md) for the update vs new-site rules.
 
 The lead page links to the local preview, GitHub repo, and live Vercel URL. Leave `PLAYWRIGHT_ENABLED=false` unless Chromium is installed. PageSpeed and OpenAI run only when their keys are set.
 

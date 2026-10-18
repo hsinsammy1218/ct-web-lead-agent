@@ -46,6 +46,11 @@ export function draftSiteDirectory(): string {
   return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
 }
 
+export function auditHtmlDirectory(): string {
+  const configured = process.env.AUDIT_HTML_DIR ?? "data/audit-html";
+  return path.isAbsolute(configured) ? configured : path.join(repoRoot(), configured);
+}
+
 export function repoRoot(start = process.cwd()): string {
   let dir = start;
   for (let hop = 0; hop < 5; hop += 1) {

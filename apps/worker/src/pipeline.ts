@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
@@ -15,7 +15,15 @@ import {
   websiteQuality,
   type PsiMetrics,
 } from "@ct/core";
-import { draftSiteDirectory, screenshotDirectory, type MemoryStore, type SiteDraft, type SupabaseStore, type WorkRecord } from "@ct/db";
+import {
+  auditHtmlDirectory,
+  draftSiteDirectory,
+  screenshotDirectory,
+  type MemoryStore,
+  type SiteDraft,
+  type SupabaseStore,
+  type WorkRecord,
+} from "@ct/db";
 import { fetchPublicSite } from "./fetch-site.js";
 import { publishGeneratedSite } from "./publish-site.js";
 
@@ -76,6 +84,11 @@ async function runAudit(store: Store, item: WorkRecord): Promise<void> {
     nameMentionWarning: evaluation.nameMentioned === false,
   });
   const auditId = lead.audit?.id ?? lead.id;
+  if (fetchResult?.html) {
+    const htmlDir = auditHtmlDirectory();
+    mkdirSync(htmlDir, { recursive: true });
+    writeFileSync(path.join(htmlDir, `${auditId}.html`), fetchResult.html, "utf8");
+  }
   await store.saveAudit(lead.id, {
     id: auditId,
     status: evaluation.auditStatus,
@@ -162,6 +175,7 @@ async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
   const lead = await store.getLead(String(item.payload.leadId ?? ""));
   if (!lead) throw new Error("Lead not found");
   try {
+    const sourceHtml = await loadSourceHtmlForLead(lead);
     const draft = buildDraftSite({
       leadId: lead.id,
       businessName: lead.displayName,
@@ -174,7 +188,7 @@ async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
       findings: lead.audit?.findings ?? [],
       score: lead.score,
       ai: lead.ai,
-      sourceHtml: null,
+      sourceHtml,
     });
     const dir = path.join(draftSiteDirectory(), lead.id);
     mkdirSync(dir, { recursive: true });
@@ -355,6 +369,37 @@ async function loadBrowser(pageUrl: string, auditId: string): Promise<{ horizont
   } finally {
     await browser.close();
   }
+}
+
+async function loadSourceHtmlForLead(lead: {
+  id: string;
+  audit: { id: string } | null;
+  website: { status: string; finalUrl: string | null; originalUrl: string };
+}): Promise<string | null> {
+  const auditId = lead.audit?.id ?? lead.id;
+  const saved = path.join(auditHtmlDirectory(), `${auditId}.html`);
+  if (existsSync(saved)) {
+    try {
+      return readFileSync(saved, "utf8");
+    } catch {
+      // fall through to re-fetch
+    }
+  }
+  if (lead.website.status !== "OPERATOR_SITE" && lead.website.status !== "PLATFORM_SITE") {
+    return null;
+  }
+  const url = lead.website.finalUrl ?? lead.website.originalUrl;
+  try {
+    const fetched = await fetchPublicSite(url);
+    if (fetched.html && !fetched.blocked) {
+      mkdirSync(auditHtmlDirectory(), { recursive: true });
+      writeFileSync(saved, fetched.html, "utf8");
+      return fetched.html;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 function parseJsonObject(text: string): unknown {

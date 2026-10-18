@@ -27,7 +27,16 @@ describe("site publish helpers", () => {
       extraFiles: draft.files,
     });
     expect(files.map((file) => file.path)).toEqual(
-      expect.arrayContaining(["README.md", "brief.json", "index.html", "package.json", "vercel.json", "styles.css", "coaches.html", "book.html"]),
+      expect.arrayContaining([
+        "README.md",
+        "brief.json",
+        "index.html",
+        "package.json",
+        "vercel.json",
+        "styles.css",
+        "coaches.html",
+        "book.html",
+      ]),
     );
     const checks = runHtmlProductionChecks(draft.html, draft.brief.businessName);
     expect(checks.passed).toBe(true);
