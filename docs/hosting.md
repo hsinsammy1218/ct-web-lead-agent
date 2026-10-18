@@ -31,10 +31,14 @@ Live services (EC Solutions workspace):
 
 | Service | Schedule | Dashboard |
 | --- | --- | --- |
-| `ct-lead-worker` | every 5 minutes (`npm run worker:once`) | https://dashboard.render.com/cron/crn-dbaehse7bikc73eaqdg0 |
+| `ct-lead-audit` | every 5 minutes (`npm run worker:once`, Docker + Playwright) | https://dashboard.render.com/cron/crn-dbaejhm7bikc73eb26s0 |
 | `ct-lead-maintenance` | daily 06:15 UTC | https://dashboard.render.com/cron/crn-dbaehsu1egvs73adjlgg |
 
-Branch: `cursor/ct-lead-agent-0cac` (auto-deploy on push). Blueprint: `render.yaml`.
+Branch: `cursor/ct-lead-agent-0cac` (auto-deploy on push). Blueprint: `render.yaml` + `Dockerfile.worker`.
+
+**Ignore / delete** the failed native Node cron `ct-lead-worker`
+(https://dashboard.render.com/cron/crn-dbaehse7bikc73eaqdg0 → Settings → Delete).
+Its build still runs `playwright install --with-deps`, which fails with `su: Authentication failure` on Render. Audits use `ct-lead-audit` (Docker) instead.
 
 **Required secret on both services** (Environment → Add):
 
