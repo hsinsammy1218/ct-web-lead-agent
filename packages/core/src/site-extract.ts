@@ -37,7 +37,7 @@ export function extractSiteContent(html: string, baseUrl: string): ExtractedSite
     root
       .querySelectorAll("h1, h2, h3")
       .map((node) => cleanText(node.text))
-      .filter((text): text is string => Boolean(text) && text.length >= 3 && text.length <= 120),
+      .filter((text): text is string => typeof text === "string" && text.length >= 3 && text.length <= 120),
   ).slice(0, 16);
 
   const paragraphs = unique(
@@ -46,7 +46,10 @@ export function extractSiteContent(html: string, baseUrl: string): ExtractedSite
       .map((node) => cleanText(node.text))
       .filter(
         (text): text is string =>
-          Boolean(text) && text.length >= 40 && text.length <= 600 && !/cookie|privacy policy|all rights reserved/i.test(text),
+          typeof text === "string" &&
+          text.length >= 40 &&
+          text.length <= 600 &&
+          !/cookie|privacy policy|all rights reserved/i.test(text),
       ),
   ).slice(0, 12);
 
@@ -56,7 +59,7 @@ export function extractSiteContent(html: string, baseUrl: string): ExtractedSite
     const raw =
       img.getAttribute("src") ||
       img.getAttribute("data-src") ||
-      firstFromSrcset(img.getAttribute("srcset") || img.getAttribute("data-srcset"));
+      firstFromSrcset(img.getAttribute("srcset") ?? img.getAttribute("data-srcset"));
     if (!raw || SKIP_IMAGE.test(raw)) continue;
     const abs = absolutize(raw, baseUrl);
     if (!abs || !/^https?:\/\//i.test(abs) || seenSrc.has(abs)) continue;
@@ -93,7 +96,7 @@ export function extractSiteContent(html: string, baseUrl: string): ExtractedSite
     root
       .querySelectorAll("nav a, header a")
       .map((a) => cleanText(a.text))
-      .filter((text): text is string => Boolean(text) && text.length >= 2 && text.length <= 32),
+      .filter((text): text is string => typeof text === "string" && text.length >= 2 && text.length <= 32),
   ).slice(0, 10);
 
   return { title, description, headings, paragraphs, images, emails, phones, socialLinks, navLabels };
@@ -107,7 +110,7 @@ export function siteModeFromHost(hostClass: string, recommendedService: string |
   return "update";
 }
 
-function firstFromSrcset(value: string | null): string | null {
+function firstFromSrcset(value: string | null | undefined): string | null {
   if (!value) return null;
   const first = value.split(",")[0]?.trim().split(/\s+/)[0];
   return first || null;

@@ -5,7 +5,7 @@ export interface SiteFile {
   content: string;
 }
 
-export interface ProfessionalSiteResult extends DraftSiteResult {
+export interface SpecialtySiteResult extends DraftSiteResult {
   files: SiteFile[];
 }
 
@@ -23,7 +23,7 @@ export function isInYourCornerBoxing(input: DraftSiteInput, sourceHtml?: string 
  * Full professional rebuild of In Your Corner Boxing using content and media
  * from https://www.inyourcornerfitness.com/
  */
-export function buildInYourCornerBoxingSite(input: DraftSiteInput): ProfessionalSiteResult {
+export function buildInYourCornerBoxingSite(input: DraftSiteInput): SpecialtySiteResult {
   const generatedAt = new Date().toISOString();
   const brief: DraftSiteBrief = {
     leadId: input.leadId,

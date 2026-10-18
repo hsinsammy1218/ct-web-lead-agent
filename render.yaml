@@ -1,3 +1,6 @@
+# Blueprint: CT fitness audit worker + nightly maintenance.
+# Apply: https://dashboard.render.com/blueprint/new?repo=https://github.com/hsinsammy1218/ct-web-lead-agent
+# Dashboard stays on Vercel; this worker writes audits into Supabase.
 services:
   - type: worker
     name: ct-lead-worker
@@ -11,7 +14,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: SUPABASE_URL
-        sync: false
+        value: https://ytbdtfzdgncdupqzniba.supabase.co
       - key: SUPABASE_SECRET_KEY
         sync: false
       - key: OPERATOR_EMAILS
@@ -34,6 +37,14 @@ services:
         value: "90"
       - key: SCREENSHOT_DIR
         value: /var/data/screenshots
+      - key: SITE_GITHUB_OWNER
+        value: hsinsammy1218
+      - key: AUTO_PUBLISH_SITES
+        value: "true"
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: VERCEL_TOKEN
+        sync: false
     disk:
       name: ct-lead-screenshots
       mountPath: /var/data
@@ -49,7 +60,7 @@ services:
       - key: DATA_DRIVER
         value: supabase
       - key: SUPABASE_URL
-        sync: false
+        value: https://ytbdtfzdgncdupqzniba.supabase.co
       - key: SUPABASE_SECRET_KEY
         sync: false
       - key: REAUDIT_DAYS
