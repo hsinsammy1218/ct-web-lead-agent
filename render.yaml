@@ -1,13 +1,18 @@
-# Blueprint: CT fitness audit worker + nightly maintenance.
+# Blueprint: CT fitness audit worker (poll cron) + nightly maintenance.
 # Apply: https://dashboard.render.com/blueprint/new?repo=https://github.com/hsinsammy1218/ct-web-lead-agent
 # Dashboard stays on Vercel; this worker writes audits into Supabase.
+#
+# Render MCP cannot create background workers, so audits run as a 5-minute
+# cron with --once. Swap to type: worker + `npm run worker` if you prefer
+# an always-on process (Dashboard/Blueprint only).
 services:
-  - type: worker
+  - type: cron
     name: ct-lead-worker
     runtime: node
-    plan: standard
+    plan: starter
+    schedule: "*/5 * * * *"
     buildCommand: npm ci && npx playwright install --with-deps chromium
-    startCommand: npm run worker
+    startCommand: npm run worker:once
     envVars:
       - key: DATA_DRIVER
         value: supabase
@@ -36,7 +41,7 @@ services:
       - key: REAUDIT_DAYS
         value: "90"
       - key: SCREENSHOT_DIR
-        value: /var/data/screenshots
+        value: /tmp/screenshots
       - key: SITE_GITHUB_OWNER
         value: hsinsammy1218
       - key: AUTO_PUBLISH_SITES
@@ -45,14 +50,11 @@ services:
         sync: false
       - key: VERCEL_TOKEN
         sync: false
-    disk:
-      name: ct-lead-screenshots
-      mountPath: /var/data
-      sizeGB: 1
 
   - type: cron
     name: ct-lead-maintenance
     runtime: node
+    plan: starter
     schedule: "15 6 * * *"
     buildCommand: npm ci
     startCommand: npm run start -w @ct/worker -- --maintenance
