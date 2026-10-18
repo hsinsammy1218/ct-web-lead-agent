@@ -636,19 +636,24 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .page { padding-bottom: 3rem; }
 .page-hero { padding: 1.75rem 0 1.1rem; }
 .page-hero .lede { max-width: 36rem; margin-bottom: 0; }
-.coach-grid { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
-.coach {
-  display: grid; gap: 1rem; grid-template-columns: 148px minmax(0, 1fr);
-  align-items: start; background: var(--panel); border: 1px solid var(--line); padding: 0.9rem;
+.coach-grid {
+  display: grid; gap: 1.35rem; grid-template-columns: 1fr;
+  max-width: 52rem;
 }
+.coach {
+  display: grid; gap: 1.35rem 1.5rem; grid-template-columns: 200px minmax(0, 1fr);
+  align-items: center; background: transparent; border: 0; border-bottom: 1px solid var(--line);
+  padding: 0 0 1.35rem;
+}
+.coach:last-child { border-bottom: 0; padding-bottom: 0; }
 .coach img {
-  width: 100%; aspect-ratio: 3 / 4; max-height: 210px; height: 100%;
+  width: 100%; aspect-ratio: 3 / 4; max-height: none; height: auto;
   object-fit: cover; object-position: center top; border-radius: 0.35rem;
 }
-.coach > div { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
-.coach h2 { font-size: clamp(1.55rem, 2.4vw, 2.05rem); margin: 0; line-height: 1; }
-.coach .role { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; margin: 0; }
-.coach p:not(.role) { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.45; }
+.coach > div { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; max-width: 38rem; }
+.coach h2 { font-size: clamp(1.7rem, 2.6vw, 2.25rem); margin: 0; line-height: 0.95; letter-spacing: 0.02em; }
+.coach .role { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; margin: 0; }
+.coach p:not(.role) { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.55; }
 .quote-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 blockquote { margin: 0; background: var(--panel); border-left: 4px solid var(--red); padding: 1.25rem; }
 blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
@@ -686,10 +691,12 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
   .hero { min-height: 48svh; max-height: none; }
   .hero-copy { padding: 1.75rem 0 1.4rem; }
   .pillars { grid-template-columns: 1fr; padding: 1.5rem 0; }
-  .coach-grid { grid-template-columns: 1fr; }
-  .split, .coach, .footer-grid { grid-template-columns: 1fr; }
-  .coach { grid-template-columns: 120px minmax(0, 1fr); }
-  .coach img { max-height: 180px; }
+  .coach-grid { max-width: none; gap: 1.15rem; }
+  .split, .footer-grid { grid-template-columns: 1fr; }
+  .coach { grid-template-columns: 112px minmax(0, 1fr); gap: 0.95rem; align-items: start; padding-bottom: 1.15rem; }
+  .coach img { max-height: 168px; }
+  .coach h2 { font-size: 1.45rem; }
+  .coach p:not(.role) { font-size: 0.92rem; line-height: 1.5; }
   .split > div:first-child { max-width: none; }
   .stack-photos { grid-template-columns: 1fr 1fr; }
   .stack-photos img { max-height: 280px; aspect-ratio: 4 / 5; }
