@@ -39,7 +39,7 @@ The lead page links to the local preview, GitHub repo, and live Vercel URL. Leav
 ## Production
 
 - Dashboard: Next.js on Vercel. Set `DATA_DRIVER=supabase` and the Supabase URL, publishable key, and secret key. The secret key is server-only.
-- Database: apply `supabase/migrations`. The worker seeds the 169 municipalities and industries on startup.
+- Database: project `ct-web-lead-agent` (`ytbdtfzdgncdupqzniba`). Schema is in `supabase/migrations`; see [docs/supabase-setup.md](docs/supabase-setup.md). The worker reseeds the 169 municipalities and fitness industries on startup.
 - Auth: magic-link email. `OPERATOR_EMAILS` is the allowlist. The first sign-in sets `app_metadata.role` to `operator`.
 - Worker: `render.yaml` runs one standard worker (Playwright) and a daily maintenance cron for re-audits and screenshot retention.
 
