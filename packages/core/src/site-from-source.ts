@@ -129,7 +129,7 @@ function socialLinksHtml(): string {
   return `<nav class="socials" aria-label="Social media">
       ${SOCIAL.map(
         (item) =>
-          `<a href="${item.href}" target="_blank" rel="noreferrer" title="${escape(item.label)} ${escape(item.handle)}" aria-label="${escape(item.label)} ${escape(item.handle)}">${socialIconSvg(item.network)}<span>${escape(item.handle)}</span></a>`,
+          `<a href="${item.href}" target="_blank" rel="noreferrer" title="${escape(item.label)} ${escape(item.handle)}" aria-label="${escape(item.label)} ${escape(item.handle)}">${socialIconSvg(item.network)}</a>`,
       ).join("\n      ")}
     </nav>`;
 }
@@ -676,14 +676,16 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
 .footer-list a { color: var(--text); text-decoration: none; }
 .footer-list a:hover { color: var(--red); }
 .site-footer h3 { margin: 0 0 0.75rem; font-size: 1.35rem; letter-spacing: 0.06em; }
-.socials { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; }
+.socials { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1rem; }
 .socials a {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  text-decoration: none; color: var(--text); font-size: 0.78rem; font-weight: 600;
-  padding: 0.4rem 0.65rem; border: 1px solid var(--line); background: var(--panel);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; padding: 0;
+  text-decoration: none; color: var(--text);
+  border: 1px solid var(--line); background: var(--panel); border-radius: 0.35rem;
 }
-.socials a .social-icon { color: var(--red); width: 1rem; height: 1rem; }
-.socials a:hover { border-color: var(--red); color: var(--red); }
+.socials a .social-icon { color: var(--red); width: 1.2rem; height: 1.2rem; }
+.socials a:hover { border-color: var(--red); color: var(--red); background: #1a0000; }
+.socials a:hover .social-icon { color: var(--red); }
 .fine { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; color: var(--muted); font-size: 0.85rem; }
 .cta-inline { padding: 2rem 0; }
 .section-head { margin-bottom: 1.2rem; }
