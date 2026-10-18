@@ -679,10 +679,11 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
 .socials { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1rem; }
 .socials a {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 2.5rem; height: 2.5rem; padding: 0;
+  width: 2.5rem; height: 2.5rem; padding: 0; overflow: hidden;
   text-decoration: none; color: var(--text);
   border: 1px solid var(--line); background: var(--panel); border-radius: 0.35rem;
 }
+.socials a span { display: none; }
 .socials a .social-icon { color: var(--red); width: 1.2rem; height: 1.2rem; }
 .socials a:hover { border-color: var(--red); color: var(--red); background: #1a0000; }
 .socials a:hover .social-icon { color: var(--red); }
