@@ -22,6 +22,7 @@ import type {
   DashboardStats,
   LeadFilters,
   LeadRecord,
+  SiteDraft,
   SubmitResult,
   UsageEntry,
   WorkRecord,
@@ -180,6 +181,13 @@ export class MemoryStore {
     const lead = requiredLead(db, leadId);
     lead.ai = assessment;
     if (lead.score) lead.score.recommendedService = assessment.recommended_service;
+    this.write(db);
+  }
+
+  async saveSiteDraft(leadId: string, draft: SiteDraft): Promise<void> {
+    const db = this.read();
+    const lead = requiredLead(db, leadId);
+    lead.draft = draft;
     this.write(db);
   }
 
@@ -368,6 +376,7 @@ export class MemoryStore {
       },
       score: null,
       ai: null,
+      draft: null as LeadRecord["draft"],
       notes: input.note ? [{ id: randomUUID(), body: input.note, createdAt: now, createdBy: submittedBy }] : [],
       statusHistory: [{ status: "new", createdAt: now, createdBy: submittedBy }],
       createdAt: now,

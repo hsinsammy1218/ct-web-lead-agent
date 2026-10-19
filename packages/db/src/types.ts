@@ -34,6 +34,30 @@ export interface LeadNote {
   createdBy: string;
 }
 
+export interface SiteDraftTestCheck {
+  name: string;
+  ok: boolean;
+  detail: string;
+}
+
+export interface SiteDraft {
+  status: "queued" | "ready" | "failed" | "publishing";
+  path: string | null;
+  previewPath: string | null;
+  generatedAt: string | null;
+  summary: string | null;
+  fixesApplied: string[];
+  recommendedService: string | null;
+  error: string | null;
+  repoUrl: string | null;
+  deploymentUrl: string | null;
+  githubRepo: string | null;
+  vercelProjectId: string | null;
+  publishStatus: "skipped" | "queued" | "published" | "failed" | null;
+  testsPassed: boolean | null;
+  testChecks: SiteDraftTestCheck[];
+}
+
 export interface LeadRecord {
   id: string;
   displayName: string;
@@ -49,6 +73,7 @@ export interface LeadRecord {
   audit: LeadAudit | null;
   score: LeadScore | null;
   ai: Assessment | null;
+  draft: SiteDraft | null;
   notes: LeadNote[];
   statusHistory: Array<{ status: LeadStatus; createdAt: string; createdBy: string }>;
   createdAt: string;

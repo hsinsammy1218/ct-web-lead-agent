@@ -1,0 +1,19 @@
+# Audit worker: Playwright Chromium + monorepo workspace.
+FROM mcr.microsoft.com/playwright:v1.55.1-jammy
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY apps ./apps
+COPY packages ./packages
+COPY config ./config
+
+RUN npm ci \
+  && mkdir -p /tmp/screenshots /tmp/drafts /tmp/audit-html
+
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+ENV NODE_ENV=production
+ENV SCREENSHOT_DIR=/tmp/screenshots
+ENV SITE_DRAFT_DIR=/tmp/drafts
+ENV AUDIT_HTML_DIR=/tmp/audit-html
+
+CMD ["npm", "run", "worker:once"]

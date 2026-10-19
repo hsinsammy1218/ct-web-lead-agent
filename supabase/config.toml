@@ -1,0 +1,15 @@
+# Linked to hosted project ct-web-lead-agent (ytbdtfzdgncdupqzniba).
+# Docs: https://supabase.com/docs/guides/cli/config
+
+project_id = "ytbdtfzdgncdupqzniba"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
