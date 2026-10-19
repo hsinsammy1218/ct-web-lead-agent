@@ -22,8 +22,10 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable>
 SUPABASE_SECRET_KEY=<service_role>
 OPERATOR_EMAILS=<your email>
 ALLOW_DEV_AUTH=false
-NEXT_PUBLIC_SITE_URL=https://<your-vercel-domain>
+NEXT_PUBLIC_SITE_URL=https://ct-web-lead-agent.vercel.app
 ```
+
+Also set Supabase Auth **Site URL** to that same domain (Authentication → URL Configuration), or magic-link emails will keep `redirect_to=http://localhost:3000`.
 
 ## Render worker
 

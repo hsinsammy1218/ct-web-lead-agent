@@ -24,6 +24,9 @@ export async function middleware(request: NextRequest) {
         },
       },
     );
+    // Magic-link callback must run before a session exists.
+    if (pathname.startsWith("/auth/")) return response;
+
     const { data } = await supabase.auth.getUser();
     const signedIn = Boolean(data.user);
     if (!signedIn && pathname !== "/login") {
