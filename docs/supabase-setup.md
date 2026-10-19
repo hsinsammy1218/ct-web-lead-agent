@@ -12,13 +12,13 @@ The audit agent persists leads, audits, scores, work queue jobs, and generated s
 | API URL | `https://ytbdtfzdgncdupqzniba.supabase.co` |
 | Dashboard | https://supabase.com/dashboard/project/ytbdtfzdgncdupqzniba |
 
-Schema applied from `supabase/migrations/` (leads, websites, audits, findings, scores, notes, work queue, site drafts). Reference data seeded: **9** planning regions, **169** CT municipalities, **9** fitness industries.
+Schema applied from `supabase/migrations/` (leads, websites, audits, findings, scores, notes, work queue, site drafts). Reference data seeded: **9** planning regions, **169** CT municipalities, and local-business industries from `config/industries.yaml` (food, fitness, trades, professional, retail, and more).
 
 ## What gets tracked
 
 | Table | Purpose |
 | --- | --- |
-| `businesses` / `business_websites` | Submitted fitness leads and URLs |
+| `businesses` / `business_websites` | Submitted local-business leads and URLs |
 | `website_audits` / `audit_findings` | Measured audit results |
 | `lead_scores` / `ai_assessments` | Opportunity scoring |
 | `work_items` | Worker job queue (audit → score → generate → publish) |

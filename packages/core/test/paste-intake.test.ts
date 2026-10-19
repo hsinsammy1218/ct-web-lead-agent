@@ -25,9 +25,12 @@ const data: ReferenceData = {
     },
   ],
   industries: [
-    { slug: "boxing-gyms", displayName: "Boxing gyms", enabled: true, sortOrder: 1 },
-    { slug: "martial-arts", displayName: "Martial arts schools", enabled: true, sortOrder: 2 },
-    { slug: "fitness-gyms", displayName: "Fitness gyms", enabled: true, sortOrder: 3 },
+    { slug: "restaurants", displayName: "Restaurants", enabled: true, sortOrder: 1 },
+    { slug: "ice-cream-dessert", displayName: "Ice cream & dessert shops", enabled: true, sortOrder: 2 },
+    { slug: "boxing-gyms", displayName: "Boxing gyms", enabled: true, sortOrder: 3 },
+    { slug: "martial-arts", displayName: "Martial arts schools", enabled: true, sortOrder: 4 },
+    { slug: "fitness-gyms", displayName: "Fitness gyms", enabled: true, sortOrder: 5 },
+    { slug: "professional-services", displayName: "Other local business", enabled: true, sortOrder: 90 },
   ],
   denylist: [],
 };
@@ -40,9 +43,11 @@ describe("paste intake", () => {
     expect(extractCandidateUrls("https://safe.example")[0]).toBe("https://safe.example/");
   });
 
-  it("finds Connecticut towns and industry keywords", () => {
+  it("finds Connecticut towns and industry keywords across food and fitness", () => {
     expect(findMunicipalityInText("Boxing gym in New Haven CT", data)).toBe("New Haven");
     expect(guessIndustrySlug("family martial arts academy", data.industries)).toBe("martial-arts");
+    expect(guessIndustrySlug("Scoops ice cream shop on Main St", data.industries)).toBe("ice-cream-dessert");
+    expect(guessIndustrySlug("Harbor pizza restaurant", data.industries)).toBe("restaurants");
   });
 
   it("builds a heuristic draft from a business blurb", () => {

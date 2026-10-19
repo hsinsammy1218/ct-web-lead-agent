@@ -68,7 +68,7 @@ export function PasteIntakeForm({
           value={paste}
           onChange={(event) => setPaste(event.target.value)}
           rows={5}
-          placeholder={"Harbor Boxing\nHartford boxing gym\nhttps://example.com\n(860) 555-0100"}
+          placeholder={"Scoops Homemade Ice Cream\nWolcott ice cream shop\nhttps://example.com\n(860) 555-0100"}
           className="mt-3 w-full rounded-md border border-line px-3 py-2 font-normal"
         />
         <div className="mt-3 flex flex-wrap items-center gap-3">
