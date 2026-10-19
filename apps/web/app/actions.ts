@@ -16,7 +16,7 @@ import {
   type PasteDraft,
 } from "@ct/core";
 import { currentOperator } from "../lib/auth";
-import { getStore } from "../lib/store";
+import { getReferenceData, getStore } from "../lib/store";
 
 async function actor(): Promise<string> {
   return currentOperator();
@@ -39,7 +39,7 @@ export async function interpretPaste(paste: string): Promise<InterpretPasteResul
     return { ok: false, message: "Paste a website URL or business details first." };
   }
 
-  const data = getStore().referenceData();
+  const data = await getReferenceData();
   const urls = extractCandidateUrls(text);
   let pageFetched = false;
   let hints = null;

@@ -50,6 +50,10 @@ export class MemoryStore {
     return this.reference;
   }
 
+  async liveReferenceData(): Promise<ReferenceData> {
+    return this.reference;
+  }
+
   async submit(input: NormalizedSubmission, submittedBy: string, allowDuplicate: boolean): Promise<SubmitResult> {
     const db = this.read();
     const existing = findExistingLead(db.leads, input);
