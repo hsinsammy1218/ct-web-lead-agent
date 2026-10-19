@@ -18,7 +18,11 @@ export async function signIn(formData: FormData): Promise<void> {
   if (process.env.DATA_DRIVER === "supabase" && process.env.NEXT_PUBLIC_SUPABASE_URL) {
     const { createClient } = await import("../lib/supabase");
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/auth/callback` } });
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: siteUrl ? `${siteUrl}/auth/callback` : undefined },
+    });
     if (error) redirect("/login?error=auth");
     redirect("/login?sent=1");
   }

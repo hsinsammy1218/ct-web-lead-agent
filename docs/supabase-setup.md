@@ -48,6 +48,19 @@ ALLOW_DEV_AUTH=false
 
 Magic-link email. First allowlisted sign-in sets `app_metadata.role = operator`. RLS policies require that role for dashboard reads/writes. The worker uses the secret key and bypasses RLS for audits and job claims.
 
+### Fix “redirect_to=http://localhost:3000” in the email
+
+The confirm link uses Supabase **Authentication → URL Configuration**:
+
+1. **Site URL** → `https://ct-web-lead-agent.vercel.app` (not `http://localhost:3000`)
+2. **Redirect URLs** → add:
+   - `https://ct-web-lead-agent.vercel.app/auth/callback`
+   - `http://localhost:3000/auth/callback` (optional, for local)
+3. On Vercel, set `NEXT_PUBLIC_SITE_URL=https://ct-web-lead-agent.vercel.app` (Production + Preview), then redeploy
+4. Request a **new** magic link — old emails still point at localhost
+
+Dashboard: https://supabase.com/dashboard/project/ytbdtfzdgncdupqzniba/auth/url-configuration
+
 ## Local verify
 
 ```bash
