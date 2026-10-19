@@ -85,13 +85,13 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
       detail: auditBlocked
         ? "Fetch blocked"
         : auditFailed
-          ? lead.audit?.summary || shortError(auditJob?.lastError) || "Audit failed"
+          ? lead.audit?.summary || operatorFacingDetail(auditJob?.lastError) || "Audit failed"
           : auditDone
             ? lead.audit?.summary || "Evidence collected"
             : auditJob?.status === "running"
               ? "Fetching and measuring the site…"
               : auditJob?.lastError
-                ? `Retrying after error: ${shortError(auditJob.lastError)}`
+                ? operatorFacingDetail(auditJob.lastError)
                 : "Waiting for the worker to start",
       status: jobStepStatus(auditJob, auditDone, {
         failedWhen: auditFailed,
@@ -228,4 +228,12 @@ function shortError(message: string | null | undefined): string {
   if (!message) return "";
   const firstLine = message.split("\n").find((line) => line.trim()) ?? message;
   return firstLine.replace(/\s+/g, " ").trim().slice(0, 140);
+}
+
+function operatorFacingDetail(message: string | null | undefined): string {
+  if (!message) return "";
+  if (/playwright|browsertype|chromium|executable doesn't exist|ms-playwright/i.test(message)) {
+    return "The audit browser on the worker isn’t ready yet. It will retry on the next run.";
+  }
+  return `Retrying after a worker hiccup: ${shortError(message)}`;
 }

@@ -2,13 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --paper: #f3efe6;
+  --ink: #1c2430;
+  --pine: #0f6e56;
+  --moss: #1f8f72;
+  --line: #e3d9c8;
+  --deep: #0a3d31;
+}
+
 body {
-  background: #f3efe6;
-  color: #1c2430;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(15, 110, 86, 0.14), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(31, 143, 114, 0.12), transparent 50%),
+    linear-gradient(180deg, #efe8da 0%, var(--paper) 40%, #ebe4d6 100%);
+  color: var(--ink);
+  min-height: 100vh;
 }
 
 a {
   color: inherit;
+}
+
+.lead-panel {
+  border: 1px solid rgba(15, 110, 86, 0.14);
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(243, 239, 230, 0.88)),
+    #fff;
+  box-shadow: 0 18px 50px rgba(28, 36, 48, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.lead-grid {
+  background-image:
+    linear-gradient(rgba(15, 110, 86, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 110, 86, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+.lead-hero {
+  border: 1px solid rgba(15, 110, 86, 0.16);
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(135deg, rgba(10, 61, 49, 0.96), rgba(15, 110, 86, 0.9) 55%, rgba(31, 143, 114, 0.85)),
+    #0a3d31;
+  color: #f7f3ea;
+  box-shadow: 0 24px 60px rgba(10, 61, 49, 0.28);
+  overflow: hidden;
+  position: relative;
+}
+
+.lead-hero::before {
+  content: "";
+  position: absolute;
+  inset: -20% auto auto -10%;
+  width: 55%;
+  height: 140%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 60%);
+  animation: ambient-drift 10s ease-in-out infinite;
+}
+
+.surface-quiet {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(6px);
 }
 
 @keyframes progress-pulse {
@@ -23,4 +83,97 @@ a {
 
 .progress-pulse {
   animation: progress-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes progress-shimmer {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.18);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+.progress-shimmer {
+  animation: progress-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes progress-draw {
+  from {
+    stroke-dashoffset: 12;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.progress-draw {
+  animation: progress-draw 1.2s ease-out;
+}
+
+@keyframes ambient-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(18px, 10px) scale(1.05);
+  }
+}
+
+.ambient-drift {
+  animation: ambient-drift 9s ease-in-out infinite;
+}
+
+.ambient-drift-slow {
+  animation: ambient-drift 14s ease-in-out infinite reverse;
+}
+
+@keyframes step-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-rise {
+  animation: step-rise 0.55s ease-out both;
+}
+
+@keyframes waiting-scan {
+  0% {
+    transform: translateX(-30%);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateX(130%);
+    opacity: 0.2;
+  }
+}
+
+.waiting-scan {
+  animation: waiting-scan 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-drift,
+  .ambient-drift-slow,
+  .progress-pulse,
+  .progress-shimmer,
+  .progress-draw,
+  .step-rise,
+  .waiting-scan,
+  .animate-ping {
+    animation: none !important;
+  }
 }
