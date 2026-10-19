@@ -175,7 +175,7 @@ export function PasteIntakeForm({
         {duplicate ? (
           <label className="flex items-start gap-2 text-sm">
             <input type="checkbox" name="allow_duplicate" className="mt-1" />
-            This is a different business on a domain that is already on file.
+            Force create only if this is a different business on a domain already on file (not already audited).
           </label>
         ) : null}
         <SubmitButton label="Queue audit" pendingLabel="Saving…" />

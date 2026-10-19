@@ -133,4 +133,6 @@ export interface SubmitResult {
   message: string;
   leadId?: string;
   duplicate?: boolean;
+  /** True when an existing website/business was reused and no new audit was queued. */
+  skipped?: boolean;
 }

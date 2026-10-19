@@ -87,3 +87,43 @@ export function decideDuplicate(existing: boolean, allowDuplicate: boolean): "cr
   if (existing && !allowDuplicate) return "skip";
   return "create";
 }
+
+export type ExistingLeadMatch = {
+  leadId: string;
+  /** Why this lead matched the new submission. */
+  match: "domain" | "business";
+  /** True when an audit already finished (completed/blocked/failed/skipped) or a score exists. */
+  audited: boolean;
+  displayName: string;
+};
+
+/**
+ * Skip creating a new lead when the website or business is already on file.
+ * Already-audited matches always skip. Same-business matches always skip.
+ * Same-domain / different-business can still be forced with allowDuplicate when not audited.
+ */
+export function decideExistingSubmission(
+  existing: ExistingLeadMatch | null,
+  allowDuplicate: boolean,
+): "create" | "skip" {
+  if (!existing) return "create";
+  if (existing.audited) return "skip";
+  if (existing.match === "business") return "skip";
+  if (!allowDuplicate) return "skip";
+  return "create";
+}
+
+export function existingSkipMessage(existing: ExistingLeadMatch): string {
+  if (existing.audited) {
+    return existing.match === "business"
+      ? `${existing.displayName} is already on file and audited. Opened the existing lead.`
+      : `That website is already on file and audited. Opened the existing lead for ${existing.displayName}.`;
+  }
+  return existing.match === "business"
+    ? `${existing.displayName} is already on file. Opened the existing lead — no new audit queued.`
+    : `That website domain is already on file for ${existing.displayName}. Opened the existing lead — no new audit queued.`;
+}
+
+export function isAuditFinished(status: string | null | undefined): boolean {
+  return status === "completed" || status === "blocked" || status === "failed" || status === "skipped";
+}

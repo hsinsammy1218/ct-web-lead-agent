@@ -4,12 +4,15 @@ import path from "node:path";
 import {
   backoffSeconds,
   budgetAllows,
-  decideDuplicate,
+  decideExistingSubmission,
+  existingSkipMessage,
+  isAuditFinished,
   parseCsv,
   submissionFromCsvRow,
   toCsv,
   validateSubmission,
   type Assessment,
+  type ExistingLeadMatch,
   type Finding,
   type LeadScore,
   type LeadStatus,
@@ -69,21 +72,17 @@ export class SupabaseStore {
   }
 
   async submit(input: NormalizedSubmission, submittedBy: string, allowDuplicate: boolean): Promise<SubmitResult> {
-    const { data: existing } = await this.client
-      .from("business_websites")
-      .select("business_id, allow_duplicate")
-      .eq("registrable_domain", input.registrableDomain)
-      .eq("allow_duplicate", false)
-      .maybeSingle();
-    if (decideDuplicate(Boolean(existing), allowDuplicate) === "skip") {
+    const municipalityId = await this.lookup("municipalities", "name", input.municipality.name);
+    const existing = await this.findExistingLead(input, municipalityId);
+    if (decideExistingSubmission(existing, allowDuplicate) === "skip" && existing) {
       return {
-        ok: false,
+        ok: true,
+        skipped: true,
         duplicate: true,
-        leadId: existing?.business_id as string | undefined,
-        message: `A lead for ${input.registrableDomain} already exists. Confirm to import it again.`,
+        leadId: existing.leadId,
+        message: existingSkipMessage(existing),
       };
     }
-    const municipalityId = await this.lookup("municipalities", "name", input.municipality.name);
     const industryId = await this.lookup("industries", "slug", input.industry.slug);
     const { data: business, error } = await this.client
       .from("businesses")
@@ -103,7 +102,7 @@ export class SupabaseStore {
       original_url: input.websiteUrl,
       registrable_domain: input.registrableDomain,
       status: input.hostClass,
-      allow_duplicate: allowDuplicate && Boolean(existing),
+      allow_duplicate: allowDuplicate && existing?.match === "domain",
     });
     if (websiteError) throw websiteError;
     if (input.phone) {
@@ -144,8 +143,8 @@ export class SupabaseStore {
       }
       const result = await this.submit(validated.value, submittedBy, allowDuplicate);
       results.push({ ...result, message: `Row ${row.line}: ${result.message}` });
-      if (result.ok) accepted += 1;
-      else rejected += 1;
+      if (result.ok && !result.skipped) accepted += 1;
+      else if (!result.skipped) rejected += 1;
     }
     if (rows.length === 0) {
       rejected += 1;
@@ -422,6 +421,63 @@ export class SupabaseStore {
     if (error || !data) throw error ?? new Error(`Missing ${table} row for ${value}`);
     return data.id as string;
   }
+
+  private async findExistingLead(
+    input: NormalizedSubmission,
+    municipalityId: string,
+  ): Promise<ExistingLeadMatch | null> {
+    const { data: byBusiness } = await this.client
+      .from("businesses")
+      .select(
+        "id, display_name, business_websites(website_audits(status), allow_duplicate), lead_scores(opportunity)",
+      )
+      .eq("name_normalized", input.nameNormalized)
+      .eq("municipality_id", municipalityId)
+      .limit(1)
+      .maybeSingle();
+    if (byBusiness) {
+      return {
+        leadId: String(byBusiness.id),
+        match: "business",
+        audited: rowWasAudited(byBusiness as Row),
+        displayName: String(byBusiness.display_name ?? input.businessName),
+      };
+    }
+
+    const { data: byDomain } = await this.client
+      .from("business_websites")
+      .select("business_id, allow_duplicate, website_audits(status), businesses(display_name)")
+      .eq("registrable_domain", input.registrableDomain)
+      .eq("allow_duplicate", false)
+      .limit(1)
+      .maybeSingle();
+    if (!byDomain?.business_id) return null;
+
+    const business = first(byDomain.businesses) as Row | null;
+    const { data: scoreRow } = await this.client
+      .from("lead_scores")
+      .select("opportunity")
+      .eq("business_id", byDomain.business_id)
+      .limit(1)
+      .maybeSingle();
+    const audits = (byDomain.website_audits as Row[] | undefined) ?? [];
+    const audited =
+      audits.some((audit) => isAuditFinished(String(audit.status ?? ""))) || Boolean(scoreRow);
+
+    return {
+      leadId: String(byDomain.business_id),
+      match: "domain",
+      audited,
+      displayName: String(business?.display_name ?? input.businessName),
+    };
+  }
+}
+
+function rowWasAudited(row: Row): boolean {
+  const websites = (row.business_websites as Row[] | undefined) ?? [];
+  const audits = websites.flatMap((website) => (website.website_audits as Row[] | undefined) ?? []);
+  const scores = (row.lead_scores as Row[] | undefined) ?? [];
+  return audits.some((audit) => isAuditFinished(String(audit.status ?? ""))) || scores.length > 0;
 }
 
 const LEAD_SELECT = `

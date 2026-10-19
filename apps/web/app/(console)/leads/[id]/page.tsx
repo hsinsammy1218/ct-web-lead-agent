@@ -61,6 +61,13 @@ export default async function LeadDetailPage({
           Work was queued. This page refreshes while the pipeline runs.
         </p>
       ) : null}
+      {query.skipped ? (
+        <p className="rounded-md border border-pine/30 bg-pine/5 px-3 py-2 text-sm">
+          {query.reason
+            ? decodeURIComponent(query.reason)
+            : "This website or business was already on file. No new audit was queued."}
+        </p>
+      ) : null}
 
       <AuditProgress pipeline={pipeline} />
 

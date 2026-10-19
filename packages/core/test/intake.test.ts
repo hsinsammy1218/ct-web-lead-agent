@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { parseCsv } from "../src/csv.js";
-import { decideDuplicate, submissionFromCsvRow, validateSubmission } from "../src/intake.js";
+import {
+  decideDuplicate,
+  decideExistingSubmission,
+  existingSkipMessage,
+  submissionFromCsvRow,
+  validateSubmission,
+} from "../src/intake.js";
 import type { ReferenceData } from "../src/types.js";
 
 const data: ReferenceData = {
@@ -88,5 +94,35 @@ describe("intake", () => {
     expect(decideDuplicate(true, false)).toBe("skip");
     expect(decideDuplicate(true, true)).toBe("create");
     expect(decideDuplicate(false, false)).toBe("create");
+  });
+
+  it("skips already-audited websites and businesses", () => {
+    expect(
+      decideExistingSubmission(
+        { leadId: "1", match: "domain", audited: true, displayName: "Harbor" },
+        true,
+      ),
+    ).toBe("skip");
+    expect(
+      decideExistingSubmission(
+        { leadId: "1", match: "business", audited: false, displayName: "Harbor" },
+        true,
+      ),
+    ).toBe("skip");
+    expect(
+      decideExistingSubmission(
+        { leadId: "1", match: "domain", audited: false, displayName: "Harbor" },
+        false,
+      ),
+    ).toBe("skip");
+    expect(
+      decideExistingSubmission(
+        { leadId: "1", match: "domain", audited: false, displayName: "Harbor" },
+        true,
+      ),
+    ).toBe("create");
+    expect(
+      existingSkipMessage({ leadId: "1", match: "domain", audited: true, displayName: "Harbor" }),
+    ).toContain("already on file and audited");
   });
 });

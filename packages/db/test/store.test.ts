@@ -34,11 +34,43 @@ describe("memory store", () => {
     const first = await memory.submit(input.value, "operator@example.com", false);
     const second = await memory.submit(input.value, "operator@example.com", false);
     expect(first.ok).toBe(true);
+    expect(second.ok).toBe(true);
+    expect(second.skipped).toBe(true);
     expect(second.duplicate).toBe(true);
+    expect(second.leadId).toBe(first.leadId);
     expect((await memory.listWork()).filter((item) => item.jobType === "website.audit")).toHaveLength(1);
     const claimed = await memory.claim();
     expect(claimed?.payload.leadId).toBe(first.leadId);
     expect(await memory.claim()).toBeNull();
+  });
+
+  it("skips when the same business name is already on file under a different domain", async () => {
+    const memory = store();
+    const firstInput = validateSubmission(
+      {
+        businessName: "Harbor Roofing",
+        municipality: "Hartford",
+        industry: "roofing",
+        websiteUrl: "https://harbor.example",
+      },
+      reference,
+    );
+    const secondInput = validateSubmission(
+      {
+        businessName: "Harbor Roofing",
+        municipality: "Hartford",
+        industry: "roofing",
+        websiteUrl: "https://harbor-roofing.example",
+      },
+      reference,
+    );
+    if (!firstInput.ok || !secondInput.ok) throw new Error("validation failed");
+    const first = await memory.submit(firstInput.value, "operator@example.com", false);
+    const second = await memory.submit(secondInput.value, "operator@example.com", true);
+    expect(first.ok).toBe(true);
+    expect(second.skipped).toBe(true);
+    expect(second.leadId).toBe(first.leadId);
+    expect((await memory.listWork()).filter((item) => item.jobType === "website.audit")).toHaveLength(1);
   });
 
   it("imports a mixed CSV and filters the lead list", async () => {

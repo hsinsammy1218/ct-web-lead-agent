@@ -122,7 +122,12 @@ export async function submitWebsite(formData: FormData): Promise<void> {
   );
   if (!validated.ok) redirect(`/leads/new?error=${encodeURIComponent(validated.message)}`);
   const result = await store.submit(validated.value, email, formData.get("allow_duplicate") === "on");
-  if (!result.ok) redirect(`/leads/new?error=${encodeURIComponent(result.message)}&duplicate=${result.leadId ?? ""}`);
+  if (result.skipped && result.leadId) {
+    redirect(`/leads/${result.leadId}?skipped=1&reason=${encodeURIComponent(result.message)}`);
+  }
+  if (!result.ok) {
+    redirect(`/leads/new?error=${encodeURIComponent(result.message)}&duplicate=${result.leadId ?? ""}`);
+  }
   redirect(`/leads/${result.leadId}`);
 }
 
