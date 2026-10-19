@@ -4,7 +4,10 @@ import { randomUUID } from "node:crypto";
 import {
   backoffSeconds,
   budgetAllows,
-  decideDuplicate,
+  decideExistingSubmission,
+  existingSkipMessage,
+  isAuditFinished,
+  type ExistingLeadMatch,
   parseCsv,
   submissionFromCsvRow,
   toCsv,
@@ -49,15 +52,14 @@ export class MemoryStore {
 
   async submit(input: NormalizedSubmission, submittedBy: string, allowDuplicate: boolean): Promise<SubmitResult> {
     const db = this.read();
-    const existing = db.leads.find(
-      (lead) => lead.website.registrableDomain === input.registrableDomain && !lead.website.allowDuplicate,
-    );
-    if (decideDuplicate(Boolean(existing), allowDuplicate) === "skip") {
+    const existing = findExistingLead(db.leads, input);
+    if (decideExistingSubmission(existing, allowDuplicate) === "skip" && existing) {
       return {
-        ok: false,
+        ok: true,
+        skipped: true,
         duplicate: true,
-        leadId: existing?.id,
-        message: `A lead for ${input.registrableDomain} already exists. Confirm to import it again.`,
+        leadId: existing.leadId,
+        message: existingSkipMessage(existing),
       };
     }
     const now = new Date().toISOString();
@@ -81,9 +83,12 @@ export class MemoryStore {
         continue;
       }
       const result = await this.submit(validated.value, submittedBy, allowDuplicate);
-      results.push({ ...result, message: result.ok ? `Row ${row.line}: ${result.message}` : `Row ${row.line}: ${result.message}` });
-      if (result.ok) accepted += 1;
-      else rejected += 1;
+      const labeled = { ...result, message: `Row ${row.line}: ${result.message}` };
+      results.push(labeled);
+      if (result.ok && !result.skipped) accepted += 1;
+      else if (result.skipped) {
+        // Already on file — count as neither accepted nor rejected.
+      } else rejected += 1;
     }
     if (rows.length === 0) {
       results.push({ ok: false, message: "CSV did not contain any data rows" });
@@ -402,6 +407,37 @@ function requiredLead(db: DatabaseFile, id: string): LeadRecord {
   const lead = db.leads.find((item) => item.id === id);
   if (!lead) throw new Error("Lead not found");
   return lead;
+}
+
+function findExistingLead(leads: LeadRecord[], input: NormalizedSubmission): ExistingLeadMatch | null {
+  const byBusiness = leads.find(
+    (lead) =>
+      lead.nameNormalized === input.nameNormalized && lead.municipalityName === input.municipality.name,
+  );
+  if (byBusiness) {
+    return {
+      leadId: byBusiness.id,
+      match: "business",
+      audited: leadWasAudited(byBusiness),
+      displayName: byBusiness.displayName,
+    };
+  }
+  const byDomain = leads.find(
+    (lead) => lead.website.registrableDomain === input.registrableDomain && !lead.website.allowDuplicate,
+  );
+  if (byDomain) {
+    return {
+      leadId: byDomain.id,
+      match: "domain",
+      audited: leadWasAudited(byDomain),
+      displayName: byDomain.displayName,
+    };
+  }
+  return null;
+}
+
+function leadWasAudited(lead: LeadRecord): boolean {
+  return isAuditFinished(lead.audit?.status) || Boolean(lead.score);
 }
 
 function matches(lead: LeadRecord, filters: LeadFilters): boolean {

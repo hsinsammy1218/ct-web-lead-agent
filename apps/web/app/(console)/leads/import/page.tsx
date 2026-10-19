@@ -11,7 +11,7 @@ export default async function ImportPage({
     <section className="max-w-2xl">
       <h1 className="font-serif text-3xl">Import CSV</h1>
       <p className="mt-2 text-sm text-ink/70">
-        Columns: business_name, municipality, industry, website_url, phone, note. Invalid rows are skipped. A domain already on file is skipped unless you allow duplicates.
+        Columns: business_name, municipality, industry, website_url, phone, note. Invalid rows are skipped. Websites or businesses already on file (especially if audited) are skipped unless you allow a different business on the same domain.
       </p>
       {params.accepted || params.rejected ? (
         <div className="mt-4 rounded-md border border-line bg-white px-3 py-2 text-sm">

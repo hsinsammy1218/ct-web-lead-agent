@@ -36,7 +36,8 @@ export default async function NewLeadPage({
       <h1 className="font-serif text-3xl">Add a website</h1>
       <p className="mt-2 text-sm text-ink/70">
         Paste a URL or business information and let the agent fill the intake fields. Review them, then queue the audit.
-        The worker fetches only the URL you confirm.
+        If that website or business is already on file (especially if audited), we open the existing lead instead of
+        creating another.
       </p>
       <div className="mt-6">
         <PasteIntakeForm
