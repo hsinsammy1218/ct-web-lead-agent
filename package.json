@@ -13,6 +13,9 @@
     "worker": "npm run start -w @ct/worker",
     "worker:once": "npm run start -w @ct/worker -- --once"
   },
+  "allowScripts": {
+    "esbuild": true
+  },
   "devDependencies": {
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
