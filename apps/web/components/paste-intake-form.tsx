@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { interpretPaste, submitWebsite } from "../app/actions";
+import { submitWebsite } from "../app/actions";
+import { interpretPaste } from "../app/paste-actions";
 import { SubmitButton } from "./submit-button";
 
 type Option = { value: string; label: string };

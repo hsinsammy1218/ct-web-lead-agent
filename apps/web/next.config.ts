@@ -20,7 +20,8 @@ for (const name of [".env", ".env.local"]) {
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
   transpilePackages: ["@ct/core", "@ct/db"],
-  serverExternalPackages: ["playwright"],
+  // Keep AI SDK out of webpack graph for pages that only import CRUD actions.
+  serverExternalPackages: ["playwright", "ai", "@ai-sdk/openai", "@ai-sdk/provider-utils"],
   // Monorepo: include shared config JSON/YAML in serverless traces.
   outputFileTracingRoot: root,
   outputFileTracingIncludes: {
@@ -35,6 +36,13 @@ const nextConfig: NextConfig = {
       ...config.resolve.extensionAlias,
       ".js": [".ts", ".tsx", ".js"],
     };
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings ?? []),
+      {
+        module: /@ai-sdk\/provider-utils/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ];
     return config;
   },
 };

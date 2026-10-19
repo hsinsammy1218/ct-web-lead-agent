@@ -1,0 +1,5 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && env -u npm_config_cache_dir npm ci",
+  "buildCommand": "cd ../.. && env -u npm_config_cache_dir npm run build -w @ct/web"
+}
