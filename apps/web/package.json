@@ -8,13 +8,16 @@
     "start": "next start --hostname 0.0.0.0 --port ${PORT:-3000}"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.42",
     "@ct/core": "*",
     "@ct/db": "*",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.75.0",
+    "ai": "^5.0.60",
     "next": "^15.5.4",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.18.6",
