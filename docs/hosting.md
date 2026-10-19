@@ -49,7 +49,8 @@ Its build still runs `playwright install --with-deps`, which fails with `su: Aut
 
 Optional on `ct-lead-audit`: `OPENAI_API_KEY`, `PAGESPEED_API_KEY`, `GITHUB_TOKEN` (`ghp_…`), `VERCEL_TOKEN` (from https://vercel.com/account/tokens — **not** a `prj_…` project id).
 
-Local `.env.local` is already wired and `npm run worker:once` connects to Supabase successfully. Render cron runs need the same secrets in the dashboard (or a Render API key so the agent can push them).
+Local `.env.local` and both Render crons are wired with production secrets.  
+`ct-lead-audit` one-off job and scheduled runs succeed against Supabase (empty queue is OK).
 
 Re-apply or recreate from Blueprint:
 
