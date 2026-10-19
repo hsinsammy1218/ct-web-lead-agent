@@ -1,50 +1,16 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { validateSubmission, type LeadStatus } from "@ct/core";
-import { COOKIE, currentOperator, operatorEmails, signOperator } from "../lib/auth";
+import { currentOperator } from "../lib/auth";
 import { getStore } from "../lib/store";
 
-async function operatorOrRedirect(): Promise<string> {
-  const email = await currentOperator();
-  if (!email) redirect("/login");
-  return email;
-}
-
-export async function signIn(formData: FormData): Promise<void> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  if (!operatorEmails().includes(email)) redirect("/login?error=not-allowed");
-  if (process.env.DATA_DRIVER === "supabase" && process.env.NEXT_PUBLIC_SUPABASE_URL) {
-    const { createClient } = await import("../lib/supabase");
-    const supabase = await createClient();
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: siteUrl ? `${siteUrl}/auth/callback` : undefined },
-    });
-    if (error) redirect("/login?error=auth");
-    redirect("/login?sent=1");
-  }
-  if (process.env.ALLOW_DEV_AUTH !== "true") redirect("/login?error=auth-disabled");
-  const jar = await cookies();
-  jar.set(COOKIE, await signOperator(email), { httpOnly: true, sameSite: "lax", path: "/" });
-  redirect("/");
-}
-
-export async function signOut(): Promise<void> {
-  if (process.env.DATA_DRIVER === "supabase" && process.env.NEXT_PUBLIC_SUPABASE_URL) {
-    const { createClient } = await import("../lib/supabase");
-    const supabase = await createClient();
-    await supabase.auth.signOut();
-  }
-  const jar = await cookies();
-  jar.delete(COOKIE);
-  redirect("/login");
+async function actor(): Promise<string> {
+  return currentOperator();
 }
 
 export async function submitWebsite(formData: FormData): Promise<void> {
-  const email = await operatorOrRedirect();
+  const email = await actor();
   const store = getStore();
   const validated = validateSubmission(
     {
@@ -64,7 +30,7 @@ export async function submitWebsite(formData: FormData): Promise<void> {
 }
 
 export async function importCsv(formData: FormData): Promise<void> {
-  const email = await operatorOrRedirect();
+  const email = await actor();
   const file = formData.get("file");
   const pasted = String(formData.get("csv") ?? "");
   const text = file instanceof File && file.size > 0 ? await file.text() : pasted;
@@ -74,7 +40,7 @@ export async function importCsv(formData: FormData): Promise<void> {
 }
 
 export async function addNote(formData: FormData): Promise<void> {
-  const email = await operatorOrRedirect();
+  const email = await actor();
   const id = String(formData.get("lead_id") ?? "");
   const body = String(formData.get("body") ?? "").trim();
   if (body) await getStore().addNote(id, body, email);
@@ -82,7 +48,7 @@ export async function addNote(formData: FormData): Promise<void> {
 }
 
 export async function setLeadStatus(formData: FormData): Promise<void> {
-  const email = await operatorOrRedirect();
+  const email = await actor();
   const id = String(formData.get("lead_id") ?? "");
   const status = String(formData.get("status") ?? "new") as LeadStatus;
   await getStore().setStatus(id, status, email);
@@ -90,7 +56,7 @@ export async function setLeadStatus(formData: FormData): Promise<void> {
 }
 
 export async function reaudit(formData: FormData): Promise<void> {
-  await operatorOrRedirect();
+  await actor();
   const id = String(formData.get("lead_id") ?? "");
   const lead = await getStore().getLead(id);
   if (!lead) redirect("/leads");
@@ -102,14 +68,14 @@ export async function reaudit(formData: FormData): Promise<void> {
 }
 
 export async function rescore(formData: FormData): Promise<void> {
-  await operatorOrRedirect();
+  await actor();
   const id = String(formData.get("lead_id") ?? "");
   await getStore().enqueueJob("lead.score", `rescore:${id}:${Date.now()}`, { leadId: id });
   redirect(`/leads/${id}?queued=1`);
 }
 
 export async function regenerateDraft(formData: FormData): Promise<void> {
-  await operatorOrRedirect();
+  await actor();
   const id = String(formData.get("lead_id") ?? "");
   const store = getStore();
   const lead = await store.getLead(id);

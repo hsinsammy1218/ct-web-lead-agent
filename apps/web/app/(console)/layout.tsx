@@ -1,9 +1,6 @@
 import Link from "next/link";
-import { signOut } from "../actions";
-import { currentOperator } from "../../lib/auth";
 
 export default async function ConsoleLayout({ children }: { children: React.ReactNode }) {
-  const email = await currentOperator();
   return (
     <div className="min-h-screen">
       <header className="border-b border-line bg-white">
@@ -19,12 +16,6 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
             <Link href="/leads/new">Add website</Link>
             <Link href="/leads/import">Import CSV</Link>
             <Link href="/jobs">Jobs</Link>
-            <span className="text-ink/60">{email}</span>
-            <form action={signOut}>
-              <button type="submit" className="text-ink/70">
-                Sign out
-              </button>
-            </form>
           </nav>
         </div>
       </header>
