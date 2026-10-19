@@ -10,17 +10,18 @@ export default async function LeadsPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
-  const store = getStore();
-  const reference = store.referenceData();
   const filters = filtersFromParams(params);
   let leads;
+  let reference;
   let error: string | null = null;
   try {
+    const store = getStore();
+    reference = store.referenceData();
     leads = await store.listLeads(filters);
   } catch (caught) {
     error = caught instanceof Error ? caught.message : "Leads could not be loaded";
   }
-  if (error || !leads) {
+  if (error || !leads || !reference) {
     return (
       <section className="rounded-lg border border-red-300 bg-white p-6">
         <h1 className="font-serif text-2xl">Leads are unavailable</h1>

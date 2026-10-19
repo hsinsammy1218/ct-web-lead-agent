@@ -8,7 +8,21 @@ export default async function NewLeadPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
-  const reference = getStore().referenceData();
+  let reference;
+  let loadError: string | null = null;
+  try {
+    reference = getStore().referenceData();
+  } catch (caught) {
+    loadError = caught instanceof Error ? caught.message : "Could not load form options";
+  }
+  if (loadError || !reference) {
+    return (
+      <section className="rounded-lg border border-red-300 bg-white p-6">
+        <h1 className="font-serif text-2xl">Add website is unavailable</h1>
+        <p className="mt-2 text-sm">{loadError}</p>
+      </section>
+    );
+  }
   const industries = reference.industries.filter((industry) => industry.enabled).sort((a, b) => a.sortOrder - b.sortOrder);
   return (
     <section className="max-w-xl">

@@ -21,6 +21,15 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
   transpilePackages: ["@ct/core", "@ct/db"],
   serverExternalPackages: ["playwright"],
+  // Monorepo: include shared config JSON/YAML in serverless traces.
+  outputFileTracingRoot: root,
+  outputFileTracingIncludes: {
+    "/*": [
+      "../../config/ct/**/*",
+      "../../config/industries.yaml",
+      "../../config/denylist.json",
+    ],
+  },
   webpack: (config) => {
     config.resolve.extensionAlias = {
       ...config.resolve.extensionAlias,
