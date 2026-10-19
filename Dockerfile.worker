@@ -1,4 +1,5 @@
 # Audit worker: Playwright Chromium + monorepo workspace.
+# Keep the FROM tag identical to apps/worker/package.json "playwright" version.
 FROM mcr.microsoft.com/playwright:v1.64.0-jammy
 
 WORKDIR /app
@@ -7,10 +8,13 @@ COPY apps ./apps
 COPY packages ./packages
 COPY config ./config
 
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+# Reinstall chromium into PLAYWRIGHT_BROWSERS_PATH so the npm package matches
+# the image. Skip --with-deps (su fails on Render's builder).
 RUN npm ci \
+  && npx --yes playwright install chromium \
   && mkdir -p /tmp/screenshots /tmp/drafts /tmp/audit-html
 
-ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 ENV NODE_ENV=production
 ENV SCREENSHOT_DIR=/tmp/screenshots
 ENV SITE_DRAFT_DIR=/tmp/drafts
