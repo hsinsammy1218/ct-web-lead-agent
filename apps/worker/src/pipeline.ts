@@ -67,7 +67,15 @@ async function runAudit(store: Store, item: WorkRecord): Promise<void> {
     }
     if (fetchResult.finalUrl && fetchResult.html && !fetchResult.blocked && (fetchResult.statusCode ?? 500) < 400) {
       psi = await loadPsi(store, fetchResult.finalUrl);
-      browser = await loadBrowser(fetchResult.finalUrl, lead.audit?.id ?? lead.id);
+      try {
+        browser = await loadBrowser(fetchResult.finalUrl, lead.audit?.id ?? lead.id);
+      } catch (error) {
+        // Keep the audit moving when Chromium is missing/mismatched; PSI + HTML still score.
+        console.error(
+          `Playwright audit skipped: ${error instanceof Error ? error.message.split("\n")[0] : "browser launch failed"}`,
+        );
+        browser = null;
+      }
     }
   }
   const evaluation = evaluateWebsite({

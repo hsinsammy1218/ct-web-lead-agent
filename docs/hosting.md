@@ -36,7 +36,9 @@ Live services (EC Solutions workspace):
 | `ct-lead-audit` | every 5 minutes (`npm run worker:once`, Docker + Playwright) | https://dashboard.render.com/cron/crn-dbaejhm7bikc73eb26s0 |
 | `ct-lead-maintenance` | daily 06:15 UTC | https://dashboard.render.com/cron/crn-dbaehsu1egvs73adjlgg |
 
-Branch: `cursor/ct-lead-agent-0cac` (auto-deploy on push). Blueprint: `render.yaml` + `Dockerfile.worker`.
+Branch: `main` (auto-deploy on push). Blueprint: `render.yaml` + `Dockerfile.worker`.
+Playwright npm package and `Dockerfile.worker` base image must stay on the same version
+(currently `1.64.0` / `mcr.microsoft.com/playwright:v1.64.0-jammy`).
 
 **Ignore / delete** the failed native Node cron `ct-lead-worker`
 (https://dashboard.render.com/cron/crn-dbaehse7bikc73eaqdg0 → Settings → Delete).
