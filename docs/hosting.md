@@ -40,15 +40,16 @@ Branch: `cursor/ct-lead-agent-0cac` (auto-deploy on push). Blueprint: `render.ya
 (https://dashboard.render.com/cron/crn-dbaehse7bikc73eaqdg0 → Settings → Delete).
 Its build still runs `playwright install --with-deps`, which fails with `su: Authentication failure` on Render. Audits use `ct-lead-audit` (Docker) instead.
 
-**Required secret on both services** (Environment → Add):
+**Required on both services** (Environment → Add / edit — replace any `{{…}}` placeholders):
 
-```
-SUPABASE_SECRET_KEY=<service_role from Supabase → Project Settings → API>
-```
+| Variable | Where |
+| --- | --- |
+| `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API (`sb_secret_…` or legacy `service_role`) |
+| `OPERATOR_EMAILS` | Your login email (comma-separated if several) |
 
-Optional: `OPERATOR_EMAILS`, `PAGESPEED_API_KEY`, `OPENAI_API_KEY`, `GITHUB_TOKEN`, `VERCEL_TOKEN`.
+Optional on `ct-lead-audit`: `OPENAI_API_KEY`, `PAGESPEED_API_KEY`, `GITHUB_TOKEN` (`ghp_…`), `VERCEL_TOKEN` (from https://vercel.com/account/tokens — **not** a `prj_…` project id).
 
-Without `SUPABASE_SECRET_KEY`, cron runs start then exit with a missing-key error. Dashboard submits still land in Supabase `work_items`; audits stay queued until the secret is set and a worker run succeeds.
+Local `.env.local` is already wired and `npm run worker:once` connects to Supabase successfully. Render cron runs need the same secrets in the dashboard (or a Render API key so the agent can push them).
 
 Re-apply or recreate from Blueprint:
 
