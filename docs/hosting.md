@@ -51,6 +51,8 @@ Its build still runs `playwright install --with-deps`, which fails with `su: Aut
 
 Optional on `ct-lead-audit`: `OPENAI_API_KEY`, `PAGESPEED_API_KEY`, `GITHUB_TOKEN` (`ghp_…`), `VERCEL_TOKEN` (from https://vercel.com/account/tokens — **not** a `prj_…` project id).
 
+Optional on the Vercel web app: `OPENAI_API_KEY` and `OPENAI_MODEL` (default `gpt-4.1-mini`) so **Add website → Fill with agent** can enrich a pasted URL or business blurb. Without the key, the form still uses heuristic extraction.
+
 Local `.env.local` and both Render crons are wired with production secrets.  
 `ct-lead-audit` one-off job and scheduled runs succeed against Supabase (empty queue is OK).
 

@@ -4,6 +4,7 @@ export * from "./url.js";
 export * from "./ssrf.js";
 export * from "./csv.js";
 export * from "./intake.js";
+export * from "./paste-intake.js";
 export * from "./scoring.js";
 export * from "./audit.js";
 export * from "./ai.js";
