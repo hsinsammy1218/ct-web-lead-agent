@@ -1,4 +1,5 @@
 import { loadLocalEnv, loadReferenceData, localDataFile, MemoryStore, SupabaseStore } from "@ct/db";
+import type { ReferenceData } from "@ct/core";
 
 export type AppStore = MemoryStore | SupabaseStore;
 
@@ -31,4 +32,13 @@ export function getStore(): AppStore {
     singleton = new MemoryStore(localDataFile(), reference, caps);
   }
   return singleton;
+}
+
+/** Industries (and other reference) for forms — prefers live Supabase rows when available. */
+export async function getReferenceData(): Promise<ReferenceData> {
+  const store = getStore();
+  if ("liveReferenceData" in store && typeof store.liveReferenceData === "function") {
+    return store.liveReferenceData();
+  }
+  return store.referenceData();
 }

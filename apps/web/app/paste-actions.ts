@@ -13,7 +13,7 @@ import {
   type PasteDraft,
 } from "@ct/core";
 import { currentOperator } from "../lib/auth";
-import { getStore } from "../lib/store";
+import { getReferenceData } from "../lib/store";
 
 export type InterpretPasteResult =
   | { ok: true; draft: PasteDraft; message: string }
@@ -32,7 +32,7 @@ export async function interpretPaste(paste: string): Promise<InterpretPasteResul
     return { ok: false, message: "Paste a website URL or business details first." };
   }
 
-  const data = getStore().referenceData();
+  const data = await getReferenceData();
   const urls = extractCandidateUrls(text);
   let pageFetched = false;
   let hints = null;

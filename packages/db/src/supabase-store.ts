@@ -39,6 +39,24 @@ export class SupabaseStore {
     return this.reference;
   }
 
+  /** Prefer live industry rows from Supabase so the Add website dropdown stays current after reseed. */
+  async liveReferenceData(): Promise<ReferenceData> {
+    const { data, error } = await this.client
+      .from("industries")
+      .select("slug, display_name, enabled, sort_order")
+      .order("sort_order", { ascending: true });
+    if (error || !data?.length) return this.reference;
+    return {
+      ...this.reference,
+      industries: data.map((row) => ({
+        slug: String(row.slug),
+        displayName: String(row.display_name),
+        enabled: Boolean(row.enabled),
+        sortOrder: Number(row.sort_order ?? 0),
+      })),
+    };
+  }
+
   async seedReference(): Promise<void> {
     const { error: regionError } = await this.client.from("planning_regions").upsert(
       this.reference.regions.map((region) => ({
@@ -59,16 +77,26 @@ export class SupabaseStore {
       { onConflict: "opm_code" },
     );
     if (townError) throw townError;
-    const { error: industryError } = await this.client.from("industries").upsert(
-      this.reference.industries.map((industry) => ({
+    for (const industry of this.reference.industries) {
+      const row = {
         slug: industry.slug,
         display_name: industry.displayName,
         enabled: industry.enabled,
         sort_order: industry.sortOrder,
-      })),
-      { onConflict: "slug" },
-    );
-    if (industryError) throw industryError;
+      };
+      const { error: industryError } = await this.client.from("industries").upsert(row, { onConflict: "slug" });
+      if (industryError) throw industryError;
+      // Ensure existing rows refresh labels/sort even if upsert insert-path was taken earlier.
+      const { error: updateError } = await this.client
+        .from("industries")
+        .update({
+          display_name: industry.displayName,
+          enabled: industry.enabled,
+          sort_order: industry.sortOrder,
+        })
+        .eq("slug", industry.slug);
+      if (updateError) throw updateError;
+    }
   }
 
   async submit(input: NormalizedSubmission, submittedBy: string, allowDuplicate: boolean): Promise<SubmitResult> {
