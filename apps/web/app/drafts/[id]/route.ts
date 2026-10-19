@@ -1,11 +1,9 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { draftSiteDirectory } from "@ct/db";
-import { currentOperator } from "../../../lib/auth";
 import { getStore } from "../../../lib/store";
 
 export async function GET(_request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
-  if (!(await currentOperator())) return new Response("Unauthorized", { status: 401 });
   const { id } = await context.params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) return new Response("Not found", { status: 404 });
   const lead = await getStore().getLead(id);

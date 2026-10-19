@@ -20,12 +20,12 @@ SUPABASE_URL=https://ytbdtfzdgncdupqzniba.supabase.co
 NEXT_PUBLIC_SUPABASE_URL=https://ytbdtfzdgncdupqzniba.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable>
 SUPABASE_SECRET_KEY=<service_role>
-OPERATOR_EMAILS=<your email>
+OPERATOR_EMAILS=<optional attribution email>
 ALLOW_DEV_AUTH=false
 NEXT_PUBLIC_SITE_URL=https://ct-web-lead-agent.vercel.app
 ```
 
-Also set Supabase Auth **Site URL** to that same domain (Authentication → URL Configuration), or magic-link emails will keep `redirect_to=http://localhost:3000`.
+No operator sign-in — the dashboard is open. `OPERATOR_EMAILS` is only used as the default attribution name for notes/submissions.
 
 ## Render worker
 

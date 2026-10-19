@@ -44,22 +44,9 @@ ALLOW_DEV_AUTH=false
 3. Copy the **service_role** / secret key into `SUPABASE_SECRET_KEY` (never commit this; never prefix with `NEXT_PUBLIC_`).
 4. Put the same URL + secret on the Render worker and Vercel dashboard.
 
-## Operator auth
+## Access
 
-Magic-link email. First allowlisted sign-in sets `app_metadata.role = operator`. RLS policies require that role for dashboard reads/writes. The worker uses the secret key and bypasses RLS for audits and job claims.
-
-### Fix “redirect_to=http://localhost:3000” in the email
-
-The confirm link uses Supabase **Authentication → URL Configuration**:
-
-1. **Site URL** → `https://ct-web-lead-agent.vercel.app` (not `http://localhost:3000`)
-2. **Redirect URLs** → add:
-   - `https://ct-web-lead-agent.vercel.app/auth/callback`
-   - `http://localhost:3000/auth/callback` (optional, for local)
-3. On Vercel, set `NEXT_PUBLIC_SITE_URL=https://ct-web-lead-agent.vercel.app` (Production + Preview), then redeploy
-4. Request a **new** magic link — old emails still point at localhost
-
-Dashboard: https://supabase.com/dashboard/project/ytbdtfzdgncdupqzniba/auth/url-configuration
+The dashboard does **not** use operator sign-in. Server routes use `SUPABASE_SECRET_KEY` (service role) and bypass RLS. Optional `OPERATOR_EMAILS` only sets the default attribution email for notes and submissions.
 
 ## Local verify
 
