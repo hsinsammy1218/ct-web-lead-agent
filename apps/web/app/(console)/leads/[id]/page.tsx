@@ -16,7 +16,18 @@ export default async function LeadDetailPage({
 }) {
   const { id } = await params;
   const query = await searchParams;
-  const store = getStore();
+  let store;
+  try {
+    store = getStore();
+  } catch (caught) {
+    const message = caught instanceof Error ? caught.message : "Lead store unavailable";
+    return (
+      <section className="rounded-lg border border-red-300 bg-white p-6">
+        <h1 className="font-serif text-2xl">Lead is unavailable</h1>
+        <p className="mt-2 text-sm">{message}</p>
+      </section>
+    );
+  }
   const lead = await store.getLead(id);
   if (!lead) notFound();
   const budget = await store.budgetDecision(0.004);

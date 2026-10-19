@@ -7,7 +7,13 @@ let singleton: AppStore | undefined;
 export function getStore(): AppStore {
   if (singleton) return singleton;
   loadLocalEnv();
-  const reference = loadReferenceData();
+  let reference;
+  try {
+    reference = loadReferenceData();
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Could not load CT reference data (config/ct). ${detail}`);
+  }
   const caps = {
     dailyCapUsd: Number(process.env.DAILY_API_CAP_USD ?? 5),
     monthlyCapUsd: Number(process.env.MONTHLY_API_CAP_USD ?? 50),
@@ -15,7 +21,11 @@ export function getStore(): AppStore {
   if (process.env.DATA_DRIVER === "supabase") {
     const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SECRET_KEY;
-    if (!url || !key) throw new Error("Supabase URL and secret key are required on the server");
+    if (!url || !key) {
+      throw new Error(
+        "Set SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL) and SUPABASE_SECRET_KEY on the Vercel project, then redeploy.",
+      );
+    }
     singleton = new SupabaseStore(url, key, reference, caps);
   } else {
     singleton = new MemoryStore(localDataFile(), reference, caps);
