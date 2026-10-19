@@ -1,39 +1,153 @@
-# Intake labels for the CT fitness lead agent.
+# Intake labels for Connecticut local-business website audits.
 # Operators can edit this file and re-seed without changing application code.
+# The paste agent / OpenAI must pick one of these slugs.
 industries:
+  # Food & drink
+  - slug: restaurants
+    display_name: Restaurants
+    enabled: true
+    sort_order: 10
+  - slug: cafes-coffee
+    display_name: Cafés & coffee shops
+    enabled: true
+    sort_order: 20
+  - slug: ice-cream-dessert
+    display_name: Ice cream & dessert shops
+    enabled: true
+    sort_order: 30
+  - slug: bakeries
+    display_name: Bakeries
+    enabled: true
+    sort_order: 40
+  - slug: bars-nightlife
+    display_name: Bars & nightlife
+    enabled: true
+    sort_order: 50
+  - slug: food-trucks
+    display_name: Food trucks & catering
+    enabled: true
+    sort_order: 60
+
+  # Fitness & wellness (kept for existing leads)
   - slug: boxing-gyms
     display_name: Boxing gyms
     enabled: true
-    sort_order: 10
+    sort_order: 110
   - slug: martial-arts
     display_name: Martial arts schools
     enabled: true
-    sort_order: 20
+    sort_order: 120
   - slug: fitness-gyms
     display_name: Fitness gyms
     enabled: true
-    sort_order: 30
+    sort_order: 130
   - slug: personal-training
     display_name: Personal training
     enabled: true
-    sort_order: 40
+    sort_order: 140
   - slug: crossfit-bootcamps
     display_name: CrossFit & bootcamps
     enabled: true
-    sort_order: 50
+    sort_order: 150
   - slug: yoga-pilates
     display_name: Yoga & pilates studios
     enabled: true
-    sort_order: 60
+    sort_order: 160
   - slug: youth-sports-training
     display_name: Youth sports training
     enabled: true
-    sort_order: 70
+    sort_order: 170
   - slug: specialty-fitness
     display_name: Specialty fitness (dance, climb, cycle)
     enabled: true
-    sort_order: 80
-  - slug: professional-services
-    display_name: Other local fitness / wellness
+    sort_order: 180
+  - slug: salons-spas
+    display_name: Salons & spas
     enabled: true
-    sort_order: 90
+    sort_order: 190
+
+  # Home & auto
+  - slug: roofing
+    display_name: Roofing companies
+    enabled: true
+    sort_order: 210
+  - slug: plumbing
+    display_name: Plumbing
+    enabled: true
+    sort_order: 220
+  - slug: electrical
+    display_name: Electrical contractors
+    enabled: true
+    sort_order: 230
+  - slug: hvac
+    display_name: HVAC
+    enabled: true
+    sort_order: 240
+  - slug: landscaping
+    display_name: Landscaping & lawn care
+    enabled: true
+    sort_order: 250
+  - slug: cleaning-services
+    display_name: Cleaning services
+    enabled: true
+    sort_order: 260
+  - slug: home-improvement
+    display_name: Home improvement & remodeling
+    enabled: true
+    sort_order: 270
+  - slug: auto-repair
+    display_name: Auto repair & body shops
+    enabled: true
+    sort_order: 280
+
+  # Professional & retail
+  - slug: dental
+    display_name: Dental offices
+    enabled: true
+    sort_order: 310
+  - slug: medical-clinics
+    display_name: Medical clinics
+    enabled: true
+    sort_order: 320
+  - slug: legal
+    display_name: Law firms
+    enabled: true
+    sort_order: 330
+  - slug: accounting
+    display_name: Accounting & bookkeeping
+    enabled: true
+    sort_order: 340
+  - slug: real-estate
+    display_name: Real estate
+    enabled: true
+    sort_order: 350
+  - slug: insurance
+    display_name: Insurance agencies
+    enabled: true
+    sort_order: 360
+  - slug: retail-shops
+    display_name: Retail shops
+    enabled: true
+    sort_order: 370
+  - slug: grocery-markets
+    display_name: Grocery & markets
+    enabled: true
+    sort_order: 380
+  - slug: hotels-inns
+    display_name: Hotels & inns
+    enabled: true
+    sort_order: 390
+  - slug: childcare
+    display_name: Childcare & daycares
+    enabled: true
+    sort_order: 400
+  - slug: pet-services
+    display_name: Pet services
+    enabled: true
+    sort_order: 410
+
+  # Catch-all (slug kept for existing rows that used the old fitness “other”)
+  - slug: professional-services
+    display_name: Other local business
+    enabled: true
+    sort_order: 900
