@@ -1,5 +1,5 @@
 # Audit worker: Playwright Chromium + monorepo workspace.
-FROM mcr.microsoft.com/playwright:v1.55.1-jammy
+FROM mcr.microsoft.com/playwright:v1.64.0-jammy
 
 WORKDIR /app
 COPY package.json package-lock.json ./
