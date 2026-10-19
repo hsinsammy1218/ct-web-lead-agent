@@ -8,6 +8,8 @@ const config: Config = {
         paper: "#f3efe6",
         ink: "#1c2430",
         pine: "#0f6e56",
+        moss: "#1f8f72",
+        deep: "#0a3d31",
         line: "#e3d9c8",
       },
       fontFamily: {
