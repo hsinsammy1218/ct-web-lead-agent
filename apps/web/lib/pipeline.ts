@@ -57,11 +57,12 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
     auditBlocked ||
     (Boolean(lead.audit) && lead.audit?.status !== "queued");
 
-  const aiFailed = aiJob?.status === "failed" && !lead.ai;
+  // Written AI notes are optional once measured scoring finished — don't block approval.
   const aiSkipped =
     Boolean(lead.score) &&
     !lead.ai &&
-    (aiJob?.status === "succeeded" || (auditDone && !aiJob));
+    (aiJob?.status === "succeeded" || aiJob?.status === "failed" || (auditDone && !aiJob));
+  const aiFailed = aiJob?.status === "failed" && !lead.ai && !lead.score;
   const aiDone = Boolean(lead.ai);
   const scoreDone = Boolean(lead.score);
   const draftQueued = lead.draft?.status === "queued" || lead.draft?.status === "publishing";
@@ -154,10 +155,12 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
             : draftFailed
               ? lead.draft?.error || "Generation failed"
               : "After scoring",
-      status: jobStepStatus(generateJob, draftDone, {
-        // Keep failed builds soft when scoring is done so approval can restart the step.
-        failedWhen: (draftFailed || generateJob?.status === "failed") && !awaitingBuildApproval,
-      }),
+      status: awaitingBuildApproval
+        ? "active"
+        : jobStepStatus(generateJob, draftDone, {
+            // Keep failed builds soft when scoring is done so approval can restart the step.
+            failedWhen: (draftFailed || generateJob?.status === "failed") && !awaitingBuildApproval,
+          }),
     },
     {
       id: "publish",
@@ -170,13 +173,17 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
             ? "Creating repo and deploying…"
             : awaitingPublishApproval
               ? "Waiting for your approval to publish live"
-              : publishFailed
+              : publishFailed && draftDone
                 ? lead.draft?.error || "Publish failed"
                 : "After the draft is ready",
-      status: jobStepStatus(publishJob, publishDone, {
-        skipWhen: publishSkipped,
-        failedWhen: (publishFailed || publishJob?.status === "failed") && !awaitingPublishApproval,
-      }),
+      status: !draftDone
+        ? "pending"
+        : awaitingPublishApproval
+          ? "active"
+          : jobStepStatus(publishJob, publishDone, {
+              skipWhen: publishSkipped,
+              failedWhen: (publishFailed || publishJob?.status === "failed") && !awaitingPublishApproval,
+            }),
     },
   ];
 
@@ -226,18 +233,18 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
 
   let headline = "Audit complete";
   let subline = "Results below are ready for review.";
-  if (failed) {
-    headline = "Pipeline needs attention";
-    subline = current?.detail || "A step failed. Retry from the actions below.";
-  } else if (active) {
-    headline = `${current?.label ?? "Work"} in progress`;
-    subline = current?.detail || "The worker is processing this lead.";
-  } else if (awaitingBuildApproval) {
+  if (awaitingBuildApproval) {
     headline = "Ready for your review";
     subline = "Audit and scoring are done. Approve a website build when you want one.";
   } else if (awaitingPublishApproval) {
     headline = "Draft ready for review";
     subline = "Preview the draft, then approve live publish when you are ready.";
+  } else if (failed) {
+    headline = "Pipeline needs attention";
+    subline = current?.detail || "A step failed. Retry from the actions below.";
+  } else if (active) {
+    headline = `${current?.label ?? "Work"} in progress`;
+    subline = current?.detail || "The worker is processing this lead.";
   } else if (percent < 100 && scoredIncomplete(steps)) {
     headline = "Waiting to continue";
     subline = "Later steps start after earlier ones finish.";
