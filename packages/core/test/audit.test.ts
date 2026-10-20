@@ -116,9 +116,29 @@ describe("website classification and audit", () => {
       findings: [],
     });
     expect(prompt).toMatch(/untrusted evidence/i);
+    expect(prompt).toMatch(/recommended_service/);
     expect(isPrivateAddress("10.1.1.1")).toBe(true);
     expect(isPrivateAddress("8.8.8.8")).toBe(false);
     expect(() => addressesArePublic(["169.254.169.254"])).toThrow(/private/i);
+  });
+
+  it("normalizes camelCase and wrapped AI assessment payloads", () => {
+    const assessment = validateAssessment({
+      assessment: {
+        verifiedFindings: [{ statement: "No click-to-call", evidenceCode: "no_click_to_call" }],
+        inferences: ["Visitors may struggle to call from mobile."],
+        unknowns: ["Search rankings are unknown."],
+        recommendedService: "Local SEO",
+        redesignJustified: "false",
+        rationale: "Measured evidence shows a weak contact path.",
+        confidence: 0.62,
+      },
+      extraModelNoise: true,
+    });
+    expect(assessment.recommended_service).toBe("local_seo");
+    expect(assessment.redesign_justified).toBe(false);
+    expect(assessment.confidence).toBe(62);
+    expect(assessment.verified_findings[0]?.evidence_code).toBe("no_click_to_call");
   });
 
   it("stops paid calls when the daily or monthly cap is reached", () => {

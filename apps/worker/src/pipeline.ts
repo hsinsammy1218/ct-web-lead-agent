@@ -133,13 +133,21 @@ async function runAi(store: Store, item: WorkRecord): Promise<void> {
   const { text } = await generateText({
     model: openai(process.env.OPENAI_MODEL ?? "gpt-4.1-mini"),
     temperature: 0,
-    system: `${ASSESSMENT_SYSTEM_PROMPT} Respond with one JSON object and no markdown.`,
+    system: ASSESSMENT_SYSTEM_PROMPT,
     prompt,
   });
-  const assessment = validateAssessment(parseJsonObject(text));
-  await store.recordUsage("openai", "assessment", 1, AI_COST_USD);
-  await store.saveAi(lead.id, assessment, String(item.payload.inputHash ?? lead.id));
-  await store.enqueueJob("lead.score", `score:${lead.id}:ai`, { leadId: lead.id });
+  try {
+    const assessment = validateAssessment(parseJsonObject(text));
+    await store.recordUsage("openai", "assessment", 1, AI_COST_USD);
+    await store.saveAi(lead.id, assessment, String(item.payload.inputHash ?? lead.id));
+    await store.enqueueJob("lead.score", `score:${lead.id}:ai`, { leadId: lead.id });
+  } catch (error) {
+    // Keep the pipeline moving on schema/policy misses — measured audit still scores.
+    const message = error instanceof Error ? error.message : "AI assessment failed";
+    console.error(`AI assessment skipped for ${lead.id}: ${message}`);
+    await store.recordUsage("openai", "assessment", 1, AI_COST_USD);
+    await store.enqueueJob("lead.score", `score:${lead.id}:ai-fallback`, { leadId: lead.id });
+  }
 }
 
 async function runScore(store: Store, item: WorkRecord): Promise<void> {
