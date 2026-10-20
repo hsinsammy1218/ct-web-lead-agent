@@ -79,18 +79,22 @@ export async function rescore(formData: FormData): Promise<void> {
   redirect(`/leads/${id}?queued=1`);
 }
 
-export async function regenerateDraft(formData: FormData): Promise<void> {
+/** Operator approval after reviewing the audit — queues draft website build only. */
+export async function approveBuildWebsite(formData: FormData): Promise<void> {
   await actor();
   const id = String(formData.get("lead_id") ?? "");
   const store = getStore();
   const lead = await store.getLead(id);
   if (!lead) redirect("/leads");
+  if (!lead.score) {
+    redirect(`/leads/${id}?error=${encodeURIComponent("Score the audit before approving a website build.")}`);
+  }
   await store.saveSiteDraft(id, {
     status: "queued",
     path: null,
     previewPath: null,
     generatedAt: null,
-    summary: "Draft website queued again.",
+    summary: "Website build approved — queued for the worker.",
     fixesApplied: [],
     recommendedService: lead.score?.recommendedService ?? null,
     error: null,
@@ -98,10 +102,47 @@ export async function regenerateDraft(formData: FormData): Promise<void> {
     deploymentUrl: null,
     githubRepo: null,
     vercelProjectId: null,
-    publishStatus: "queued",
+    publishStatus: null,
     testsPassed: null,
     testChecks: [],
   });
   await store.enqueueJob("site.generate", `draft:${id}:${Date.now()}`, { leadId: id });
   redirect(`/leads/${id}?queued=1`);
+}
+
+/** Explicit live publish after the local draft is ready. */
+export async function publishWebsite(formData: FormData): Promise<void> {
+  await actor();
+  const id = String(formData.get("lead_id") ?? "");
+  const store = getStore();
+  const lead = await store.getLead(id);
+  if (!lead) redirect("/leads");
+  const draft = lead.draft;
+  if (!draft?.path && draft?.status !== "ready") {
+    redirect(`/leads/${id}?error=${encodeURIComponent("Build and review the draft website before publishing.")}`);
+  }
+  await store.saveSiteDraft(id, {
+    status: "publishing",
+    path: draft?.path ?? null,
+    previewPath: draft?.previewPath ?? `/drafts/${id}`,
+    generatedAt: draft?.generatedAt ?? null,
+    summary: draft?.summary ?? "Publishing approved — queued for deploy.",
+    fixesApplied: draft?.fixesApplied ?? [],
+    recommendedService: draft?.recommendedService ?? lead.score?.recommendedService ?? null,
+    error: null,
+    repoUrl: draft?.repoUrl ?? null,
+    deploymentUrl: draft?.deploymentUrl ?? null,
+    githubRepo: draft?.githubRepo ?? null,
+    vercelProjectId: draft?.vercelProjectId ?? null,
+    publishStatus: "queued",
+    testsPassed: draft?.testsPassed ?? null,
+    testChecks: draft?.testChecks ?? [],
+  });
+  await store.enqueueJob("site.publish", `publish:${id}:${Date.now()}`, { leadId: id });
+  redirect(`/leads/${id}?queued=1`);
+}
+
+/** @deprecated alias — prefer approveBuildWebsite */
+export async function regenerateDraft(formData: FormData): Promise<void> {
+  return approveBuildWebsite(formData);
 }

@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LEAD_STATUSES } from "@ct/core";
-import { addNote, reaudit, regenerateDraft, rescore, setLeadStatus } from "../../../actions";
+import {
+  addNote,
+  approveBuildWebsite,
+  publishWebsite,
+  reaudit,
+  rescore,
+  setLeadStatus,
+} from "../../../actions";
 import { AuditProgress } from "../../../../components/audit-progress";
 import { AutoRefresh } from "../../../../components/auto-refresh";
 import { ScoreMeter } from "../../../../components/score-meter";
@@ -39,6 +46,14 @@ export default async function LeadDetailPage({
   const inferred = lead.audit?.findings.filter((finding) => finding.source === "inferred") ?? [];
   const blocked = lead.audit?.status === "blocked" || lead.website.status === "BLOCKED";
   const scored = Boolean(lead.score);
+  const draftReady = lead.draft?.status === "ready";
+  const draftBuilding = lead.draft?.status === "queued" || lead.draft?.status === "publishing";
+  const canApproveBuild = scored && !draftBuilding && !draftReady;
+  const canPublish =
+    draftReady &&
+    lead.draft?.publishStatus !== "published" &&
+    lead.draft?.publishStatus !== "queued" &&
+    !lead.draft?.deploymentUrl;
   const siteHost = (() => {
     try {
       return new URL(lead.website.originalUrl).hostname.replace(/^www\./, "");
@@ -81,6 +96,11 @@ export default async function LeadDetailPage({
       {query.queued ? (
         <p className="surface-quiet px-4 py-3 text-sm">Work was queued. This page keeps pace while the pipeline runs.</p>
       ) : null}
+      {query.error ? (
+        <p className="surface-quiet border-red-300/60 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {decodeURIComponent(query.error)}
+        </p>
+      ) : null}
       {query.skipped ? (
         <p className="surface-quiet border-pine/25 bg-pine/5 px-4 py-3 text-sm">
           {query.reason
@@ -90,6 +110,20 @@ export default async function LeadDetailPage({
       ) : null}
 
       <AuditProgress pipeline={pipeline} />
+
+      {canApproveBuild ? (
+        <article className="lead-panel px-6 py-6 sm:px-8">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-pine">Your review</p>
+          <h2 className="mt-2 font-serif text-3xl tracking-tight">Approve a website build when ready</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/70">
+            The audit and score are ready below. Nothing is built or published until you approve it.
+          </p>
+          <form action={approveBuildWebsite} className="mt-5">
+            <input type="hidden" name="lead_id" value={lead.id} />
+            <SubmitButton label="Approve & build website" pendingLabel="Queuing build…" />
+          </form>
+        </article>
+      ) : null}
 
       {pipeline.active && !scored ? (
         <article className="lead-panel relative overflow-hidden px-6 py-7 sm:px-8">
@@ -320,11 +354,21 @@ export default async function LeadDetailPage({
         ) : lead.draft?.status === "queued" ? (
           <p className="mt-5 text-sm text-ink/65">Draft website is queued. Progress updates above as the worker runs.</p>
         ) : lead.draft?.status === "failed" ? (
-          <p className="mt-5 text-sm text-red-700">{lead.draft.error ?? "Website generation failed."}</p>
+          <div className="mt-5 space-y-3">
+            <p className="text-sm text-red-700">{lead.draft.error ?? "Website generation failed."}</p>
+            <form action={approveBuildWebsite}>
+              <input type="hidden" name="lead_id" value={lead.id} />
+              <SubmitButton label="Approve & rebuild website" pendingLabel="Queuing build…" />
+            </form>
+          </div>
+        ) : scored ? (
+          <p className="mt-5 text-sm leading-relaxed text-ink/60">
+            Review the audit and score first. When you are ready, approve a website build — publish stays a separate
+            step.
+          </p>
         ) : (
           <p className="mt-5 text-sm leading-relaxed text-ink/60">
-            After scoring, the worker builds the site, creates a GitHub repo, deploys to Vercel, and runs production
-            checks.
+            After scoring, you can approve a draft build. Live publish only runs when you ask for it.
           </p>
         )}
       </article>
@@ -344,10 +388,18 @@ export default async function LeadDetailPage({
           <input type="hidden" name="lead_id" value={lead.id} />
           <SubmitButton label="Rescore" pendingLabel="Queuing…" />
         </form>
-        <form action={regenerateDraft}>
-          <input type="hidden" name="lead_id" value={lead.id} />
-          <SubmitButton label="Regenerate website" pendingLabel="Queuing…" />
-        </form>
+        {canApproveBuild ? (
+          <form action={approveBuildWebsite}>
+            <input type="hidden" name="lead_id" value={lead.id} />
+            <SubmitButton label="Approve & build website" pendingLabel="Queuing build…" />
+          </form>
+        ) : null}
+        {canPublish ? (
+          <form action={publishWebsite}>
+            <input type="hidden" name="lead_id" value={lead.id} />
+            <SubmitButton label="Approve & publish live" pendingLabel="Queuing publish…" />
+          </form>
+        ) : null}
         <form action={setLeadStatus} className="flex items-center gap-2">
           <input type="hidden" name="lead_id" value={lead.id} />
           <input type="hidden" name="status" value="contacted" />

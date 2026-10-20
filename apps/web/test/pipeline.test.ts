@@ -125,6 +125,9 @@ describe("buildLeadPipeline", () => {
     expect(pipeline.steps.find((step) => step.id === "audit")?.status).toBe("done");
     expect(pipeline.steps.find((step) => step.id === "score")?.status).toBe("done");
     expect(pipeline.steps.find((step) => step.id === "assess")?.status).toBe("skipped");
+    expect(pipeline.steps.find((step) => step.id === "generate")?.detail).toMatch(/approval/i);
+    expect(pipeline.steps.find((step) => step.id === "publish")?.detail).toMatch(/after the draft/i);
+    expect(pipeline.headline).toMatch(/review/i);
     expect(pipeline.active).toBe(false);
   });
 });
