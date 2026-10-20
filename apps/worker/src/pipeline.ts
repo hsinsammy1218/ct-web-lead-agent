@@ -179,12 +179,7 @@ async function runScore(store: Store, item: WorkRecord): Promise<void> {
   });
   if (lead.ai) score.recommendedService = lead.ai.recommended_service;
   await store.saveScore(lead.id, score);
-  await store.saveSiteDraft(lead.id, emptyDraft({
-    status: "queued",
-    summary: "Draft website queued from the audit.",
-    recommendedService: score.recommendedService,
-  }));
-  await store.enqueueJob("site.generate", `draft:${lead.id}:${lead.audit?.id ?? "score"}`, { leadId: lead.id });
+  // Stop here — draft/publish wait for operator approval after they review the audit.
 }
 
 async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
@@ -219,16 +214,16 @@ async function runSiteGenerate(store: Store, item: WorkRecord): Promise<void> {
       writeFileSync(full, file.content, "utf8");
     }
     await store.saveSiteDraft(lead.id, emptyDraft({
-      status: "publishing",
+      status: "ready",
       path: htmlPath,
       previewPath: `/drafts/${lead.id}`,
       generatedAt: draft.brief.generatedAt,
       summary: draft.brief.summary,
       fixesApplied: draft.brief.fixesApplied,
       recommendedService: draft.brief.recommendedService,
-      publishStatus: "queued",
+      publishStatus: null,
     }));
-    await store.enqueueJob("site.publish", `publish:${lead.id}:${draft.brief.generatedAt}`, { leadId: lead.id });
+    // Live publish waits for a separate operator action.
   } catch (error) {
     await store.saveSiteDraft(lead.id, emptyDraft({
       status: "failed",

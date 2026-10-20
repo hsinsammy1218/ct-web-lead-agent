@@ -71,10 +71,21 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
     Boolean(lead.draft?.path) ||
     Boolean(lead.draft?.deploymentUrl);
   const draftFailed = lead.draft?.status === "failed";
+  const generateInFlight = generateJob?.status === "queued" || generateJob?.status === "running";
+  const awaitingBuildApproval = scoreDone && !draftDone && !draftQueued && !generateInFlight;
   const publishDone =
     lead.draft?.publishStatus === "published" || Boolean(lead.draft?.deploymentUrl);
   const publishSkipped = lead.draft?.publishStatus === "skipped";
   const publishFailed = lead.draft?.publishStatus === "failed";
+  const publishInFlight =
+    publishJob?.status === "queued" ||
+    publishJob?.status === "running" ||
+    lead.draft?.publishStatus === "queued";
+  const awaitingPublishApproval =
+    Boolean(lead.draft?.path || lead.draft?.status === "ready") &&
+    !publishDone &&
+    !publishSkipped &&
+    !publishInFlight;
 
   const steps: PipelineStep[] = [
     {
@@ -132,32 +143,39 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
     {
       id: "generate",
       label: "Draft website",
-      detail: draftFailed
-        ? lead.draft?.error || "Generation failed"
-        : draftDone
-          ? lead.draft?.summary || "Draft ready"
-          : draftQueued || generateJob
-            ? "Building the improved site…"
-            : "After scoring",
+      detail: draftDone
+        ? lead.draft?.summary || "Draft ready — publish when you approve"
+        : draftQueued || generateInFlight
+          ? "Building the improved site…"
+          : awaitingBuildApproval
+            ? draftFailed
+              ? "Waiting for your approval to rebuild after reviewing the audit"
+              : "Waiting for your approval after you review the audit"
+            : draftFailed
+              ? lead.draft?.error || "Generation failed"
+              : "After scoring",
       status: jobStepStatus(generateJob, draftDone, {
-        failedWhen: draftFailed || generateJob?.status === "failed",
+        // Keep failed builds soft when scoring is done so approval can restart the step.
+        failedWhen: (draftFailed || generateJob?.status === "failed") && !awaitingBuildApproval,
       }),
     },
     {
       id: "publish",
       label: "Live publish",
-      detail: publishFailed
-        ? lead.draft?.error || "Publish failed"
+      detail: publishDone
+        ? lead.draft?.deploymentUrl || "Deployed"
         : publishSkipped
           ? "Publish skipped"
-          : publishDone
-            ? lead.draft?.deploymentUrl || "Deployed"
-            : publishJob || lead.draft?.publishStatus === "queued"
-              ? "Creating repo and deploying…"
-              : "After the draft is ready",
+          : publishInFlight
+            ? "Creating repo and deploying…"
+            : awaitingPublishApproval
+              ? "Waiting for your approval to publish live"
+              : publishFailed
+                ? lead.draft?.error || "Publish failed"
+                : "After the draft is ready",
       status: jobStepStatus(publishJob, publishDone, {
         skipWhen: publishSkipped,
-        failedWhen: publishFailed || publishJob?.status === "failed",
+        failedWhen: (publishFailed || publishJob?.status === "failed") && !awaitingPublishApproval,
       }),
     },
   ];
@@ -214,12 +232,18 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
   } else if (active) {
     headline = `${current?.label ?? "Work"} in progress`;
     subline = current?.detail || "The worker is processing this lead.";
+  } else if (awaitingBuildApproval) {
+    headline = "Ready for your review";
+    subline = "Audit and scoring are done. Approve a website build when you want one.";
+  } else if (awaitingPublishApproval) {
+    headline = "Draft ready for review";
+    subline = "Preview the draft, then approve live publish when you are ready.";
   } else if (percent < 100 && scoredIncomplete(steps)) {
     headline = "Waiting to continue";
     subline = "Later steps start after earlier ones finish.";
   } else if (percent < 100) {
     headline = "Results ready";
-    subline = "Core audit and scoring are done. Draft and publish run when queued.";
+    subline = "Core audit and scoring are done. Draft and publish wait for your approval.";
   }
 
   return { steps, active, headline, subline, percent };
