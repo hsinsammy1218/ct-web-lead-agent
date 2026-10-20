@@ -57,8 +57,12 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
     auditBlocked ||
     (Boolean(lead.audit) && lead.audit?.status !== "queued");
 
-  const aiSkipped = auditDone && !aiJob && Boolean(lead.score) && !lead.ai;
-  const aiDone = Boolean(lead.ai) || aiJob?.status === "succeeded";
+  const aiFailed = aiJob?.status === "failed" && !lead.ai;
+  const aiSkipped =
+    Boolean(lead.score) &&
+    !lead.ai &&
+    (aiJob?.status === "succeeded" || (auditDone && !aiJob));
+  const aiDone = Boolean(lead.ai);
   const scoreDone = Boolean(lead.score);
   const draftQueued = lead.draft?.status === "queued" || lead.draft?.status === "publishing";
   const draftDone =
@@ -100,16 +104,18 @@ export function buildLeadPipeline(lead: LeadRecord, work: WorkRecord[]): LeadPip
     {
       id: "assess",
       label: "Assessment",
-      detail: aiSkipped
-        ? "Skipped — scored from measured evidence"
-        : aiDone
-          ? "Written notes ready"
-          : aiJob
-            ? "Reviewing findings…"
-            : auditDone
-              ? "Queued after audit when needed"
-              : "After the audit",
-      status: jobStepStatus(aiJob, aiDone, { skipWhen: aiSkipped }),
+      detail: aiFailed
+        ? operatorFacingDetail(aiJob?.lastError) || "Assessment failed"
+        : aiSkipped
+          ? "Skipped — scored from measured evidence"
+          : aiDone
+            ? "Written notes ready"
+            : aiJob?.status === "running" || aiJob?.status === "queued"
+              ? "Reviewing findings…"
+              : auditDone
+                ? "Queued after audit when needed"
+                : "After the audit",
+      status: jobStepStatus(aiJob, aiDone, { skipWhen: aiSkipped, failedWhen: aiFailed }),
     },
     {
       id: "score",
@@ -234,6 +240,9 @@ function operatorFacingDetail(message: string | null | undefined): string {
   if (!message) return "";
   if (/playwright|browsertype|chromium|executable doesn't exist|ms-playwright/i.test(message)) {
     return "The audit browser on the worker isn’t ready yet. It will retry on the next run.";
+  }
+  if (/assessment schema|did not match the assessment/i.test(message)) {
+    return "Written assessment needs a cleaner model response. Scoring can continue from measured evidence.";
   }
   return `Retrying after a worker hiccup: ${shortError(message)}`;
 }
