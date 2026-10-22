@@ -241,6 +241,11 @@ async function runSitePublish(store: Store, item: WorkRecord): Promise<void> {
   const dir = path.join(draftSiteDirectory(), lead.id);
   const htmlPath = path.join(dir, "index.html");
   const briefPath = path.join(dir, "brief.json");
+  // Render cron disks are ephemeral — rebuild the draft tree if a prior generate
+  // run's files are gone before the operator approved publish.
+  if (!existsSync(htmlPath) || !existsSync(briefPath)) {
+    await materializeDraftFiles(store, lead, dir, htmlPath, briefPath);
+  }
   const html = readFileSync(htmlPath, "utf8");
   const brief = JSON.parse(readFileSync(briefPath, "utf8")) as ReturnType<typeof buildDraftSite>["brief"];
   const extraFiles = ["styles.css", "coaches.html", "testimonials.html", "fight-back.html", "book.html"]
@@ -297,6 +302,49 @@ async function runSitePublish(store: Store, item: WorkRecord): Promise<void> {
     }));
     throw error;
   }
+}
+
+async function materializeDraftFiles(
+  store: Store,
+  lead: NonNullable<Awaited<ReturnType<Store["getLead"]>>>,
+  dir: string,
+  htmlPath: string,
+  briefPath: string,
+): Promise<void> {
+  const sourceHtml = await loadSourceHtmlForLead(lead);
+  const draft = buildDraftSite({
+    leadId: lead.id,
+    businessName: lead.displayName,
+    municipality: lead.municipalityName,
+    planningRegion: lead.planningRegionName,
+    industry: lead.industryName,
+    phone: lead.phone,
+    currentUrl: lead.website.finalUrl ?? lead.website.originalUrl,
+    hostClass: lead.website.status,
+    findings: lead.audit?.findings ?? [],
+    score: lead.score,
+    ai: lead.ai,
+    sourceHtml,
+  });
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(htmlPath, draft.html, "utf8");
+  writeFileSync(briefPath, `${JSON.stringify(draft.brief, null, 2)}\n`, "utf8");
+  for (const file of draft.files ?? []) {
+    if (file.path === "index.html") continue;
+    const full = path.join(dir, file.path);
+    mkdirSync(path.dirname(full), { recursive: true });
+    writeFileSync(full, file.content, "utf8");
+  }
+  await store.saveSiteDraft(lead.id, emptyDraft({
+    status: "publishing",
+    path: htmlPath,
+    previewPath: `/drafts/${lead.id}`,
+    generatedAt: draft.brief.generatedAt,
+    summary: draft.brief.summary,
+    fixesApplied: draft.brief.fixesApplied,
+    recommendedService: draft.brief.recommendedService,
+    publishStatus: "queued",
+  }));
 }
 
 function emptyDraft(patch: Partial<SiteDraft>): SiteDraft {

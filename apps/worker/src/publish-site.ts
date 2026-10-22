@@ -90,12 +90,19 @@ export async function publishGeneratedSite(input: {
     writeFileSync(full, file.content, "utf8");
   }
 
-  const repo = await createGithubRepo({ token: githubToken, owner, name: repoName, description: `Generated site for ${input.businessName}` });
+  const repo = await createGithubRepo({
+    token: githubToken,
+    owner,
+    name: repoName,
+    description: `Generated site for ${input.businessName}`,
+  });
   pushDirectoryToGithub({
     workDir: input.workDir,
     token: githubToken,
     owner,
     repo: repoName,
+    // Always replace remote main — these repos are fully regenerated each publish.
+    force: true,
   });
 
   const deployment = await deployToVercel({
@@ -132,13 +139,13 @@ async function createGithubRepo(input: {
   owner: string;
   name: string;
   description: string;
-}): Promise<{ htmlUrl: string }> {
+}): Promise<{ htmlUrl: string; existed: boolean }> {
   const existing = await fetch(`https://api.github.com/repos/${input.owner}/${input.name}`, {
     headers: githubHeaders(input.token),
   });
   if (existing.ok) {
     const body = (await existing.json()) as { html_url: string };
-    return { htmlUrl: body.html_url };
+    return { htmlUrl: body.html_url, existed: true };
   }
   const user = await fetch("https://api.github.com/user", { headers: githubHeaders(input.token) });
   if (!user.ok) throw new Error(`GitHub auth failed: ${user.status}`);
@@ -165,19 +172,43 @@ async function createGithubRepo(input: {
     throw new Error(`GitHub create repo failed: ${created.status} ${text}`);
   }
   const body = (await created.json()) as { html_url: string };
-  return { htmlUrl: body.html_url };
+  return { htmlUrl: body.html_url, existed: false };
 }
 
-function pushDirectoryToGithub(input: { workDir: string; token: string; owner: string; repo: string }): void {
+function pushDirectoryToGithub(input: {
+  workDir: string;
+  token: string;
+  owner: string;
+  repo: string;
+  /** When true, replace remote main — these repos are fully regenerated on each publish. */
+  force: boolean;
+}): void {
   const remote = `https://x-access-token:${input.token}@github.com/${input.owner}/${input.repo}.git`;
   const env = { ...process.env, GIT_TERMINAL_PROMPT: "0" };
-  execFileSync("git", ["init", "-b", "main"], { cwd: input.workDir, env });
-  execFileSync("git", ["config", "user.email", "ct-lead-agent@users.noreply.github.com"], { cwd: input.workDir, env });
-  execFileSync("git", ["config", "user.name", "CT Web Lead Agent"], { cwd: input.workDir, env });
-  execFileSync("git", ["add", "."], { cwd: input.workDir, env });
-  execFileSync("git", ["commit", "-m", "Initial generated site from audit"], { cwd: input.workDir, env });
-  execFileSync("git", ["remote", "add", "origin", remote], { cwd: input.workDir, env });
-  execFileSync("git", ["push", "-u", "origin", "main"], { cwd: input.workDir, env });
+  try {
+    execFileSync("git", ["init", "-b", "main"], { cwd: input.workDir, env });
+    execFileSync("git", ["config", "user.email", "ct-lead-agent@users.noreply.github.com"], {
+      cwd: input.workDir,
+      env,
+    });
+    execFileSync("git", ["config", "user.name", "CT Web Lead Agent"], { cwd: input.workDir, env });
+    execFileSync("git", ["add", "."], { cwd: input.workDir, env });
+    execFileSync(
+      "git",
+      ["commit", "-m", input.force ? "Update generated site from audit" : "Initial generated site from audit"],
+      { cwd: input.workDir, env },
+    );
+    execFileSync("git", ["remote", "add", "origin", remote], { cwd: input.workDir, env });
+    // Rebuilds always rewrite the whole site tree; force is required when the
+    // GitHub repo already has an earlier generated commit.
+    const pushArgs = input.force
+      ? ["push", "--force", "-u", "origin", "main"]
+      : ["push", "-u", "origin", "main"];
+    execFileSync("git", pushArgs, { cwd: input.workDir, env });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`GitHub push failed for ${input.owner}/${input.repo}: ${detail.split("\n")[0]}`);
+  }
 }
 
 async function deployToVercel(input: {
