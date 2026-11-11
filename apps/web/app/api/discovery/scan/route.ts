@@ -98,7 +98,7 @@ export async function POST(request: Request): Promise<Response> {
         const result = await store.submit(validated.value, email, false);
         enqueued.push({
           businessName: candidate.businessName,
-          leadId: result.leadId,
+          leadId: result.leadId ?? null,
           message: result.message,
           skipped: result.skipped,
         });
