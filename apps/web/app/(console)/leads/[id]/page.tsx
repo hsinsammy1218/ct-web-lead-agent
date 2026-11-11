@@ -15,7 +15,7 @@ import { ScoreMeter } from "../../../../components/score-meter";
 import { SubmitButton } from "../../../../components/submit-button";
 import { bandLabel, hostLabel, serviceLabel, statusLabel } from "../../../../lib/labels";
 import { buildLeadPipeline } from "../../../../lib/pipeline";
-import { getStore } from "../../../../lib/store";
+import { getStore, storeError } from "../../../../lib/store";
 
 export default async function LeadDetailPage({
   params,
@@ -30,7 +30,7 @@ export default async function LeadDetailPage({
   try {
     store = getStore();
   } catch (caught) {
-    const message = caught instanceof Error ? caught.message : "Lead store unavailable";
+    const message = storeError(caught, "Lead store unavailable").message;
     return (
       <section className="surface-quiet p-6">
         <h1 className="font-serif text-2xl">Lead is unavailable</h1>

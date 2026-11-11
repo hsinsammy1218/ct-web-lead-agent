@@ -1,5 +1,5 @@
 import { PasteIntakeForm } from "../../../../components/paste-intake-form";
-import { getReferenceData } from "../../../../lib/store";
+import { getReferenceData, storeError } from "../../../../lib/store";
 
 export default async function NewLeadPage({
   searchParams,
@@ -12,7 +12,7 @@ export default async function NewLeadPage({
   try {
     reference = await getReferenceData();
   } catch (caught) {
-    loadError = caught instanceof Error ? caught.message : "Could not load form options";
+    loadError = storeError(caught, "Could not load form options").message;
   }
   if (loadError || !reference) {
     return (

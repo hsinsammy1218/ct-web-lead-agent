@@ -2,7 +2,7 @@ import Link from "next/link";
 import { HOST_CLASSES, LEAD_STATUSES, SCORE_BANDS } from "@ct/core";
 import { bandLabel, hostLabel, serviceLabel, statusLabel } from "../../../lib/labels";
 import { exportQuery, filtersFromParams, scoreText } from "../../../lib/filters";
-import { getReferenceData, getStore } from "../../../lib/store";
+import { getReferenceData, getStore, storeError } from "../../../lib/store";
 
 export default async function LeadsPage({
   searchParams,
@@ -19,7 +19,7 @@ export default async function LeadsPage({
     reference = await getReferenceData();
     leads = await store.listLeads(filters);
   } catch (caught) {
-    error = caught instanceof Error ? caught.message : "Leads could not be loaded";
+    error = storeError(caught, "Leads could not be loaded").message;
   }
   if (error || !leads || !reference) {
     return (

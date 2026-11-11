@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getStore } from "../../lib/store";
+import { getStore, storeError } from "../../lib/store";
 
 export default async function HomePage() {
   let stats;
@@ -7,7 +7,7 @@ export default async function HomePage() {
   try {
     stats = await getStore().stats();
   } catch (caught) {
-    error = caught instanceof Error ? caught.message : "The lead store is unavailable";
+    error = storeError(caught).message;
   }
   if (error || !stats) {
     return (

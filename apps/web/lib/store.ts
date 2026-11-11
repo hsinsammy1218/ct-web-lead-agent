@@ -5,6 +5,28 @@ export type AppStore = MemoryStore | SupabaseStore;
 
 let singleton: AppStore | undefined;
 
+/** Normalize thrown values (Postgrest errors are plain objects) into Error. */
+export function storeError(caught: unknown, fallback = "The lead store is unavailable"): Error {
+  if (caught instanceof Error) return caught;
+  if (caught && typeof caught === "object") {
+    const row = caught as { message?: unknown; details?: unknown; hint?: unknown; code?: unknown };
+    const parts = [row.message, row.details, row.hint, row.code]
+      .map((part) => (typeof part === "string" ? part.trim() : ""))
+      .filter(Boolean);
+    if (parts.length) {
+      const message = parts.join(" — ");
+      if (/failed to fetch|fetch failed|enotfound|econnrefused|network/i.test(message)) {
+        return new Error(
+          "Supabase is unreachable right now. If the project was paused for inactivity, restore it in the Supabase dashboard, then reload.",
+        );
+      }
+      return new Error(message);
+    }
+  }
+  if (typeof caught === "string" && caught.trim()) return new Error(caught.trim());
+  return new Error(fallback);
+}
+
 export function getStore(): AppStore {
   if (singleton) return singleton;
   loadLocalEnv();
@@ -12,8 +34,7 @@ export function getStore(): AppStore {
   try {
     reference = loadReferenceData();
   } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
-    throw new Error(`Could not load CT reference data (config/ct). ${detail}`);
+    throw storeError(error, "Could not load CT reference data (config/ct).");
   }
   const caps = {
     dailyCapUsd: Number(process.env.DAILY_API_CAP_USD ?? 5),
