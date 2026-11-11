@@ -5,7 +5,7 @@ import { buildDraftSite } from "../src/site-draft.js";
 describe("site publish helpers", () => {
   it("names repos safely and packages deployable files", () => {
     const name = buildGithubRepoName("In your corner fitness!", "af124d15-bc91-4563-9881-003f6edbbf24");
-    expect(name).toMatch(/^ct-site-in-your-corner-fitness-af124d15$/);
+    expect(name).toBe("in-your-corner-fitness");
     const draft = buildDraftSite({
       leadId: "af124d15-bc91-4563-9881-003f6edbbf24",
       businessName: "In your corner fitness",
