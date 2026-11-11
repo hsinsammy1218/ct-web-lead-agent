@@ -1,4 +1,4 @@
-import { getStore } from "../../../lib/store";
+import { getStore, storeError } from "../../../lib/store";
 
 export default async function JobsPage() {
   let jobs;
@@ -6,7 +6,7 @@ export default async function JobsPage() {
   try {
     jobs = await getStore().listWork();
   } catch (caught) {
-    error = caught instanceof Error ? caught.message : "Jobs could not be loaded";
+    error = storeError(caught, "Jobs could not be loaded").message;
   }
   if (error || !jobs) {
     return (
