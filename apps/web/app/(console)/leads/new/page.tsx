@@ -45,6 +45,13 @@ export default async function NewLeadPage({
           industries={industries}
           error={params.error}
           duplicate={params.duplicate}
+          initialDraft={{
+            businessName: params.business_name ?? "",
+            municipality: params.municipality ?? "",
+            industry: params.industry ?? "",
+            websiteUrl: params.website_url ?? "",
+            phone: params.phone ?? "",
+          }}
         />
       </div>
     </section>

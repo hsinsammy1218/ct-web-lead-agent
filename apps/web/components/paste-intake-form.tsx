@@ -30,14 +30,16 @@ export function PasteIntakeForm({
   industries,
   error,
   duplicate,
+  initialDraft,
 }: {
   municipalities: Option[];
   industries: Option[];
   error?: string;
   duplicate?: string;
+  initialDraft?: Partial<Draft>;
 }) {
   const [paste, setPaste] = useState("");
-  const [draft, setDraft] = useState<Draft>(EMPTY);
+  const [draft, setDraft] = useState<Draft>({ ...EMPTY, ...initialDraft });
   const [agentNote, setAgentNote] = useState<string | null>(null);
   const [agentError, setAgentError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();

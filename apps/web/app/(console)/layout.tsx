@@ -20,6 +20,9 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
             <Link href="/leads/new" className="transition hover:text-pine">
               Add website
             </Link>
+            <Link href="/discover" className="transition hover:text-pine">
+              Find businesses
+            </Link>
             <Link href="/leads/import" className="transition hover:text-pine">
               Import CSV
             </Link>

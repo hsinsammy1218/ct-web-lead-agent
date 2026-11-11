@@ -2,7 +2,7 @@
 
 Internal tool for auditing websites an operator has already found in Connecticut. The operator submits a URL, business name, municipality, and industry. A worker fetches that URL, records evidence, and scores the opportunity.
 
-This release does not search Google, Yelp, Overture, or the state business registry.
+Optional discovery: with `GOOGLE_PLACES_API_KEY`, use **Find businesses** (`/discover`) or `POST /api/discovery/scan` to find CT businesses with no website, only a social/directory page, or an outdated site. Full audits still start from a submitted URL.
 
 ## Local development
 
