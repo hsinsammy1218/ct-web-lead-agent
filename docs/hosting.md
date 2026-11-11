@@ -23,9 +23,12 @@ SUPABASE_SECRET_KEY=<service_role>
 OPERATOR_EMAILS=<optional attribution email>
 ALLOW_DEV_AUTH=false
 NEXT_PUBLIC_SITE_URL=https://ct-web-lead-agent.vercel.app
+GOOGLE_PLACES_API_KEY=<Places API New key for /discover>
 ```
 
 No operator sign-in — the dashboard is open. `OPERATOR_EMAILS` is only used as the default attribution name for notes/submissions.
+
+`GOOGLE_PLACES_API_KEY` powers **Find businesses** (`/discover` and `POST /api/discovery/scan`). Enable Places API (New) in Google Cloud and restrict the key to that API.
 
 ## Render worker
 
