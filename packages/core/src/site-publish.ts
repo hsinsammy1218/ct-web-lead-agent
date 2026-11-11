@@ -19,10 +19,9 @@ export function slugifySiteName(name: string): string {
     .slice(0, 40) || "site";
 }
 
-export function buildGithubRepoName(businessName: string, leadId: string): string {
-  const slug = slugifySiteName(businessName);
-  const short = leadId.replaceAll("-", "").slice(0, 8);
-  return `ct-site-${slug}-${short}`.slice(0, 100);
+export function buildGithubRepoName(businessName: string, _leadId?: string): string {
+  // Public Vercel/GitHub names should read as the business, not an internal agent prefix.
+  return slugifySiteName(businessName).slice(0, 100);
 }
 
 export function buildPublishFiles(input: {
