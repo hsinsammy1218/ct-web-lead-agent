@@ -22,6 +22,11 @@ export function isInYourCornerBoxing(input: DraftSiteInput, sourceHtml?: string 
 /**
  * Full professional rebuild of In Your Corner Boxing using content and media
  * from https://www.inyourcornerfitness.com/
+ *
+ * Design cues drawn from top boxing sites (Gleason's, Mayweather Boxing + Fitness,
+ * Rumble, Prime Boxing USA, Work Train Fight): full-bleed training photography,
+ * condensed fight-poster type, address/hours utility bar, round-based IA,
+ * and ring-rope / corner-post visual language.
  */
 export function buildInYourCornerBoxingSite(input: DraftSiteInput): SpecialtySiteResult {
   const generatedAt = new Date().toISOString();
@@ -37,13 +42,14 @@ export function buildInYourCornerBoxingSite(input: DraftSiteInput): SpecialtySit
       "Rebuilt as a full multi-page professional site from the live business content.",
       "Preserved brand identity: In Your Corner Boxing — Boxing, Fitness, Nutrition.",
       "Used the business’s own photography and logo from the current website.",
+      "Shifted the first viewport to fight-gym patterns: action hero, condensed poster type, and ring cues.",
       "Added clear local SEO title, meta description, and LocalBusiness/SportsActivityLocation schema.",
       "Published dedicated pages for coaches, testimonials, Fight Back IYC, and booking/pricing.",
       "Surfaced real address, email, class schedule, and membership pricing from the source site.",
     ],
     findingsAddressed: [...new Set(input.findings.map((f) => f.code))],
     summary:
-      "Final professional website for In Your Corner Boxing in Wolcott, CT — rebuilt from the current site’s content, branding, coaches, schedule, and pricing.",
+      "Final professional website for In Your Corner Boxing in Wolcott, CT — rebuilt from the current site’s content, branding, coaches, schedule, and pricing with a boxing-first presentation.",
   };
 
   const css = siteCss();
@@ -161,11 +167,11 @@ function shell(active: string, title: string, description: string, body: string)
   <link rel="canonical" href="https://www.inyourcornerfitness.com/">
   <meta property="og:title" content="${escape(title)}">
   <meta property="og:description" content="${escape(description)}">
-  <meta property="og:image" content="${IMG.building}">
+  <meta property="og:image" content="${IMG.training}">
   <link rel="icon" href="${IMG.logo}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
@@ -173,7 +179,7 @@ function shell(active: string, title: string, description: string, body: string)
     name: "In Your Corner Boxing",
     url: "https://www.inyourcornerfitness.com/",
     email: "inyourcornerboxing@yahoo.com",
-    image: IMG.building,
+    image: IMG.training,
     address: {
       "@type": "PostalAddress",
       streetAddress: "1 Wolcott Rd",
@@ -187,6 +193,14 @@ function shell(active: string, title: string, description: string, body: string)
   })}</script>
 </head>
 <body>
+  <div class="ring-frame" aria-hidden="true"></div>
+  <p class="utility-bar">
+    <span>1 Wolcott Rd, Wolcott CT 06716</span>
+    <span class="dot" aria-hidden="true"></span>
+    <span>Real boxing · Fitness · Nutrition</span>
+    <span class="dot" aria-hidden="true"></span>
+    <a href="mailto:inyourcornerboxing@yahoo.com">inyourcornerboxing@yahoo.com</a>
+  </p>
   <header class="site-header">
     <a class="brand" href="index.html">
       <img src="${IMG.logo}" alt="In Your Corner Boxing logo" width="56" height="56">
@@ -251,13 +265,13 @@ function pageHome(): string {
   <main>
     <section class="hero">
       <div class="hero-media">
-        <img src="${IMG.building}" alt="In Your Corner Boxing gym at 1 Wolcott Rd, Wolcott CT" width="1600" height="1100" fetchpriority="high">
+        <img src="${IMG.training}" alt="Boxing training on the floor at In Your Corner Boxing in Wolcott, CT" width="1600" height="1100" fetchpriority="high">
       </div>
       <div class="hero-copy wrap">
-        <p class="eyebrow">Wolcott, Connecticut</p>
+        <p class="corner-mark"><span>Red corner</span> · Wolcott, CT</p>
         <h1>In Your Corner Boxing</h1>
-        <p class="tagline">Boxing · Fitness · Nutrition</p>
-        <p class="lede">A gym family for every age and ability — real boxing skills, strength training, and nutrition coaching in one welcoming corner of Wolcott.</p>
+        <p class="punchline">Train hard. Punch with purpose.</p>
+        <p class="lede">Real boxing skills, strength training, and nutrition coaching for every age and ability — in one corner of Wolcott.</p>
         <div class="actions">
           <a class="btn btn-primary" href="book.html">Book a class</a>
           <a class="btn btn-ghost" href="coaches.html">Meet the coaches</a>
@@ -265,22 +279,25 @@ function pageHome(): string {
       </div>
     </section>
 
-    <section class="wrap pillars">
-      <article>
+    <section class="wrap rounds" aria-label="What we train">
+      <article class="round">
+        <p class="round-num">Round 01</p>
         <h2>Boxing</h2>
         <p>Learn real boxing skills and techniques. Get into fighting shape with drills that build cardio, core strength, balance, coordination, and power. Relieve stress while building confidence. Private training and classes for all ages and levels — including non-contact, mitts, sparring, heavy bag, speed bag, senior boxing, youth boxing, and boxing for movement disorders.</p>
       </article>
-      <article>
+      <article class="round">
+        <p class="round-num">Round 02</p>
         <h2>Fitness</h2>
         <p>Build strength, lose weight, burn fat, feel better. Join a class or sign up for private training at IYC in Wolcott, CT — boot camps, circuit training, strength &amp; conditioning, and one-on-one coaching whether boxing is your focus or not.</p>
       </article>
-      <article>
+      <article class="round">
+        <p class="round-num">Round 03</p>
         <h2>Nutrition</h2>
         <p>Precision Nutrition–informed coaching to reach your goals without feeling deprived. Individual coaching and small group classes that teach lasting skills — not a crash diet or quick fix.</p>
       </article>
     </section>
 
-    <section class="band">
+    <section class="band band-action">
       <div class="wrap split">
         <div>
           <p class="eyebrow">Our philosophy</p>
@@ -297,19 +314,32 @@ function pageHome(): string {
       </div>
     </section>
 
+    <section class="floor-band">
+      <div class="wrap floor-grid">
+        <figure class="floor-shot">
+          <img src="${IMG.gear}" alt="Boxing gloves and gear at In Your Corner Boxing" width="1200" height="900" loading="lazy">
+          <figcaption>Gloves on. Work starts here.</figcaption>
+        </figure>
+        <figure class="floor-shot">
+          <img src="${IMG.building}" alt="In Your Corner Boxing gym at 1 Wolcott Rd, Wolcott CT" width="1600" height="1100" loading="lazy">
+          <figcaption>1 Wolcott Rd — walk into the corner.</figcaption>
+        </figure>
+      </div>
+    </section>
+
     <section class="wrap">
       <div class="section-head">
         <p class="eyebrow">This week on the floor</p>
-        <h2>Class snapshot</h2>
+        <h2>Fight card</h2>
       </div>
-      <div class="schedule">
-        <div><strong>Mon</strong><span>5:00 PM Tiny Champs (3–6)</span><span>6:00 PM Circuit Training</span></div>
-        <div><strong>Tue</strong><span>6:00 PM Youth Boxing (6–12)</span><span>6:00 PM Boxing Bootcamp</span><span>7:00 PM Teen Boxing (12–17)</span></div>
-        <div><strong>Wed</strong><span>10:00 AM 55+ Boxing</span><span>6:00 PM Boxing Heavy Bags</span></div>
-        <div><strong>Thu</strong><span>6:00 PM Youth Boxing</span><span>6:00 PM Bootcamp</span></div>
-        <div><strong>Fri</strong><span>4:30 PM Teen/Adult Boxing</span></div>
-        <div><strong>Sat</strong><span>9:00 AM Boxing: Heavy Bags</span></div>
-        <div><strong>Sun</strong><span>8:00 AM Bags &amp; Mitts</span><span>9:00 AM Bootcamp</span><span>10:00 AM Strength: Total Body</span></div>
+      <div class="schedule" role="list">
+        <div role="listitem"><strong>Mon</strong><span>5:00 PM Tiny Champs (3–6)</span><span>6:00 PM Circuit Training</span></div>
+        <div role="listitem"><strong>Tue</strong><span>6:00 PM Youth Boxing (6–12)</span><span>6:00 PM Boxing Bootcamp</span><span>7:00 PM Teen Boxing (12–17)</span></div>
+        <div role="listitem"><strong>Wed</strong><span>10:00 AM 55+ Boxing</span><span>6:00 PM Boxing Heavy Bags</span></div>
+        <div role="listitem"><strong>Thu</strong><span>6:00 PM Youth Boxing</span><span>6:00 PM Bootcamp</span></div>
+        <div role="listitem"><strong>Fri</strong><span>4:30 PM Teen/Adult Boxing</span></div>
+        <div role="listitem"><strong>Sat</strong><span>9:00 AM Boxing: Heavy Bags</span></div>
+        <div role="listitem"><strong>Sun</strong><span>8:00 AM Bags &amp; Mitts</span><span>9:00 AM Bootcamp</span><span>10:00 AM Strength: Total Body</span></div>
       </div>
       <p class="note">Sign up in the GloFox app · Full pricing on the <a href="book.html">Book Now</a> page</p>
     </section>
@@ -335,7 +365,7 @@ function pageCoaches(): string {
     `
   <main class="page">
     <section class="page-hero wrap">
-      <p class="eyebrow">The IYC family</p>
+      <p class="eyebrow">The IYC corner</p>
       <h1>Meet the Coaches</h1>
       <p class="lede">Experience, heart, and high standards — the team that keeps Wolcott showing up.</p>
     </section>
@@ -523,80 +553,240 @@ function pageBook(): string {
 
 function siteCss(): string {
   return `:root {
-  --bg: #070707;
-  --bg-2: #111;
-  --panel: #161616;
+  --bg: #050505;
+  --bg-2: #0d0b0a;
+  --canvas: #14110f;
+  --panel: #1a1614;
   --red: #e10600;
-  --red-deep: #b00000;
-  --text: #f5f5f5;
-  --muted: #b7b7b7;
-  --line: #2a2a2a;
+  --red-deep: #9d0000;
+  --red-glow: rgba(225, 6, 0, 0.45);
+  --rope: #c9a36a;
+  --rope-dim: rgba(201, 163, 106, 0.35);
+  --text: #f4f1ea;
+  --muted: #b8aea3;
+  --line: #2c2622;
   --max: 1120px;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  font-family: Manrope, system-ui, sans-serif;
-  background: var(--bg);
+  font-family: "DM Sans", system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(225, 6, 0, 0.18), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(201, 163, 106, 0.08), transparent 50%),
+    var(--bg);
   color: var(--text);
   line-height: 1.55;
+  position: relative;
 }
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 .wrap { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; }
+
+.ring-frame {
+  pointer-events: none;
+  position: fixed;
+  inset: 0.55rem;
+  border: 2px solid var(--rope-dim);
+  border-radius: 0.2rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 6, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.65);
+  z-index: 100;
+  animation: ropePulse 5.5s ease-in-out infinite;
+}
+@keyframes ropePulse {
+  0%, 100% { border-color: rgba(201, 163, 106, 0.28); }
+  50% { border-color: rgba(201, 163, 106, 0.55); }
+}
+
+.utility-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.55rem 0.85rem;
+  margin: 0; padding: 0.45rem 1rem;
+  background: #000;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.utility-bar a { color: var(--text); text-decoration: none; }
+.utility-bar a:hover { color: var(--red); }
+.utility-bar .dot {
+  width: 0.28rem; height: 0.28rem; border-radius: 50%;
+  background: var(--red); display: inline-block;
+}
+
 .site-header {
   position: sticky; top: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   padding: 0.7rem max(1rem, calc((100% - var(--max)) / 2));
-  background: rgba(7,7,7,0.94); border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(10px);
+  background: rgba(5, 5, 5, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
 }
 .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-.brand img { border-radius: 50%; background: #000; }
+.brand img { border-radius: 50%; background: #000; border: 1px solid var(--rope-dim); }
 .brand strong { display: block; font-size: 0.98rem; letter-spacing: 0.02em; }
 .brand small { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .site-header nav { display: flex; flex-wrap: wrap; gap: 0.85rem; align-items: center; }
-.site-header nav a { text-decoration: none; color: var(--muted); font-size: 0.86rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+.site-header nav a {
+  text-decoration: none; color: var(--muted);
+  font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700;
+}
 .site-header nav a:hover, .site-header nav a.active { color: var(--red); }
-.nav-toggle { display: none; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 0.4rem; padding: 0.55rem 0.8rem; }
+.nav-toggle {
+  display: none; background: var(--panel); color: var(--text);
+  border: 1px solid var(--line); border-radius: 0.2rem; padding: 0.55rem 0.8rem;
+}
+
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 0.85rem 1.2rem; border-radius: 0.35rem; text-decoration: none;
-  font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.85rem;
+  padding: 0.9rem 1.25rem; border-radius: 0.15rem; text-decoration: none;
+  font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.82rem;
   border: 0; cursor: pointer;
 }
-.btn-primary { background: var(--red); color: white; }
+.btn-primary {
+  background: var(--red); color: white;
+  box-shadow: 0 0 0 0 var(--red-glow);
+  animation: cornerFlash 2.8s ease-in-out infinite;
+}
 .btn-primary:hover { background: var(--red-deep); }
 .btn-ghost { border: 1px solid rgba(255,255,255,0.45); color: white; background: transparent; }
-.btn-nav { background: var(--red); color: white !important; padding: 0.55rem 0.9rem; border-radius: 0.3rem; }
-.hero { position: relative; min-height: 52svh; max-height: 640px; display: grid; align-items: end; }
-.hero-media { position: absolute; inset: 0; }
-.hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
-.hero-media::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 48%, rgba(0,0,0,0.28) 100%),
-    linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.78));
+.btn-ghost:hover { border-color: var(--rope); color: var(--rope); }
+.btn-nav { background: var(--red); color: white !important; padding: 0.55rem 0.9rem; border-radius: 0.15rem; }
+@keyframes cornerFlash {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(225, 6, 0, 0); }
+  50% { box-shadow: 0 0 22px 2px var(--red-glow); }
 }
+
+.hero {
+  position: relative;
+  min-height: min(88svh, 760px);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+}
+.hero-media { position: absolute; inset: 0; }
+.hero-media img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 30%;
+  filter: contrast(1.08) saturate(0.92);
+  transform: scale(1.04);
+  animation: heroDrift 18s ease-in-out infinite alternate;
+}
+.hero-media::before {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.62) 42%, rgba(0,0,0,0.25) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.86)),
+    linear-gradient(135deg, rgba(225, 6, 0, 0.28), transparent 42%);
+}
+.hero-media::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 10px; z-index: 2;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--rope) 0 18px,
+    #8a6a3a 18px 22px,
+    var(--rope) 22px 40px,
+    #5a3f1c 40px 44px
+  );
+  opacity: 0.9;
+}
+@keyframes heroDrift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+
 .hero-copy {
-  position: relative; z-index: 1;
-  padding: 2.25rem 0 1.75rem;
+  position: relative; z-index: 3;
+  padding: 3.5rem 0 2.4rem;
   width: min(var(--max), calc(100% - 2rem));
   margin: 0 auto;
+  animation: heroRise 0.9s ease-out both;
 }
-.hero-copy > * { max-width: 34rem; }
-.eyebrow { color: var(--red); text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.78rem; font-weight: 800; margin: 0 0 0.55rem; }
-h1, h2, h3 { font-family: "Bebas Neue", Impact, sans-serif; letter-spacing: 0.03em; line-height: 0.95; margin: 0 0 0.55rem; }
-h1 { font-size: clamp(2.8rem, 7vw, 4.6rem); color: var(--red); }
-h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
-.tagline { font-family: "Bebas Neue", Impact, sans-serif; font-size: clamp(1.25rem, 3vw, 1.9rem); margin: 0 0 0.75rem; letter-spacing: 0.08em; }
-.lede { color: var(--muted); font-size: 1rem; margin: 0 0 1.1rem; line-height: 1.5; }
-.actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
-.pillars { display: grid; gap: 0.85rem; grid-template-columns: repeat(3, 1fr); padding: 2rem 0; }
-.pillars article { background: var(--panel); border: 1px solid var(--line); padding: 1.15rem 1.2rem; }
-.pillars h2 { color: var(--red); margin-bottom: 0.45rem; }
-.pillars p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-.band { background: var(--bg-2); padding: 2.5rem 0; border-block: 1px solid var(--line); }
+.hero-copy > * { max-width: 38rem; }
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.corner-mark {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  margin: 0 0 0.85rem;
+  color: var(--rope);
+  font-size: 0.78rem; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.corner-mark span {
+  display: inline-block;
+  padding: 0.28rem 0.55rem;
+  background: var(--red);
+  color: #fff;
+  letter-spacing: 0.12em;
+}
+.eyebrow {
+  color: var(--red); text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 0.78rem; font-weight: 800; margin: 0 0 0.55rem;
+}
+h1, h2, h3 {
+  font-family: "Bebas Neue", Impact, sans-serif;
+  letter-spacing: 0.03em; line-height: 0.92; margin: 0 0 0.55rem;
+}
+h1 {
+  font-family: Anton, "Bebas Neue", Impact, sans-serif;
+  font-size: clamp(3.2rem, 9vw, 6.2rem);
+  color: #fff;
+  text-shadow: 0 0 40px rgba(225, 6, 0, 0.25);
+  max-width: 11ch;
+}
+.punchline {
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: clamp(1.55rem, 3.8vw, 2.45rem);
+  margin: 0 0 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  text-transform: uppercase;
+}
+.lede { color: var(--muted); font-size: 1.02rem; margin: 0 0 1.25rem; line-height: 1.5; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+.rounds {
+  display: grid; gap: 0;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0;
+  border-block: 1px solid var(--line);
+  background: var(--canvas);
+}
+.round {
+  padding: 1.6rem 1.35rem 1.75rem;
+  border-right: 1px solid var(--line);
+  position: relative;
+}
+.round:last-child { border-right: 0; }
+.round::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--red), transparent 70%);
+  opacity: 0.85;
+}
+.round-num {
+  margin: 0 0 0.55rem;
+  color: var(--rope);
+  font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.rounds h2 { color: #fff; margin-bottom: 0.55rem; font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.rounds p:not(.round-num) { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+.band { background: var(--bg-2); padding: 2.75rem 0; border-block: 1px solid var(--line); }
+.band-action {
+  background:
+    linear-gradient(180deg, rgba(225, 6, 0, 0.06), transparent 40%),
+    var(--bg-2);
+}
 .split { display: grid; gap: 1.75rem; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: start; }
 .split > div:first-child { display: flex; flex-direction: column; gap: 0.75rem; max-width: 36rem; }
 .split > div:first-child > p { margin: 0; }
@@ -605,23 +795,90 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .stack-photos { display: grid; gap: 0.75rem; grid-template-columns: 1fr 1fr; align-self: stretch; }
 .stack-photos img {
   width: 100%; aspect-ratio: 3 / 4; height: 100%; max-height: 420px;
-  object-fit: cover; object-position: center 18%; border-radius: 0.35rem;
+  object-fit: cover; object-position: center 18%;
+  border-radius: 0.15rem;
+  border: 1px solid var(--line);
+  filter: contrast(1.05);
 }
 .split > img {
   width: 100%; aspect-ratio: 4 / 5; max-height: 520px;
-  object-fit: cover; object-position: center; border-radius: 0.35rem;
+  object-fit: cover; object-position: center;
+  border-radius: 0.15rem; border: 1px solid var(--line);
 }
 .program { padding: 1.75rem 0 2.5rem; }
-.schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+
+.floor-band {
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+  background: #000;
+}
+.floor-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 0;
+  width: min(100%, var(--max) + 2rem);
+  padding: 0;
+}
+.floor-shot {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+}
+.floor-shot img {
+  width: 100%; height: 100%; min-height: 280px;
+  object-fit: cover;
+  filter: grayscale(0.15) contrast(1.08);
+}
+.floor-shot::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.78));
+}
+.floor-shot figcaption {
+  position: absolute; left: 1.1rem; right: 1.1rem; bottom: 1rem; z-index: 1;
+  margin: 0;
+  font-family: "Bebas Neue", Impact, sans-serif;
+  letter-spacing: 0.08em;
+  font-size: 1.35rem;
+  text-transform: uppercase;
+}
+
+.schedule { display: grid; gap: 0.75rem; grid-template-columns: repeat(7, minmax(0, 1fr)); padding: 0.5rem 0 0; }
 .schedule.dense { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-.schedule div { background: var(--panel); border: 1px solid var(--line); padding: 1rem 0.85rem; display: grid; gap: 0.4rem; align-content: start; }
-.schedule strong { color: var(--red); font-family: "Bebas Neue", Impact, sans-serif; font-size: 1.35rem; letter-spacing: 0.04em; }
+.schedule div {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--red);
+  padding: 1rem 0.85rem;
+  display: grid; gap: 0.4rem; align-content: start;
+}
+.schedule strong {
+  color: var(--rope);
+  font-family: "Bebas Neue", Impact, sans-serif;
+  font-size: 1.35rem; letter-spacing: 0.04em;
+}
 .schedule span { color: var(--muted); font-size: 0.86rem; line-height: 1.35; }
 .note { color: var(--muted); }
-.cta-band { padding: 3rem 0; background: linear-gradient(135deg, #1a0000, #0d0d0d 45%, #140000); border-top: 1px solid var(--line); text-align: center; }
+.section-head { margin: 2rem 0 1.2rem; }
+
+.cta-band {
+  padding: 3.25rem 0;
+  background:
+    linear-gradient(135deg, #220000 0%, #0a0807 42%, #160000 100%);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  position: relative;
+}
+.cta-band::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 0; height: 4px;
+  background: repeating-linear-gradient(90deg, var(--rope) 0 14px, var(--red) 14px 18px);
+}
 .cta-logo {
   width: 96px; height: 96px; margin: 0 auto 1rem; border-radius: 50%;
   background: #000; object-fit: cover; display: block;
+  border: 2px solid var(--rope-dim);
 }
 .cta-band h2 { margin-bottom: 0.65rem; }
 .social-icon { display: block; flex-shrink: 0; width: 1.1rem; height: 1.1rem; }
@@ -634,9 +891,12 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 }
 .social-inline a:hover { color: var(--text); border-color: var(--red); }
 .social-inline a:hover .social-icon { color: var(--red); }
+
 .page { padding-bottom: 3rem; }
-.page-hero { padding: 1.75rem 0 1.1rem; }
+.page-hero { padding: 1.9rem 0 1.1rem; }
 .page-hero .lede { max-width: 36rem; margin-bottom: 0; }
+.page-hero h1 { color: var(--red); max-width: none; text-shadow: none; }
+
 .coach-grid {
   display: grid; gap: 1.35rem; grid-template-columns: 1fr;
   max-width: 52rem;
@@ -649,27 +909,42 @@ h2 { font-size: clamp(2rem, 4.5vw, 3rem); }
 .coach:last-child { border-bottom: 0; padding-bottom: 0; }
 .coach img {
   width: 100%; aspect-ratio: 3 / 4; max-height: none; height: auto;
-  object-fit: cover; object-position: center top; border-radius: 0.35rem;
+  object-fit: cover; object-position: center top; border-radius: 0.15rem;
+  border: 1px solid var(--line);
+  filter: contrast(1.06);
 }
 .coach > div { display: flex; flex-direction: column; gap: 0.45rem; min-width: 0; max-width: 38rem; }
 .coach h2 { font-size: clamp(1.7rem, 2.6vw, 2.25rem); margin: 0; line-height: 0.95; letter-spacing: 0.02em; }
 .coach .role { color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; margin: 0; }
 .coach p:not(.role) { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.55; }
+
 .quote-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-blockquote { margin: 0; background: var(--panel); border-left: 4px solid var(--red); padding: 1.25rem; }
+blockquote {
+  margin: 0; background: var(--panel);
+  border-left: 4px solid var(--red);
+  border-top: 1px solid var(--line);
+  padding: 1.25rem;
+}
 blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
+
 .steps, .price-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2rem; }
-.steps article, .price-grid article { background: var(--panel); border: 1px solid var(--line); padding: 1.2rem; }
+.steps article, .price-grid article {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--rope);
+  padding: 1.2rem;
+}
 .steps h3 { color: var(--red); font-size: 2.4rem; }
 .price-grid ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
 .price-grid li { margin: 0.4rem 0; }
-.site-footer { border-top: 1px solid var(--line); padding: 2.25rem 0 1.75rem; background: #050505; }
+
+.site-footer { border-top: 1px solid var(--line); padding: 2.25rem 0 1.75rem; background: #030303; }
 .footer-grid {
   width: min(var(--max), calc(100% - 2rem)); margin: 0 auto 1.25rem;
   display: grid; gap: 1.75rem; grid-template-columns: 1.4fr 1fr 1fr; align-items: start;
 }
 .footer-brand-head { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.75rem; }
-.footer-brand-head img { width: 64px; height: 64px; border-radius: 50%; background: #000; flex-shrink: 0; }
+.footer-brand-head img { width: 64px; height: 64px; border-radius: 50%; background: #000; flex-shrink: 0; border: 1px solid var(--rope-dim); }
 .footer-brand-head h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.1rem); line-height: 0.95; }
 .footer-tag { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .footer-brand > p { margin: 0; color: var(--muted); max-width: 28rem; font-size: 0.95rem; }
@@ -682,22 +957,28 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
   display: inline-flex; align-items: center; justify-content: center;
   width: 2.5rem; height: 2.5rem; padding: 0; overflow: hidden;
   text-decoration: none; color: var(--text);
-  border: 1px solid var(--line); background: var(--panel); border-radius: 0.35rem;
+  border: 1px solid var(--line); background: var(--panel); border-radius: 0.2rem;
 }
 .socials a span { display: none; }
 .socials a .social-icon { color: var(--red); width: 1.2rem; height: 1.2rem; }
 .socials a:hover { border-color: var(--red); color: var(--red); background: #1a0000; }
-.socials a:hover .social-icon { color: var(--red); }
 .fine { width: min(var(--max), calc(100% - 2rem)); margin: 0 auto; color: var(--muted); font-size: 0.85rem; }
 .cta-inline { padding: 2rem 0; }
-.section-head { margin-bottom: 1.2rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ring-frame, .btn-primary, .hero-media img, .hero-copy { animation: none; }
+}
+
 @media (max-width: 900px) {
-  .hero { min-height: 48svh; max-height: none; }
-  .hero-copy { padding: 1.75rem 0 1.4rem; }
-  .pillars { grid-template-columns: 1fr; padding: 1.5rem 0; }
+  .ring-frame { inset: 0.35rem; }
+  .hero { min-height: 78svh; }
+  .hero-copy { padding: 2.2rem 0 1.7rem; }
+  .rounds { grid-template-columns: 1fr; }
+  .round { border-right: 0; border-bottom: 1px solid var(--line); }
+  .round:last-child { border-bottom: 0; }
   .schedule { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .coach-grid { max-width: none; gap: 1.15rem; }
-  .split, .footer-grid { grid-template-columns: 1fr; }
+  .split, .footer-grid, .floor-grid { grid-template-columns: 1fr; }
   .coach { grid-template-columns: 112px minmax(0, 1fr); gap: 0.95rem; align-items: start; padding-bottom: 1.15rem; }
   .coach img { max-height: 168px; }
   .coach h2 { font-size: 1.45rem; }
@@ -707,10 +988,11 @@ blockquote cite { color: var(--muted); font-style: normal; font-weight: 700; }
   .stack-photos img { max-height: 280px; aspect-ratio: 4 / 5; }
   .nav-toggle { display: inline-flex; }
   .site-header nav {
-    display: none; position: absolute; inset: 100% 0 auto 0; background: #0b0b0b;
+    display: none; position: absolute; inset: 100% 0 auto 0; background: #0b0908;
     flex-direction: column; align-items: flex-start; padding: 1rem; border-bottom: 1px solid var(--line);
   }
   body.nav-open .site-header nav { display: flex; }
+  .utility-bar { justify-content: flex-start; }
 }
 `;
 }
